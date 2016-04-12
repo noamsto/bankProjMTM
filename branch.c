@@ -14,7 +14,9 @@
 
 
 /*---------------------LOCAL BRANCHLIST-----------------*/
-branch branchList[N];
+branch* head;
+branch* tail;
+
 
 
 /*--------------------LOCAL FUNCTION DECLERATION--------*/

@@ -11,7 +11,8 @@
 
 typedef struct branches{
     branchID brID;
-    char* name;
+    char* bankName;
+    char* branchName;
     int currentClients;
     int numOfActiveLoans;
     int closeTime;
