@@ -12,7 +12,6 @@ int main(){
     int menu;
     boolean finish=FALSE;
     createBank();
-    createBankClientList();
     createBranchList();
     while(finish == FALSE){
     printf("main menu:\n"

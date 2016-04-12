@@ -4,10 +4,7 @@
  file:bank.c
  */
 
-
-
 #include "bank.h"
-
 
 void initBank(bank*);
 
@@ -22,7 +19,6 @@ bank* masterBank=NULL;
 /*initalise bank struct.*/
 void initBank(bank* masterBank){
     masterBank->balance=0;
-    masterBank->bankClients=NULL;
     masterBank->numOfActiveLoans=0;
     masterBank->numOfBranch=0;
     masterBank->numOfClients=0;
@@ -34,6 +30,7 @@ void initBank(bank* masterBank){
 void createBank(){
     masterBank=ALLOC(bank, 1);
     initBank(masterBank);
+    masterBank->ClientListHead=createBankClientList();
     getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
@@ -44,15 +41,8 @@ client* createBankClientList()
     int i=0;
     client* tempBankClientList=NULL;
     
-    tempBankClientList=ALLOC(client, MAXBANKCLIENTS);
-    
-    for(i=0; i<MAXBANKCLIENTS; i++)
-    {
-        initClient(&tempBankClientList[i]);
-    }
-    
-    /*assign the client list to the bank struct pointer.*/
-    masterBank->bankClients=tempBankClientList;
+    tempBankClientList=ALLOC(client,1);
+    tempBankClientList->next=NULL;
     return tempBankClientList;
 }
 
@@ -121,7 +111,7 @@ try deleteBankClient(accountNum acc){
     updateBankBalance(getClient->balance, REMOVE);
     updateNumOfBankClients(REMOVE);
     
-    /*ovverride deleted client with last client;*/
+    /*override deleted client with last client;*/
     *getClient=masterBank->bankClients[masterBank->numOfClients];
     
     
@@ -130,7 +120,10 @@ try deleteBankClient(accountNum acc){
 
 /*add a new client to the bank.*/
 void addNewClientToBank(client* newClient){
-    masterBank->bankClients[masterBank->numOfClients]=*newClient;
+    client *tempNext=NULL;
+    tempNext=masterBank->ClientListHead->next;
+
+	masterBank->bankClients[masterBank->numOfClients]=*newClient;
     masterBank->numOfClients++;
 }
 

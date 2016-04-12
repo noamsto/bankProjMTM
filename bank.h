@@ -22,7 +22,7 @@ typedef struct banks{
     double balance;
     double yearProfit;
     
-    client *bankClients;
+    client *ClientListHead;
 }bank;
 
 

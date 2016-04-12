@@ -23,6 +23,7 @@ typedef struct clients{
     int debt;
     int investment;
     
+    struct clients *next;
 }client;
 
 
