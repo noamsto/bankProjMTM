@@ -48,7 +48,7 @@ void createBankClientList()
     tempHead->next=tempTail;
 
 
-    CLIENTSHEAD(masterBank)->next=tempHead;
+    CLIENTSHEAD(masterBank)=tempHead;
 
     return;
 }
