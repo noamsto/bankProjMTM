@@ -62,7 +62,7 @@ void updateBranchLoan(branchID, addremove);
 branch* getBranch(branchID,branch**);
 /*enter branch ID and receive pointer to the wanted branch*/
 
-client *getBranchClient(accountNum,branchID);
+client *getBranchClient(accountNum,branchID,client**);
 /* send client account and branch ID and receive client pointer if exist*/
 
 
