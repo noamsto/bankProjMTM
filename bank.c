@@ -190,9 +190,21 @@ int isBankFull(){
 /******need testsss *******/
 int clientNumberOfBank_REC(client *head, int *biggestBalance){
 	int counter=0;
-	int nextBalance=0;
 
-	if (head==NULL){
+	if (head==NULL)
+		return 0;
+	counter+= clientNumberOfBank_REC(head->next,biggestBalance);
+	if (head->balance==*biggestBalance){
+		counter+=1;
+	}else if(head->balance>*biggestBalance){
+		counter=1;
+		*biggestBalance=head->balance;
+	}
+	return counter;
+
+
+
+	/*if (head==NULL){
 		*biggestBalance=nextBalance;
 		return 0;
 	}
@@ -206,7 +218,7 @@ int clientNumberOfBank_REC(client *head, int *biggestBalance){
 		nextBalance=head->balance;
 	}
 	*biggestBalance=nextBalance;
-	return counter;
+	return counter;*/
 }
 
 
