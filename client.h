@@ -13,8 +13,8 @@
 #define MAXNAME 20
 
 typedef struct clients{
-    char name[MAXNAME];
-    char surname[MAXNAME];
+    char* name;
+    char* surname;
     clientID cID[CLIENTIDL];
     branchID brID;
     accountNum accNum;
