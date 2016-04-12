@@ -154,7 +154,7 @@ int BankNumberOfClients(){
 /*find a client in bank Client list.*/
 client* getBankClient(accountNum acc, client** nextClient){
     client* preClient=CLIENTSHEAD(masterBank);
-    while (preClient->next!=CLIENTStAIL(masterBank))
+    while (preClient->next!=CLIENTSTAIL(masterBank))
     {
     	if (preClient->next->accNum==acc){
 
