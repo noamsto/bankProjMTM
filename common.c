@@ -14,7 +14,7 @@
 
 
 /*get string from user, check for legibility comparing to length of word and only letters.*/
-void getName(char* name , int length, char* output){
+void getName(char** name , int length, char* output){
     int i,len;
     boolean check = TRUE;       /*flag for testing input*/
     char temp[MAXSTRING];
@@ -39,7 +39,7 @@ void getName(char* name , int length, char* output){
             }
     }while(check==FALSE);
     temp[i]='\0';
-    strcpy(name, temp);
+    *name = strdup(temp);
 }
 
 /*get client id from user with 9 digits.*/

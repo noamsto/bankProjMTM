@@ -24,7 +24,7 @@ typedef enum{deposit,loan,leaveBranch} transType;
 typedef int branchID, amount, accountNum;
 typedef char clientID;
 
-void getName(char* , int, char*);
+void getName(char** , int, char*);
 /*get string from user, check for legibility comparing to length of word*/
 
 void getInt(int* num,char* output);

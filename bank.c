@@ -34,7 +34,7 @@ void initBank(bank* masterBank){
 void createBank(){
     masterBank=ALLOC(bank, 1);
     initBank(masterBank);
-    getName(masterBank->name, BANKNAMEMAX, "please enter bank name:\n");
+    getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
 

@@ -15,7 +15,7 @@
 
 typedef struct banks{
     
-    char name[BANKNAMEMAX];
+    char* name;
     int numOfBranch;
     int numOfClients;
     int numOfActiveLoans;

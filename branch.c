@@ -14,7 +14,9 @@
 
 
 /*---------------------LOCAL BRANCHLIST-----------------*/
-branch branchList[N];
+branch* head;
+branch* tail;
+
 
 
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
@@ -62,7 +64,7 @@ try addNewBranch()
         return MAX_BANK_REACHED;
     }
     /*receive data from user*/
-    getName((branchList+brNum)->name,MAXNAME,"please enter branch name:\n");
+    getName(&(branchList+brNum)->name,MAXNAME,"please enter branch name:\n");
     branchList[brNum].brID=getBranchID(NOTEXIST);
     branchList[brNum].openTime = getTime("please enter opening time (between 0-23)\n");
     branchList[brNum].closeTime = getTime("please enter closing time (between 0-23)\n");
@@ -111,7 +113,7 @@ try addNewClientToBranch()
     newClient = &temp->branchClients[temp->currentClients];
     
     /*recieve client data from user*/
-    getName(newClient->name, MAXNAME, "please enter client name:\n");
+    getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getClientID(newClient->cID);
     newClient->accNum=getAcc(NOTEXIST);
     
