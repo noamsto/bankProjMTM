@@ -383,3 +383,20 @@ branchID getBranchID(availble checkif){
     
 }
 
+void printBranchInfo()
+{
+	branchID brID;
+	branch *tempBranch;
+	brID = getBranchID(EXIST);
+	tempBranch = getBranch(brID,NOCHECK);
+	printf("Branch name: %s\n",tempBranch->branchName);
+	printf("Branch Bank name: %s\n",tempBranch->bankName);
+	printf("Branch ID : %d\n",tempBranch->brID);
+	printf("Number of clients: %d\n",tempBranch->currentClients);
+	printf("Number of loans: %d\n",tempBranch->numOfActiveLoans);
+	printf("Opening time: %d\n",tempBranch->openTime);
+	printf("Closing time: %d\n",tempBranch->closeTime);
+	printf("Branch balance: %d\n",tempBranch->balance);
+	printf("Yearly profit: %d\n",tempBranch->yearProfit);
+	printf("Do not take life too seriously.\n You will never get out of it alive\n");
+}

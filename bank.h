@@ -69,6 +69,9 @@ void deleteBank();
 
 char* getBankName();
 
+void printBankInfo();
+
+
 #endif /* bank_h */
 
 

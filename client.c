@@ -197,4 +197,20 @@ accountNum getAcc(availble checkif){
 
 }
 
+void printClientInfo()
+{
+	accountNum accNumber;
+	client *tempClient;
+	accNumber = getAcc(EXIST);
+	tempClient = getBankClient(accNumber,NOCHECK);
+	printf("Client name: %s  %s\n",tempClient->name,tempClient->surname);
+	printf("Client Bank name: %s\n",tempClient->bankName);
+	printf("Client branch ID : %d\n",tempClient->brID);
+	printf("Client account number: %d\n",tempClient->accNum);
+	printf("Client ID: %s\n",tempClient->cID);
+	printf("client balance: %d\n",tempClient->investment);
+	printf("Client debt: %d\n",tempClient->debt);
+	printf("Client's max overdraft: %d\n",tempClient->maxOverdraft);
+	printf("It takes two to lie:\n one to lie and one to listen\n");
+}
 

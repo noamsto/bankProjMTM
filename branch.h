@@ -78,6 +78,7 @@ client *getBranchClient(accountNum,branchID,client**);
 boolean checkBranchID(branchID brID);
 /*check if branch ID is used*/
 
+void printBranchInfo();
 
 
 #endif /* branch_h */

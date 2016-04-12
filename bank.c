@@ -255,3 +255,15 @@ void deleteBank(){
 char* getBankName(){
 	return masterBank->name;
 }
+
+void printBankInfo()
+{
+
+	printf("Bank name: %s\n",masterBank->name);
+	printf("Bank amount of branches: %s\n",masterBank->numOfBranch);
+	printf("Number of clients: %d\n",masterBank->numOfClients);
+	printf("Number of loans: %d\n",masterBank->numOfActiveLoans);
+	printf("Branch balance: %d\n",masterBank->balance);
+	printf("Yearly profit: %d\n",masterBank->yearProfit);
+	printf("Try not to become a man of success, but rather try to become a man of value\nAlbert Einstein\n");
+}
