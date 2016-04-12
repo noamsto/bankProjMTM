@@ -184,17 +184,41 @@ int isBankFull(){
     return TRUE;
 }
 
-
+/* check Recursively which are the client/s with biggest balance and return their number and
+ * biggest balance.
+ */
+/******need testsss *******/
 int clientNumberOfBank_REC(client *head, int *biggestBalance){
+	int counter=0;
 
-	if (head==CLIENTSHEAD(masterBank) && head->next==CLIENTSTAIL(masterBank)){
-		*biggestBalance=0;
+	if (head==NULL)
+		return 0;
+	counter+= clientNumberOfBank_REC(head->next,biggestBalance);
+	if (head->balance==*biggestBalance){
+		counter+=1;
+	}else if(head->balance>*biggestBalance){
+		counter=1;
+		*biggestBalance=head->balance;
+	}
+	return counter;
+
+
+
+	/*if (head==NULL){
+		*biggestBalance=nextBalance;
 		return 0;
 	}
-	if (head->next==CLIENTSTAIL(masterBank)){
+	nextBalance= head->balance;
+	counter+= clientNumberOfBank_REC(head->next,&nextBalance);
 
+	if (head->balance==nextBalance){
+		counter++;
+	}else if(head->balance>nextBalance){
+		counter=1;
+		nextBalance=head->balance;
 	}
-
+	*biggestBalance=nextBalance;
+	return counter;*/
 }
 
 
