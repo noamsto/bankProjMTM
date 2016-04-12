@@ -125,7 +125,7 @@ try addNewClientToBranch()
     return SUCCESS;
 }
 
-//#ifdef Bank1
+//#ifdef Bank_hamelim
 int clientNumberWithGivenBalance()
 {
     int clientsNumber=0;
@@ -149,6 +149,29 @@ int clientNumberWithGivenBalance()
     return clientsNumber;
 }
 //#endif
+
+
+void clientNumberWithBiggerLoansThanBalance(){
+	int numberOfClients=0;
+	branch *tempBranch;
+	client *tempClient;
+	branchID brID;
+	brID = getBranchID(EXIST);
+	tempBranch = getBranch(brID,NOCHECK);
+	tempClient = tempBranch->clientList.head->next;
+	while(tempClient != tempBranch->clientList.tail){
+		if(tempClient->balance < tempClient->debt)
+			numberOfClients++;
+	tempClient = tempClient->next;
+	}
+	printf("The amount of clients in branch number : %d "
+			"\n with debt bigger then there balance is : %d\n",tempBranch->brID,numberOfClients);
+}
+
+void clientNumberWithBiggerLoansThanBalance_rec(){
+
+
+}
 
 
 try deleteAllBranchClients(branchID id)

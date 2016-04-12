@@ -41,6 +41,15 @@ try addNewClientToBranch();
 int clientNumberWithGivenBalance();
 /*get branch ID and balance from user. returns amount of clients with higher balance*/
 
+void clientNumberWithBiggerLoansThanBalance();
+/* get branch ID from user. Finds amount of clients with bigger loans then they're balance. */
+
+void clientNumberWithBiggerLoansThanBalance_rec();
+/* get branch ID from user. Finds amount of clients with bigger loans then they're balance. function works recursive */
+
+void printClientAccountsNumberAndBalance();
+
+
 try deleteAllBranchClients(branchID);
 /*delete all clients of a certain branch. returns whether the action succeeded*/
 
@@ -68,5 +77,7 @@ client *getBranchClient(accountNum,branchID,client**);
 
 boolean checkBranchID(branchID brID);
 /*check if branch ID is used*/
+
+
 
 #endif /* branch_h */
