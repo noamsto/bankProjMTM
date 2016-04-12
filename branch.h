@@ -59,7 +59,7 @@ try updateBranchBalance(branchID, amount,addremove);
 void updateBranchLoan(branchID, addremove);
 /*update amount of loans from branch*/
 
-branch* getBranch(branchID);
+branch* getBranch(branchID,branch**);
 /*enter branch ID and receive pointer to the wanted branch*/
 
 client *getBranchClient(accountNum,branchID);
