@@ -68,7 +68,7 @@ try addNewBranch()
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
-    newBranch->clientList = createBranchClientList();    /*create the client list of the branch*/
+    createBranchClientList(&(newBranch->clientList));    /*create the client list of the branch*/
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
     return SUCCESS;
 }
@@ -119,8 +119,8 @@ try addNewClientToBranch()
     newClient->brID=brID;
     temp->currentClients++;
     addNewClientToBank(newClient);
-    newClient->next = temp->clientList->head->next;/*-----------------------------------------------------------------------------------------*/
-    temp->clientList->head->next = newClient;
+    newClient->next = temp->clientList.head->next;
+    temp->clientList.head->next = newClient;
     printf("Add new client finished successfully\n");
     return SUCCESS;
 }
@@ -140,7 +140,7 @@ int clientNumberWithGivenBalance()
     brID = getBranchID(EXIST);
     tempBranch = getBranch(brID,NOCHECK);
     getInt(&balance, "please enter balance:\n");
-    tempClient = tempBranch->clientList->head->next;
+    tempClient = tempBranch->clientList.head->next;
     while(tempClient!=NULL){
         if(tempClient->balance > balance)
             clientsNumber++;
@@ -159,7 +159,7 @@ try deleteAllBranchClients(branchID id)
     }
     temp = getBranch(id,NOCHECK);
     while(temp->currentClients>0){
-        deleteClient(temp->clientList->head->next->accNum);
+        deleteClient(temp->clientList.head->next->accNum);
     }
     
     updateBranchBalance(id,0,REMOVE);
@@ -197,17 +197,17 @@ try deleteBranchClient(branchID brID,accountNum acc)
 
 try deleteBranch(branchID brID)
 {
-    branch *deleteB=NULL,previus;
+    branch *deleteB=NULL,*previus;
     if(brID==NOCHECK)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
-    deleteB=getBranch(brID,previus);/*get the pointer to the branch*/
+    deleteB=getBranch(brID,&previus);/*get the pointer to the branch*/
     previus->next = deleteB->next;
     deleteAllBranchClients(brID);
     FREE(deleteB->bankName);
     FREE(deleteB->branchName);
-    FREE(deleteB->clientList->head);
-    FREE(deleteB->clientList->tail);
+    FREE(deleteB->clientList.head);
+    FREE(deleteB->clientList.tail);
     FREE(deleteB);
     updateNumOfBranches(REMOVE);  /* decrease ammount of branches in bank*/
     return SUCCESS;
@@ -218,7 +218,7 @@ void deleteAllBranches()
     int numberOfBranches;
     numberOfBranches = getNumOfBranches();
     while(numberOfBranches>0)
-        deleteBranch(head->next);
+        deleteBranch(head->next->brID);
 }
 
 /*--------------------------- BRANCH INFO UPDATE -------------------------*/
@@ -295,10 +295,10 @@ client* getBranchClient(accountNum acc, branchID brID, client **previus)
     branch *tempBranch=NULL;
     client *tempClient;
 
-    tempBranch=getBranch(brID);
-    tempClient = tempBranch->clientList->head;
+    tempBranch=getBranch(brID,NOCHECK);
+    tempClient = tempBranch->clientList.head;
 
-    while(tempClient->next != tempBranch->clientList->tail){
+    while(tempClient->next != tempBranch->clientList.tail){
     	if(tempClient->next->accNum == acc){
     		if(previus != NULL)
     			*previus = tempClient;

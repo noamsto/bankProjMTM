@@ -32,7 +32,7 @@ branch* createBranchList();
 try addNewBranch();
 /*add new branch to list*/
 
-client* createBranchClientList();
+void createBranchClientList(clientsLinkedList*);
 /*create and init 'L' size client list. returns client list pointer*/
 
 try addNewClientToBranch();
