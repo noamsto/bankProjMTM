@@ -17,8 +17,6 @@
 branch* head;
 branch* tail;
 
-
-
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
@@ -31,12 +29,11 @@ int getTime(char*); /*get hours from user.*/
 
 branch* createBranchList()
 {
-    /*branch list already exist*/
-    int i=0;
-    for (i=0; i<N; i++) {/*init every branch in the list*/
-        initBranch(&branchList[i]);
-    }
-    return NULL;
+    head = ALLOC(branch,1);
+    tail = ALLOC(branch,1);
+    head->next=tail;
+    tail->next=NULL;
+    return head;
 }
 
 

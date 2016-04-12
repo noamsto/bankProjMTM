@@ -19,7 +19,8 @@ typedef struct branches{
     int openTime;
     int balance;
     int yearProfit;
-    client *branchClients;
+    clientsLinkedList clientList;
+    struct branches *next;
     
 }branch;
 
