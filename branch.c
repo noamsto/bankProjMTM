@@ -60,6 +60,11 @@ try addNewBranch()
         printf("bank has maximum number of branches.\n");
         return MAX_BANK_REACHED;
     }
+    printf("Add new branch start:\n");
+    /*add new branch in the beginning of the list*/
+    newBranch = ALLOC(branch,1);
+    newBranch->next = head->next;
+    head->next = newBranch;
     /*receive data from user*/
     getName(&(branchList+brNum)->name,MAXNAME,"please enter branch name:\n");
     branchList[brNum].brID=getBranchID(NOTEXIST);
