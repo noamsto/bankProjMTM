@@ -67,6 +67,8 @@ int isBankFull();
 
 void deleteBank();
 
+char* getBankName();
+
 #endif /* bank_h */
 
 

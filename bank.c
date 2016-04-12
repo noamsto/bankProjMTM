@@ -48,7 +48,7 @@ void createBankClientList()
     tempHead->next=tempTail;
 
 
-    CLIENTSHEAD(masterBank)->next=tempHead;
+    CLIENTSHEAD(masterBank)=tempHead;
 
     return;
 }
@@ -250,4 +250,8 @@ void deleteBank(){
     FREE(CLIENTSHEAD(masterBank));
     FREE(CLIENTSTAIL(masterBank));
     FREE(masterBank);
+}
+
+char* getBankName(){
+	return masterBank->name;
 }

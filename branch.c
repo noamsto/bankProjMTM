@@ -64,7 +64,7 @@ try addNewBranch()
     head->next = newBranch;
     /*receive data from user*/
     getName(&newBranch->bankName,MAXNAME,"please enter branch name:\n");
-    getName(&newBranch->bankName,MAXNAME,"please enter branch name:\n");
+    newBranch->bankName = getBankName();
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
@@ -112,6 +112,7 @@ try addNewClientToBranch()
     /*receive client data from user*/
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
+    newClient->bankName = temp->bankName;
     getClientID(newClient->cID);
     newClient->accNum=getAcc(NOTEXIST);
     
