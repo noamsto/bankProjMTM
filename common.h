@@ -12,6 +12,10 @@
 #define NOCHECK 0
 #define CLIENTIDL 9
 
+typedef struct linkedList{
+	client *head;
+	client *tail;
+}clientsLinkedList;
 
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;

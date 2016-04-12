@@ -30,20 +30,26 @@ void initBank(bank* masterBank){
 void createBank(){
     masterBank=ALLOC(bank, 1);
     initBank(masterBank);
-    masterBank->ClientListHead=createBankClientList();
+    masterBank->clientListHead=createBankClientList();
     getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
 
-/*create and init M size client list*/
-client* createBankClientList()
+/*create and init client list*/
+void createBankClientList()
 {
     int i=0;
-    client* tempBankClientList=NULL;
-    
-    tempBankClientList=ALLOC(client,1);
-    tempBankClientList->next=NULL;
-    return tempBankClientList;
+    client* tempHead=NULL, tempTail=NULL;
+    tempHead=ALLOC(client,1);
+    tempHead->next=NULL;
+
+    tempTail=ALLOC(client,1);
+    tempTail->next=NULL;
+
+    masterBank->clientsList->head=tempHead;
+    masterBank->clientsList->tail=tempTail;
+
+    return;
 }
 
 /*********_Bank_Creation_Functions_END_******************/
@@ -99,20 +105,20 @@ void updateNumOfBankClients(addremove REMOVE){
 
 /*delete a client from the bank.*/
 try deleteBankClient(accountNum acc){
-    client *getClient=NULL;
-    
+    client *getPreClient=NULL, *getNextClient=NULL,
+    		*clientToBeDeleted=NULL;
     /*find bank client;*/
-    getClient=getBankClient(acc);
-    if (!getClient) {
+    getPreClient=getBankClient(acc, &getNextClient);
+    if (getPreClient==NULL && getNextClient==NULL) {
         return CLIENTNOTFOUND;
     }
-    
+    clientToBeDeleted=getPreClient->next;
+
     /*update bank balance / client size*/
-    updateBankBalance(getClient->balance, REMOVE);
+    updateBankBalance(getPreClient->next->balance, REMOVE);
     updateNumOfBankClients(REMOVE);
     
-    /*override deleted client with last client;*/
-    *getClient=masterBank->bankClients[masterBank->numOfClients];
+    /*delete the Client*/
     
     
     return SUCCESS;
@@ -121,9 +127,11 @@ try deleteBankClient(accountNum acc){
 /*add a new client to the bank.*/
 void addNewClientToBank(client* newClient){
     client *tempNext=NULL;
-    tempNext=masterBank->ClientListHead->next;
+    if (masterBank->clientListHead->next!=NULL)
+    	tempNext=masterBank->clientListHead->next->next;
+    masterBank->clientListHead->next=newClient;
+    newClient->next=tempNext;
 
-	masterBank->bankClients[masterBank->numOfClients]=*newClient;
     masterBank->numOfClients++;
 }
 
