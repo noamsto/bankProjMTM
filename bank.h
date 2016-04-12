@@ -33,7 +33,7 @@ void createBankClientList();
 
 
 /*return bank amount of clients.*/
-int clientNumberOfBank();
+int BankNumberOfClients();
 
 
 /*find a client in bankClient List.*/

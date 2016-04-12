@@ -145,7 +145,7 @@ void addNewClientToBank(client* newClient){
 
 
 /*return number clients of bank.*/
-int clientNumberOfBank(){
+int BankNumberOfClients(){
     return masterBank->numOfClients;
 }
 
