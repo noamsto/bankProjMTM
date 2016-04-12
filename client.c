@@ -58,7 +58,7 @@ void deleteClient(accountNum acc){
         /*get client acc from user*/
         acc=getAcc(EXIST);
     }
-    deleteC=getBankClient(acc);
+    deleteC=getBankClient(acc,GETSPECIFIC);
     
     /*delete client from branch*/
     echo=deleteBranchClient(deleteC->brID,acc);
@@ -80,7 +80,7 @@ try updateClientBalance(accountNum acc,amount money,addremove remove){
     
     
     /*find client in bank*/
-    getClient=getBankClient(acc);
+    getClient=getBankClient(acc,GETSPECIFIC);
     if (!getClient) {
         return CLIENTNOTFOUND;
     }else{
@@ -97,7 +97,7 @@ try updateClientBalance(accountNum acc,amount money,addremove remove){
     }
     
     /*find client in branch*/
-    getClient=getBranchClient(acc, getClient->brID);
+    getClient=getBranchClient(acc, getClient->brID,GETSPECIFIC);
     if (!getClient) {
         printf("Client not belong in any branch\n");
     }else{
@@ -140,10 +140,10 @@ void updateClientDebt(accountNum acc, amount money, addremove add){
     client* getClient=NULL;
     
     
-    getClient=getBankClient(acc);
+    getClient=getBankClient(acc,GETSPECIFIC);
     getClient->debt+=money;
     
-    getClient=getBranchClient(acc,getClient->brID);
+    getClient=getBranchClient(acc,getClient->brID,GETSPECIFIC);
     if (getClient)
         getClient->debt+=money;
 }
@@ -179,7 +179,7 @@ accountNum getAcc(availble checkif){
     do{
         getInt(&acc,"please enter client account number\n");
         
-        if(getBankClient(acc)){
+        if(getBankClient(acc,GETSPECIFIC)){
             if(checkif==EXIST){
                 flag = TRUE;
             }else{
