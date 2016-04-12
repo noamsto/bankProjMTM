@@ -15,6 +15,7 @@
 typedef struct clients{
     char* name;
     char* surname;
+    char* bankName;
     clientID cID[CLIENTIDL];
     branchID brID;
     accountNum accNum;
@@ -27,7 +28,10 @@ typedef struct clients{
 }client;
 
 
-
+typedef struct linkedList{
+	client *head;
+	client *tail;
+}clientsLinkedList;
 
 /*init client struct*/
 void initClient(client*);

@@ -29,7 +29,7 @@ typedef struct banks{
 
 
 /*create and init M size client list. */
-client* createBankClientList();
+void createBankClientList();
 
 
 /*return bank amount of clients.*/
@@ -37,7 +37,7 @@ int clientNumberOfBank();
 
 
 /*find a client in bankClient List.*/
-client *getBankClient(accountNum);
+client *getBankClient(accountNum,client**);
 
 /*update the bank balance.*/
 void updateBankBalance(amount ,addremove);

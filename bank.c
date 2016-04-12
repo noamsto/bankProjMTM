@@ -8,7 +8,8 @@
 
 void initBank(bank*);
 
-
+#define CLIENTSHEAD(STRUCT) STRUCT->clientsList.head
+#define CLIENTSTAIL(STRUCT) STRUCT->clientsList.tail
 /*********_Bank_Creation_Functions_START_******************/
 
 
@@ -16,7 +17,7 @@ void initBank(bank*);
 bank* masterBank=NULL;
 
 
-/*initalise bank struct.*/
+/*Initialize bank struct.*/
 void initBank(bank* masterBank){
     masterBank->balance=0;
     masterBank->numOfActiveLoans=0;
@@ -30,7 +31,7 @@ void initBank(bank* masterBank){
 void createBank(){
     masterBank=ALLOC(bank, 1);
     initBank(masterBank);
-    masterBank->clientListHead=createBankClientList();
+    createBankClientList();
     getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
@@ -38,16 +39,16 @@ void createBank(){
 /*create and init client list*/
 void createBankClientList()
 {
-    int i=0;
-    client* tempHead=NULL, tempTail=NULL;
-    tempHead=ALLOC(client,1);
-    tempHead->next=NULL;
+    client* tempHead=NULL , *tempTail=NULL;
 
     tempTail=ALLOC(client,1);
     tempTail->next=NULL;
 
-    masterBank->clientsList->head=tempHead;
-    masterBank->clientsList->tail=tempTail;
+    tempHead=ALLOC(client,1);
+    tempHead->next=tempTail;
+
+
+    CLIENTSHEAD(masterBank)->next=tempHead;
 
     return;
 }
@@ -107,29 +108,34 @@ void updateNumOfBankClients(addremove REMOVE){
 try deleteBankClient(accountNum acc){
     client *getPreClient=NULL, *getNextClient=NULL,
     		*clientToBeDeleted=NULL;
+
     /*find bank client;*/
     getPreClient=getBankClient(acc, &getNextClient);
-    if (getPreClient==NULL && getNextClient==NULL) {
+
+    if (getPreClient==NULL) {
         return CLIENTNOTFOUND;
     }
+
     clientToBeDeleted=getPreClient->next;
 
     /*update bank balance / client size*/
-    updateBankBalance(getPreClient->next->balance, REMOVE);
+    updateBankBalance(clientToBeDeleted->balance, REMOVE);
     updateNumOfBankClients(REMOVE);
     
     /*delete the Client*/
+    getPreClient->next=getNextClient;
     
-    
+    FREE(clientToBeDeleted);
     return SUCCESS;
 }
 
 /*add a new client to the bank.*/
 void addNewClientToBank(client* newClient){
     client *tempNext=NULL;
-    if (masterBank->clientListHead->next!=NULL)
-    	tempNext=masterBank->clientListHead->next->next;
-    masterBank->clientListHead->next=newClient;
+
+    tempNext = CLIENTSHEAD(masterBank)->next;
+
+    CLIENTSHEAD(masterBank)->next=newClient;
     newClient->next=tempNext;
 
     masterBank->numOfClients++;
@@ -146,14 +152,18 @@ int clientNumberOfBank(){
 
 
 /*find a client in bank Client list.*/
-client* getBankClient(accountNum acc){
-    int i=0;
-    
-    for (i=0; i<masterBank->numOfClients; i++)
+client* getBankClient(accountNum acc, client** nextClient){
+    client* preClient=CLIENTSHEAD(masterBank);
+    while (preClient->next!=CLIENTStAIL(masterBank))
     {
-        if (masterBank->bankClients[i].accNum==acc ) {
-            return &(masterBank->bankClients[i]);
-        }
+    	if (preClient->next->accNum==acc){
+
+    		if (nextClient==GETSPECIFIC){
+    			return preClient->next;
+    		}
+    		*nextClient=preClient->next;
+    		return preClient;
+    	}
     }
     return NULL;
 }
@@ -174,11 +184,46 @@ int isBankFull(){
     return TRUE;
 }
 
+
+int clientNumberOfBank_REC(client *head, int *biggestBalance){
+
+	if (head==CLIENTSHEAD(masterBank) && head->next==CLIENTSTAIL(masterBank)){
+		*biggestBalance=0;
+		return 0;
+	}
+	if (head->next==CLIENTSTAIL(masterBank)){
+
+	}
+
+}
+
+
+/* check which are the client/s with biggest balance and return their number and
+ * biggest balance.
+ */
+int clientNumberOfBank(int *biggestBalance){
+	client* current=CLIENTSHEAD(masterBank);
+	int counter=0;
+	*biggestBalance=0;
+
+	while (current->next!=CLIENTSTAIL(masterBank)){
+		if(*biggestBalance<=current->balance){
+			counter++;
+			*biggestBalance=current->balance;
+		}
+		current=current->next;
+	}
+	return counter;
+
+}
+
 /*********_Information_Functions_END_******************/
+
 
 /* Delete the bank*/
 void deleteBank(){
     deleteAllBranches();
-    FREE(masterBank->bankClients);
+    FREE(CLIENTSHEAD(masterBank));
+    FREE(CLIENTSTAIL(masterBank));
     FREE(masterBank);
 }
