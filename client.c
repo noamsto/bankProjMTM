@@ -202,10 +202,9 @@ accountNum getAcc(availble checkif){
 void printClientInfo()
 {
 	accountNum accNumber;
-	client *tempClient,*branchClient;
+	client *tempClient;
 	accNumber = getAcc(EXIST);
 	tempClient = getBankClient(accNumber,NOCHECK);
-	branchClient = getBranchClient(tempClient->accNum,tempClient->brID,NOCHECK);
 	printf("Client name: %s  %s\n",tempClient->name,tempClient->surname);
 	printf("Client Bank name: %s\n",tempClient->bankName);
 	printf("Client branch ID : %d\n",tempClient->brID);

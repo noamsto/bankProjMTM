@@ -10,6 +10,7 @@
 void mainMenu();
 void deleteMenu();
 void infoMenu();
+void transactionAndReports();
 /*testing code.*/
 int main(){
     createBank();
@@ -30,13 +31,10 @@ void mainMenu(){
 	    printf("main menu:\n"
 	           "1: add new branch\n"
 	           "2: add new client to branch\n"
-	           "3: deposit money to client\n"
-	           "4: loan to client\n"
-	           "5: client with given balance\n"
-	           "6: information\n"
+	           "3: transaction\n"
+	           "4: check info\n"
 	           "7: delete branch/client\n"
-	           "8: exit\n"
-	           "9: recursion\n");
+	           "8: exit\n");
 	        menu = getchar();
 	        getchar();
 	        switch (menu) {
@@ -47,15 +45,9 @@ void mainMenu(){
 	                addNewClientToBranch();
 	                break;
 	            case '3':
-	                depositeMoneyToClientAccount();
+	                transactionAndReports();
 	                break;
 	            case '4':
-	                loanToClient();
-	                break;
-	            case '5':
-	                printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
-	                break;
-	            case '6':
 	            	infoMenu();
 	                break;
 	            case '7':
