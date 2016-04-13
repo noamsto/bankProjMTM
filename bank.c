@@ -130,11 +130,14 @@ try deleteBankClient(accountNum acc){
 }
 
 /*add a new client to the bank.*/
-void addNewClientToBank(client* newClient){
-    client *tempNext=NULL;
+void addNewClientToBank(client* createdClient){
+    client *tempNext=NULL, *newClient=NULL;
+
+    newClient=ALLOC(client,1);
+
+    *newClient=*createdClient;
 
     tempNext = CLIENTSHEAD(masterBank)->next;
-
     CLIENTSHEAD(masterBank)->next=newClient;
     newClient->next=tempNext;
 
@@ -153,17 +156,20 @@ int BankNumberOfClients(){
 
 /*find a client in bank Client list.*/
 client* getBankClient(accountNum acc, client** nextClient){
-    client* preClient=CLIENTSHEAD(masterBank);
-    while (preClient->next!=CLIENTSTAIL(masterBank))
+    client* preClient=CLIENTSHEAD(masterBank), *tail=CLIENTSTAIL(masterBank);
+
+
+    while (preClient->next!=tail)
     {
     	if (preClient->next->accNum==acc){
 
     		if (nextClient==GETSPECIFIC){
     			return preClient->next;
     		}
-    		*nextClient=preClient->next;
+    		*nextClient=preClient->next->next;
     		return preClient;
     	}
+    	preClient=preClient->next;
     }
     return NULL;
 }
