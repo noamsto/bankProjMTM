@@ -84,7 +84,7 @@ try updateClientBalance(accountNum acc,amount money,addremove remove){
     if (!getClient) {
         return CLIENTNOTFOUND;
     }else{
-        if (remove) {   /*add or remove money to his balance*/
+        if (remove==REMOVE) {   /*add or remove money to his balance*/
             getClient->balance-=money;
         }else{
             getClient->balance+=money;
@@ -129,7 +129,8 @@ try depositeMoneyToClientAccount() {
         printf("error: client not present in system.\n");
         return FAIL;
     }
-    printf("deposit finished succssefuly.\n");
+    else
+    	printf("deposit finished succssefuly.\n");
     return SUCCESS;
 }
 
@@ -210,18 +211,9 @@ void printClientInfo()
 	printf("Client branch ID : %d\n",tempClient->brID);
 	printf("Client account number: %d\n",tempClient->accNum);
 	printf("Client ID: %s\n",tempClient->cID);
-	printf("client balance: %d\n",tempClient->investment);
+	printf("client balance: %d\n",tempClient->balance);
 	printf("Client debt: %d\n",tempClient->debt);
 	printf("Client's max overdraft: %d\n",tempClient->maxOverdraft);
 	printf("It takes two to lie:\n one to lie and one to listen\n\n");
-	printf("Client name: %s  %s\n",branchClient->name,tempClient->surname);
-		printf("Client Bank name: %s\n",branchClient->bankName);
-		printf("Client branch ID : %d\n",branchClient->brID);
-		printf("Client account number: %d\n",branchClient->accNum);
-		printf("Client ID: %s\n",branchClient->cID);
-		printf("client balance: %d\n",branchClient->investment);
-		printf("Client debt: %d\n",branchClient->debt);
-		printf("Client's max overdraft: %d\n",branchClient->maxOverdraft);
-		printf("It takes two to lie:\n one to lie and one to listen\n");
 }
 
