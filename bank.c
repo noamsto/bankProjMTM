@@ -269,7 +269,7 @@ void printBankInfo()
 	printf("Bank amount of branches: %d\n",masterBank->numOfBranch);
 	printf("Number of clients: %d\n",masterBank->numOfClients);
 	printf("Number of loans: %d\n",masterBank->numOfActiveLoans);
-	printf("Branch balance: %g\n",masterBank->balance);
+	printf("Bank balance: %g\n",masterBank->balance);
 	printf("Yearly profit: %g\n",masterBank->yearProfit);
 	printf("Try not to become a man of success, but rather try to become a man of value\nAlbert Einstein\n");
 }
