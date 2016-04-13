@@ -60,8 +60,7 @@ try addNewBranch()
     printf("Add new branch start:\n");
     /*add new branch in the beginning of the list*/
     newBranch = ALLOC(branch,1);
-    newBranch->next = head->next;
-    head->next = newBranch;
+    initBranch(newBranch);
     /*receive data from user*/
     getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
@@ -70,6 +69,9 @@ try addNewBranch()
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
     createBranchClientList(&(newBranch->clientList));    /*create the client list of the branch*/
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
+
+    newBranch->next = head->next;
+    head->next = newBranch;
     return SUCCESS;
 }
 
@@ -207,7 +209,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     updateBranchBalance(tempClient->brID,tempClient->balance, REMOVE);
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
-    beforeClient->next = tempBranch->next;
+    beforeClient->next = tempClient->next;
     /*delete all clients fields*/
     FREE(tempClient->name);
     FREE(tempClient->surname);
@@ -398,5 +400,5 @@ void printBranchInfo()
 	printf("Closing time: %d\n",tempBranch->closeTime);
 	printf("Branch balance: %d\n",tempBranch->balance);
 	printf("Yearly profit: %d\n",tempBranch->yearProfit);
-	printf("Do not take life too seriously.\n You will never get out of it alive\n");
+	printf("\n\"Do not take life too seriously.\n You will never get out of it alive\"\n\n");
 }
