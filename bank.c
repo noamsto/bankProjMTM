@@ -44,12 +44,12 @@ void createBankClientList()
     tempTail=ALLOC(client,1);
     tempTail->next=NULL;
 
+
     tempHead=ALLOC(client,1);
     tempHead->next=tempTail;
 
-
     CLIENTSHEAD(masterBank)=tempHead;
-
+    CLIENTSTAIL(masterBank)=tempTail;
     return;
 }
 
@@ -260,10 +260,10 @@ void printBankInfo()
 {
 
 	printf("Bank name: %s\n",masterBank->name);
-	printf("Bank amount of branches: %s\n",masterBank->numOfBranch);
+	printf("Bank amount of branches: %d\n",masterBank->numOfBranch);
 	printf("Number of clients: %d\n",masterBank->numOfClients);
 	printf("Number of loans: %d\n",masterBank->numOfActiveLoans);
-	printf("Branch balance: %d\n",masterBank->balance);
-	printf("Yearly profit: %d\n",masterBank->yearProfit);
+	printf("Branch balance: %g\n",masterBank->balance);
+	printf("Yearly profit: %g\n",masterBank->yearProfit);
 	printf("Try not to become a man of success, but rather try to become a man of value\nAlbert Einstein\n");
 }

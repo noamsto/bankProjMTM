@@ -63,7 +63,7 @@ try addNewBranch()
     newBranch->next = head->next;
     head->next = newBranch;
     /*receive data from user*/
-    getName(&newBranch->bankName,MAXNAME,"please enter branch name:\n");
+    getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
