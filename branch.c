@@ -168,7 +168,7 @@ void clientNumberWithBiggerLoansThanBalance(){
 	tempClient = tempClient->next;
 	}
 	printf("The amount of clients in branch number : %d "
-			"\n with debt bigger then there balance is : %d\n",tempBranch->brID,numberOfClients);
+			"\n with debt bigger then they're balance is : %d\n",tempBranch->brID,numberOfClients);
 }
 
 void clientNumberWithBiggerLoansThanBalance_rec(){

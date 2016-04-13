@@ -116,3 +116,49 @@ void infoMenu(){
 			}
 		}
 }
+
+void transactionAndReports(){
+	int subMenu;
+		boolean finish=FALSE;
+		while(finish == FALSE){
+			printf( "1: deposit money to client\n"
+					"2: loan money to client\n"
+					"3: biggest balance in bank\n"
+					"4: biggest balance in bank (rec)\n"
+					"5: number of clients with bigger loans\n"
+					"6: number of clients with bigger loans (rec)\n"
+					"7: number of clients with given balance\n"
+					"8: exit\n");
+			subMenu = getchar();
+			getchar();
+			switch(subMenu){
+				case '1':
+				   depositeMoneyToClientAccount();
+				   break;
+				case '2':
+				   loanToClient();
+				   break;
+				case '3':
+					//clientNumberOfBank();
+					break;
+				case '4':
+					//clientNumberOfBank_REC(client *head, int *biggestBalance);
+					break;
+				case '5':
+					clientNumberWithBiggerLoansThanBalance();
+					break;
+				case '6':
+					clientNumberWithBiggerLoansThanBalance_rec();
+					break;
+				case '7':
+				   printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
+				   break;
+				case '8':
+					finish=TRUE;
+					break;
+				default:
+					printf("the number is not in the menu.\n try again\n");
+					break;
+				}
+			}
+}
