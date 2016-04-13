@@ -253,7 +253,7 @@ try updateBranchBalance(branchID brID, amount am,addremove remove)
 {
     branch *tempBranch;
     tempBranch = getBranch(brID,NOCHECK);
-    if (tempBranch!=NULL){/*if branch not found*/
+    if (tempBranch==NULL){/*if branch not found*/
         printf("branch not found.\n");
         return BRANCHNOTFOUND;
     }
