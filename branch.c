@@ -236,7 +236,6 @@ try deleteBranchClient(branchID brID,accountNum acc)
     /*delete all clients fields*/
     FREE(tempClient->name);
     FREE(tempClient->surname);
-    FREE(tempClient->bankName);
     beforeClient->next = tempClient->next;
     FREE(tempClient);
     tempBranch->currentClients--;
