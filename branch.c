@@ -70,7 +70,7 @@ try addNewBranch()
     initBranch(newBranch);
     /*receive data from user*/
     getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
-    newBranch->bankName = getBankName();
+    newBranch->bankName = strdup(getBankName());
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
@@ -122,7 +122,7 @@ try addNewClientToBranch()
     initClient(newClient);
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
-    newClient->bankName = temp->bankName;
+    newClient->bankName = strdup(temp->bankName);
     getClientID(newClient->cID);
     newClient->accNum=getAcc(NOTEXIST);
     
@@ -233,11 +233,11 @@ try deleteBranchClient(branchID brID,accountNum acc)
     updateBranchBalance(tempClient->brID,tempClient->balance, REMOVE);
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
-    beforeClient->next = tempClient->next;
     /*delete all clients fields*/
     FREE(tempClient->name);
     FREE(tempClient->surname);
     FREE(tempClient->bankName);
+    beforeClient->next = tempClient->next;
     FREE(tempClient);
     tempBranch->currentClients--;
     
@@ -252,12 +252,12 @@ try deleteBranch(branchID brID)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
     deleteB=getBranch(brID,&previus);/*get the pointer to the branch*/
-    previus->next = deleteB->next;
     deleteAllBranchClients(brID);
     FREE(deleteB->bankName);
     FREE(deleteB->branchName);
     FREE(deleteB->clientList.head);
     FREE(deleteB->clientList.tail);
+    previus->next = deleteB->next;
     FREE(deleteB);
     updateNumOfBranches(REMOVE);  /* decrease ammount of branches in bank*/
     return SUCCESS;
