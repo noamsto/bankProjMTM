@@ -28,7 +28,7 @@ void mainMenu(){
 	int menu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
-	    printf("main menu:\n"
+	    printf("\nmain menu:\n"
 	           "1: add new branch\n"
 	           "2: add new client to branch\n"
 	           "3: transaction\n"
@@ -68,7 +68,7 @@ void mainMenu(){
 
 void deleteMenu(){
 	int subMenu;
-	printf("c: for client enter \n"
+	printf("\nc: for client enter \n"
 		   "b: for branch enter \n"
 		   "else: back to menu\n");
 	subMenu = getchar();
@@ -83,7 +83,7 @@ void infoMenu(){
 	int subMenu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
-		printf( "1: print bank info\n"
+		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
 				"4: back to main menu\n");
@@ -113,14 +113,13 @@ void transactionAndReports(){
 	int subMenu;
 		boolean finish=FALSE;
 		while(finish == FALSE){
-			printf( "1: deposit money to client\n"
+			printf( "\n1: deposit money to client\n"
 					"2: loan money to client\n"
 					"3: biggest balance in bank\n"
-					"4: biggest balance in bank (rec)\n"
-					"5: number of clients with bigger loans\n"
-					"6: number of clients with bigger loans (rec)\n"
-					"7: number of clients with given balance\n"
-					"8: exit\n");
+					"4: number of clients with bigger loans\n"
+					"5: number of clients with bigger loans (rec)\n"
+					"6: number of clients with given balance\n"
+					"7: exit\n");
 			subMenu = getchar();
 			getchar();
 			switch(subMenu){
@@ -131,21 +130,18 @@ void transactionAndReports(){
 				   loanToClient();
 				   break;
 				case '3':
-					clientNumberOfBank();
+					clientNumberOfBank_print();
 					break;
 				case '4':
-					//clientNumberOfBank_REC(client * CLIENTSHEAD(masterBank), int *biggestBalance);
-					break;
-				case '5':
 					clientNumberWithBiggerLoansThanBalance();
 					break;
-				case '6':
+				case '5':
 					clientNumberWithBiggerLoansThanBalance_rec();
 					break;
-				case '7':
+				case '6':
 				   printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
 				   break;
-				case '8':
+				case '7':
 					finish=TRUE;
 					break;
 				default:

@@ -8,6 +8,11 @@
 
 void initBank(bank*);
 
+#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
+#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
+
+int clientNumberOfBank_REC(client *head, amount *biggestBalance);
+
 
 /*********_Bank_Creation_Functions_START_******************/
 
@@ -189,12 +194,28 @@ int isBankFull(){
     return TRUE;
 }
 
+/*print the number of richest client and the bigget balance*/
+void clientNumberOfBank_print(){
+	int counter;
+	amount maxBalance=0;
+	/*the recursive calculation of the number of richest client and the biggest balance*/
+	counter = clientNumberOfBank_REC(CLIENTSHEAD(masterBank), &maxBalance);
+	printf("Recursive Check\n");
+	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
+
+	/*the Iterative calculation of the number of richest client and the biggest balance*/
+	printf("Iterative Check\n");
+	counter = clientNumberOfBank(&maxBalance);
+	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
+}
+
 /* check Recursively which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
 /******need testsss *******/
-int clientNumberOfBank_REC(client *head, int *biggestBalance){
-	int counter=0, maxBalance=0;
+int clientNumberOfBank_REC(client *head, amount *biggestBalance){
+	int counter=0;
+	amount maxBalance=0;
 
 	if (head==NULL){
 		*biggestBalance=0;
@@ -217,10 +238,10 @@ int clientNumberOfBank_REC(client *head, int *biggestBalance){
 /* check which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
-int clientNumberOfBank(){
+int clientNumberOfBank(amount *biggestBalnce){
 	client* current=CLIENTSHEAD(masterBank);
 	int counter=0;
-	int biggestBalance=0;
+	amount biggestBalance=0;
 
 	while (current->next!=CLIENTSTAIL(masterBank)){
 		if(biggestBalance<=current->balance){
@@ -244,10 +265,12 @@ void deleteBank(){
     FREE(masterBank);
 }
 
+/*return the bank name*/
 char* getBankName(){
 	return masterBank->name;
 }
 
+/*print all of the bank information and status.*/
 void printBankInfo()
 {
 

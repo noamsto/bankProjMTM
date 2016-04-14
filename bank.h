@@ -65,12 +65,16 @@ void addNewClientToBank(client* );
 /*check if bank is full.*/
 int isBankFull();
 
+/*delete the bank anll all of his database*/
 void deleteBank();
 
+/*get bank name*/
 char* getBankName();
 
+/*print all of the bank info*/
 void printBankInfo();
-
+/*printing the richest client or clients and the biggest balance*/
+void clientNumberOfBank_print();
 
 #endif /* bank_h */
 
