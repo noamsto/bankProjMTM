@@ -70,7 +70,7 @@ try addNewBranch()
     initBranch(newBranch);
     /*receive data from user*/
     getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
-    newBranch->bankName = strdup(getBankName());
+    newBranch->bankName = getBankName();
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
@@ -253,13 +253,12 @@ try deleteBranch(branchID brID)
     
     deleteB=getBranch(brID,&previus);/*get the pointer to the branch*/
     deleteAllBranchClients(brID);
-    FREE(deleteB->bankName);
     FREE(deleteB->branchName);
     FREE(deleteB->clientList.head);
     FREE(deleteB->clientList.tail);
     previus->next = deleteB->next;
     FREE(deleteB);
-    updateNumOfBranches(REMOVE);  /* decrease ammount of branches in bank*/
+    updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
 
