@@ -233,11 +233,11 @@ try deleteBranchClient(branchID brID,accountNum acc)
     updateBranchBalance(tempClient->brID,tempClient->balance, REMOVE);
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
-    beforeClient->next = tempClient->next;
     /*delete all clients fields*/
     FREE(tempClient->name);
     FREE(tempClient->surname);
     FREE(tempClient->bankName);
+    beforeClient->next = tempClient->next;
     FREE(tempClient);
     tempBranch->currentClients--;
     
@@ -252,14 +252,13 @@ try deleteBranch(branchID brID)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
     deleteB=getBranch(brID,&previus);/*get the pointer to the branch*/
-    previus->next = deleteB->next;
     deleteAllBranchClients(brID);
-    FREE(deleteB->bankName);
     FREE(deleteB->branchName);
     FREE(deleteB->clientList.head);
     FREE(deleteB->clientList.tail);
+    previus->next = deleteB->next;
     FREE(deleteB);
-    updateNumOfBranches(REMOVE);  /* decrease ammount of branches in bank*/
+    updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
 
