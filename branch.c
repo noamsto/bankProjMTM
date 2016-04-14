@@ -23,7 +23,7 @@ int isBranchFull(branch *);/*check if branch is full (has more room from clients
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
 int getTime(char*); /*get hours from user.*/
-int clientWithBiggerLoans(client*);
+int clientWithBiggerLoans(client*);/*recursive function. returns amount of clients with bigger debt then they're balance*/
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -187,13 +187,14 @@ void clientNumberWithBiggerLoansThanBalance_rec(){
 	printf("%d clients owes the branch number %d money\n",clientAmount,tempBranch->brID);
 }
 
+
 int clientWithBiggerLoans(client *list){
 	int amountOfClients=0;
-	if(list->next == NULL)
+	if(list->next == NULL)/*if list is empty, no clients with bigger loans then balance*/
 		return 0;
-	amountOfClients = clientWithBiggerLoans(list->next);
+	amountOfClients = clientWithBiggerLoans(list->next);/*get amount of clients from rest of the list*/
 	if(list->debt > list->balance)
-		amountOfClients++;
+		amountOfClients++;/*if the client has bigger debt then balance, count him*/
 	return amountOfClients;
 }
 

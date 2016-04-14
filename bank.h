@@ -15,14 +15,14 @@
 
 typedef struct banks{
     
-    char* name;
-    int numOfBranch;
-    int numOfClients;
-    int numOfActiveLoans;
-    double balance;
-    double yearProfit;
+    char* name;					/*name of bank*/
+    int numOfBranch;			/*number of branches in bank*/
+    int numOfClients;			/*number of clients registered to bank*/
+    int numOfActiveLoans;		/*number of loans currently activated in bank*/
+    double balance;				/*balance of bank*/
+    double yearProfit;			/*the yearly profit of the bank*/
     
-    clientsLinkedList clientsList;
+    clientsLinkedList clientsList;/*list of clients registered to bank*/
 }bank;
 
 

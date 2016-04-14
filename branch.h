@@ -10,17 +10,17 @@
 #include "client.h"
 
 typedef struct branches{
-    branchID brID;
-    char* bankName;
-    char* branchName;
-    int currentClients;
-    int numOfActiveLoans;
-    int closeTime;
-    int openTime;
-    int balance;
-    int yearProfit;
-    clientsLinkedList clientList;
-    struct branches *next;
+    branchID brID;				/*the ID of the branch*/
+    char* bankName;				/*the name of the bank the branch belongs to*/
+    char* branchName;			/*the name of the branch*/
+    int currentClients;			/*amount of clients currently registered to branch*/
+    int numOfActiveLoans;		/*amount of loans currently activated in branch*/
+    int closeTime;				/*closing hours of the branch*/
+    int openTime;				/*opening hours of the branch*/
+    int balance;				/*the branch's balance*/
+    int yearProfit;				/*profit of current year in branch*/
+    clientsLinkedList clientList;/*list of all the clients registered to branch*/
+    struct branches *next;		/*point to next branch in branch list*/
     
 }branch;
 
@@ -42,13 +42,10 @@ int clientNumberWithGivenBalance();
 /*get branch ID and balance from user. returns amount of clients with higher balance*/
 
 void clientNumberWithBiggerLoansThanBalance();
-/* get branch ID from user. Finds amount of clients with bigger loans then they're balance. */
+/* print to screen amount of clients with debt higher then balance. receive branch ID from user */
 
 void clientNumberWithBiggerLoansThanBalance_rec();
-/* get branch ID from user. Finds amount of clients with bigger loans then they're balance. function works recursive */
-
-void printClientAccountsNumberAndBalance();
-
+/* print to screen amount of clients with debt higher then balance. receive branch ID from user. the function is done recursively */
 
 try deleteAllBranchClients(branchID);
 /*delete all clients of a certain branch. returns whether the action succeeded*/
@@ -79,6 +76,6 @@ boolean checkBranchID(branchID brID);
 /*check if branch ID is used*/
 
 void printBranchInfo();
-
+/*print all the information on branch. receive the branch ID from the user*/
 
 #endif /* branch_h */

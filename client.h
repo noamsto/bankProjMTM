@@ -13,16 +13,16 @@
 #define MAXNAME 20
 
 typedef struct clients{
-    char* name;
-    char* surname;
-    char* bankName;
-    clientID cID[CLIENTIDL];
-    branchID brID;
-    accountNum accNum;
-    int maxOverdraft;
-    int balance;
-    int debt;
-    int investment;
+    char* name;					/*client's name*/
+    char* surname;				/*client's family name*/
+    char* bankName;				/*name of bank, client is registered to*/
+    clientID cID[CLIENTIDL];	/*client's ID number*/
+    branchID brID;				/*the ID number of the branch the client belongs to*/
+    accountNum accNum;			/*the account number of the client*/
+    int maxOverdraft;			/*the maximum overdraft allowed to the client*/
+    int balance;				/*client's balance*/
+    int debt;					/*client's debt to bank/branch*/
+    int investment;				/*client's investment*/
     
     struct clients *next;
 }client;
