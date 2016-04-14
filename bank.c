@@ -12,7 +12,7 @@ void initBank(bank*);
 #define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
 
 int clientNumberOfBank_REC(client *head, amount *biggestBalance);
-
+int clientNumberOfBank();
 
 /*********_Bank_Creation_Functions_START_******************/
 
@@ -98,8 +98,8 @@ void updateNumOfBranches(addremove remove){
             return;
         }
         masterBank->numOfBranch--;
-    }
-    masterBank->numOfBranch++;
+    }else
+    	masterBank->numOfBranch++;
 }
 
 /*update number of clients of the bank.*/
@@ -217,12 +217,13 @@ int clientNumberOfBank_REC(client *head, amount *biggestBalance){
 	int counter=0;
 	amount maxBalance=0;
 
-	if (head==NULL){
+	if (head==CLIENTSTAIL(masterBank)){
 		*biggestBalance=0;
 		return 0;
 	}
 
 	counter= clientNumberOfBank_REC(head->next,&maxBalance);
+
 	if (head->balance==maxBalance){
 		counter+=1;
 	}else if(head->balance>maxBalance){
@@ -238,17 +239,17 @@ int clientNumberOfBank_REC(client *head, amount *biggestBalance){
 /* check which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
-int clientNumberOfBank(amount *biggestBalnce){
+int clientNumberOfBank(amount *biggestBalance){
 	client* current=CLIENTSHEAD(masterBank);
 	int counter=0;
-	amount biggestBalance=0;
+	*biggestBalance=0;
 
 	while (current->next!=CLIENTSTAIL(masterBank)){
-		if(biggestBalance==current->balance){
+		if(*biggestBalance==current->balance){
 			counter++;
-		}else if(biggestBalance>current->balance ){
+		}else if(*biggestBalance<current->balance ){
 			counter=1;
-			biggestBalance=current->balance;
+			*biggestBalance=current->balance;
 		}
 		current=current->next;
 	}

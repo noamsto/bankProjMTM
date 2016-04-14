@@ -13,7 +13,7 @@
 void getTransactionInfo(accountNum* acc,amount* money);
 
 /*update client debt.*/
-void updateClientDebt(accountNum acc, amount money, addremove add);
+try updateClientDebt(accountNum acc, amount money, addremove add);
 
 
 
@@ -139,16 +139,39 @@ try depositeMoneyToClientAccount() {
 
 
 /*update client debt.*/
-void updateClientDebt(accountNum acc, amount money, addremove add){
+try  updateClientDebt(accountNum acc, amount money, addremove  remove){
+
     client* getClient=NULL;
-    
-    
+    /*find client in bank*/
     getClient=getBankClient(acc,GETSPECIFIC);
-    getClient->debt+=money;
+    if (!getClient) {
+        return CLIENTNOTFOUND;
+    }else{
+        if (remove==REMOVE) {   /*add or remove money to his balance*/
+            getClient->debt-=money;
+        }else{
+            getClient->debt+=money;
+        }
+        updateBankBalance(money, remove);   /*update bank balance*/
+    }
+    if (getClient->brID==0) {
+        return SUCCESS;
+    }
+    /*find client in branch*/
+    getClient=getBranchClient(acc, getClient->brID,GETSPECIFIC);
+    if (!getClient) {
+        printf("Client not belong in any branch\n");
+    }else{
+        if (remove) {   /*add or remove money to his balance*/
+            getClient->debt-=money;
+        }else{
+            getClient->debt+=money;
+        }
+        updateBranchBalance(getClient->brID, money,remove); /*update branch balance*/
+    }
     
-    getClient=getBranchClient(acc,getClient->brID,GETSPECIFIC);
-    if (getClient)
-        getClient->debt+=money;
+    return SUCCESS;
+
 }
 
 /*loan money to client.*/
@@ -160,13 +183,12 @@ try loanToClient() {
     printf("starting a loan:\n");
     getTransactionInfo(&acc, &money);   /*get the transaction info.*/
     
-    echo=updateClientBalance(acc, money, ADD);  /*update client/bank/branch balance*/
+    echo=updateClientDebt(acc, money, ADD);  /*update client/bank/branch balance*/
     if (echo==CLIENTNOTFOUND) { /*if client is not found print error.*/
         printf("error: client not present in system.\n");
         return FAIL;
     }
     /*update the client data.*/
-    updateClientDebt(acc,money, ADD);
     updateBranchLoan(GETBRID(acc),ADD);
     updateNumOfActiveLoans(ADD);
     
