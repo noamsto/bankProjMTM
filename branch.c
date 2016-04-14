@@ -160,45 +160,45 @@ int clientNumberWithGivenBalance()
     return clientsNumber;
 }
 #endif
-
-
-void clientNumberWithBiggerLoansThanBalance(){
-	int numberOfClients=0;
+void clientNumberWithBiggerLoansThanBalance_print(){
+	int clientNum_rec,clientNum_iter;
 	branch *tempBranch;
-	client *tempClient;
 	branchID brID;
 	brID = getBranchID(EXIST);
 	tempBranch = getBranch(brID,NOCHECK);
-	tempClient = CLIENTSHEAD(tempBranch);
-	while(tempClient != tempBranch->clientList.tail){
+	clientNum_iter = clientNumberWithBiggerLoansThanBalance(CLIENTSHEAD(tempBranch));
+	clientNum_rec = clientNumberWithBiggerLoansThanBalance_rec(CLIENTSHEAD(tempBranch));
+	printf("iterative check:\n"
+			"there are %d clients owe to branch more then they're balance\n",clientNum_iter);
+	printf("recursive check:\n"
+				"there are %d clients owe to branch more then they're balance\n",clientNum_rec);
+}
+
+
+int clientNumberWithBiggerLoansThanBalance(client *list){
+	int numberOfClients=0;
+	client *tempClient;
+	tempClient = list;
+	while(tempClient->next != NULL){
 		if(tempClient->balance < tempClient->debt)
 			numberOfClients++;
 	tempClient = tempClient->next;
 	}
-	printf("The amount of clients in branch number : %d "
-			"\n with debt bigger then they're balance is : %d\n",tempBranch->brID,numberOfClients);
+	return numberOfClients;
 }
 
-void clientNumberWithBiggerLoansThanBalance_rec(){
-	int clientAmount=0;
-	branchID brID;
-	branch *tempBranch;
-	brID = getBranchID(EXIST);
-	tempBranch = getBranch(brID,NOCHECK);
-	clientAmount = clientWithBiggerLoans(tempBranch->clientList.head);
-	printf("%d clients owes the branch number %d money\n",clientAmount,tempBranch->brID);
-}
-
-
-int clientWithBiggerLoans(client *list){
+int clientNumberWithBiggerLoansThanBalance_rec(client *list){
 	int amountOfClients=0;
 	if(list->next == NULL)/*if list is empty, no clients with bigger loans then balance*/
 		return 0;
-	amountOfClients = clientWithBiggerLoans(list->next);/*get amount of clients from rest of the list*/
+	amountOfClients = clientNumberWithBiggerLoansThanBalance_rec(list->next);/*get amount of clients from rest of the list*/
 	if(list->debt > list->balance)
 		amountOfClients++;/*if the client has bigger debt then balance, count him*/
 	return amountOfClients;
 }
+
+
+
 
 
 try deleteAllBranchClients(branchID id)

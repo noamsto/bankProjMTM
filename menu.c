@@ -1,90 +1,67 @@
-/* bank project
- Yahel Tsufim 304952898
- Noam Stolero 201581683
- file:main.c
+/*
+ * menu.c
+ *
+ *  Created on: Apr 14, 2016
+ *      Author: yali
  */
 
 #include "menu.h"
 
-
-/*void mainMenu();
-void deleteMenu();
-void infoMenu();
-void transactionAndReports();
-/*testing code.*/
-int main(){
-    createBank();
-    createBranchList();
-    mainMenu();/*menu for testing code*/
-    deleteBank();
-    check_for_exit();
-    
-    return 0;
-    
-    
-}
-/*
 void mainMenu(){
 	int menu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
 	    printf("\nmain menu:\n"
-	           "1: add new branch\n"
-	           "2: add new client to branch\n"
-	           "3: transaction\n"
-	           "4: check info\n"
-	           "7: delete \n"
-	           "8: exit\n");
+	           "1: add/delete menu\n"
+	           "2: transaction\n"
+	           "3: check info\n"
+	           "9: exit\n");
 	        menu = getchar();
 	        getchar();
 	        switch (menu) {
 	            case '1':
-	                addNewBranch();
+	            	add_Delete_Menu();
 	                break;
 	            case '2':
-	                addNewClientToBranch();
-	                break;
-	            case '3':
 	                transactionAndReports();
 	                break;
-	            case '4':
+	            case '3':
 	            	infoMenu();
 	                break;
-	            case '7':
-	            	deleteMenu();
-	                break;
-	            case '8':
+	             case '9':
 	                finish = TRUE;
 	                break;
-	            case '9':
-	            	printf("Insanity: doing the same thing over and over again\n and expecting different results\n");
-	            	break;
-	            default:
+	             default:
 	                printf("the number is not in the menu.\n try again\n");
 	                break;
 	        }
 	    }
 }
 
-void deleteMenu(){
+void add_Delete_Menu(){
 	int subMenu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
-	printf("\n1: for client \n"
-		   "2: for branch \n"
-		   "3: for bank \n"
+	printf("~ADD/DELETE MENU~:\n"
+		   "1: add branch \n"
+		   "2: add client \n"
+		   "3: delete branch\n"
+		   "4: delete client\n"
 		   "9: back to menu\n");
 	subMenu = getchar();
 	getchar();
 	switch (subMenu) {
 		case '1':
-			deleteClient(NOCHECK);
+			addNewBranch();
 			break;
 		case '2':
-			deleteBranch(NOCHECK);
+			addNewClientToBranch();
 			break;
 		case '3':
-			deleteBank();
+			deleteBranch(NOCHECK);
+			break;
+		case '4':
+			deleteClient(NOCHECK);
 			break;
 		case '9':
 			finish = TRUE;
@@ -166,4 +143,3 @@ void transactionAndReports(){
 				}
 			}
 }
-*/
