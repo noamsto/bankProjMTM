@@ -25,8 +25,7 @@ typedef int branchID , accountNum;
 typedef double amount;
 typedef char clientID;
 
-#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
-#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
+
 
 void getName(char** , int, char*);
 /*get string from user, check for legibility comparing to length of word*/
