@@ -122,7 +122,7 @@ try addNewClientToBranch()
     initClient(newClient);
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
-    newClient->bankName = strdup(temp->bankName);
+    newClient->bankName = temp->bankName;
     getClientID(newClient->cID);
     newClient->accNum=getAcc(NOTEXIST);
     
