@@ -21,14 +21,22 @@ typedef enum ret_val{SUCCESS, FAIL, ALOC_FAIL, MAX_BRANCH_REACHED, MAX_BANK_REAC
 
 typedef enum{deposit,loan,leaveBranch} transType;
 
-typedef int branchID, amount, accountNum;
+typedef int branchID , accountNum;
+typedef double amount;
 typedef char clientID;
+
+#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
+#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
 
 void getName(char** , int, char*);
 /*get string from user, check for legibility comparing to length of word*/
 
 void getInt(int* num,char* output);
 /*get string from user, check for legibility comparing to length of size*/
+
+void getDouble(double* num, char* output);
+/*get string from user, check for legibility comparing to length of size*/
+
 
 void getClientID(clientID *);
 

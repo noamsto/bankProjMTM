@@ -8,8 +8,7 @@
 
 void initBank(bank*);
 
-#define CLIENTSHEAD(STRUCT) STRUCT->clientsList.head
-#define CLIENTSTAIL(STRUCT) STRUCT->clientsList.tail
+
 /*********_Bank_Creation_Functions_START_******************/
 
 
@@ -195,36 +194,23 @@ int isBankFull(){
  */
 /******need testsss *******/
 int clientNumberOfBank_REC(client *head, int *biggestBalance){
-	int counter=0;
+	int counter=0, maxBalance=0;
 
-	if (head==NULL)
+	if (head==NULL){
+		*biggestBalance=0;
 		return 0;
-	counter+= clientNumberOfBank_REC(head->next,biggestBalance);
-	if (head->balance==*biggestBalance){
-		counter+=1;
-	}else if(head->balance>*biggestBalance){
-		counter=1;
-		*biggestBalance=head->balance;
 	}
+
+	counter= clientNumberOfBank_REC(head->next,&maxBalance);
+	if (head->balance==maxBalance){
+		counter+=1;
+	}else if(head->balance>maxBalance){
+		counter=1;
+		maxBalance=head->balance;
+	}
+	*biggestBalance=maxBalance;
 	return counter;
 
-
-
-	/*if (head==NULL){
-		*biggestBalance=nextBalance;
-		return 0;
-	}
-	nextBalance= head->balance;
-	counter+= clientNumberOfBank_REC(head->next,&nextBalance);
-
-	if (head->balance==nextBalance){
-		counter++;
-	}else if(head->balance>nextBalance){
-		counter=1;
-		nextBalance=head->balance;
-	}
-	*biggestBalance=nextBalance;
-	return counter;*/
 }
 
 

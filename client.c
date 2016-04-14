@@ -24,10 +24,10 @@ void getTransactionInfo(accountNum* acc,amount* money){
     
     *acc=getAcc(EXIST);
 
-    getInt(money,"Please enter amount:\n");
+    getDouble(money,"Please enter amount:\n");
     while (*money<=0) {
         printf("Error: amount cant be negative.\n");
-        getInt(money,"Please enter amount:\n");
+        getDouble(money,"Please enter amount:\n");
     }
     
 }
@@ -47,7 +47,7 @@ void initClient(client* c)
 
 
 /*delete client from system.*/
-void deleteClient(accountNum acc){
+try deleteClient(accountNum acc){
     try echo;
     client *deleteC=NULL;
     
@@ -70,7 +70,9 @@ void deleteClient(accountNum acc){
     echo=deleteBankClient(acc);
     if (echo==CLIENTNOTFOUND) {
         printf("client not found in system.\n");
+        return FAIL;
     }
+    return SUCCESS;
 }
 
 
@@ -178,6 +180,7 @@ accountNum getAcc(availble checkif){
     boolean flag=FALSE;
     accountNum acc=0;
     
+
     do{
         getInt(&acc,"please enter client account number\n");
         
@@ -210,8 +213,8 @@ void printClientInfo()
 	printf("Client branch ID : %d\n",tempClient->brID);
 	printf("Client account number: %d\n",tempClient->accNum);
 	printf("Client ID: %s\n",tempClient->cID);
-	printf("client balance: %d\n",tempClient->balance);
-	printf("Client debt: %d\n",tempClient->debt);
+	printf("client balance: %g\n",tempClient->balance);
+	printf("Client debt: %g\n",tempClient->debt);
 	printf("Client's max overdraft: %d\n",tempClient->maxOverdraft);
 	printf("It takes two to lie:\n one to lie and one to listen\n\n");
 }

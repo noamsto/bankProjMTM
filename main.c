@@ -131,10 +131,10 @@ void transactionAndReports(){
 				   loanToClient();
 				   break;
 				case '3':
-					//clientNumberOfBank();
+					clientNumberOfBank();
 					break;
 				case '4':
-					//clientNumberOfBank_REC(client *head, int *biggestBalance);
+					//clientNumberOfBank_REC(client * CLIENTSHEAD(masterBank), int *biggestBalance);
 					break;
 				case '5':
 					clientNumberWithBiggerLoansThanBalance();

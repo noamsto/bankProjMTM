@@ -96,3 +96,25 @@ void getInt(int* num,char* output){
     *num = atoi(temp);
 }
 
+/*get an double from user */
+void getDouble(double* num, char* output){
+    char temp[MAXSTRING];
+    int i,len;
+    boolean check;  /*flag for testing input*/
+
+    do{
+        check = TRUE;
+        printf("%s",output);
+        fgets(temp, MAXSTRING, stdin);
+
+        /*check entered string is number*/
+        len=(int)strlen(temp);
+        for(i=0;i<len-1;i++)     /* -1 in order to ignore the '\n'*/
+            if(!isdigit(temp[i])){
+                check=FALSE;
+                printf("illegal characters\n");
+                break;
+            }
+    }while(check==FALSE);
+    *num = atol(temp);
+}

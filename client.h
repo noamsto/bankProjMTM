@@ -20,8 +20,8 @@ typedef struct clients{
     branchID brID;				/*the ID number of the branch the client belongs to*/
     accountNum accNum;			/*the account number of the client*/
     int maxOverdraft;			/*the maximum overdraft allowed to the client*/
-    int balance;				/*client's balance*/
-    int debt;					/*client's debt to bank/branch*/
+    amount balance;				/*client's balance*/
+    amount debt;					/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
     struct clients *next;
@@ -34,10 +34,10 @@ typedef struct linkedList{
 }clientsLinkedList;
 
 /*init client struct*/
-void initClient(client*);
+void initClient(client* );
 
 /*delete client from system.*/
-void deleteClient(accountNum);
+try deleteClient(accountNum);
 
 /*update the client balance.*/
 try updateClientBalance(accountNum,amount,addremove);
