@@ -67,7 +67,7 @@ void createBankClientList()
 /*update bank balance.*/
 void updateBankBalance(amount money,addremove remove){
     if (remove) {
-        if (masterBank->balance<=0){
+        if (masterBank->balance<=0 && money>0){
             printf("no balance");
             return;
         }
@@ -200,11 +200,11 @@ void clientNumberOfBank_print(){
 	amount maxBalance=0;
 	/*the recursive calculation of the number of richest client and the biggest balance*/
 	counter = clientNumberOfBank_REC(CLIENTSHEAD(masterBank), &maxBalance);
-	printf("Recursive Check\n");
+	printf("Recursive check:\n");
 	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
 
 	/*the Iterative calculation of the number of richest client and the biggest balance*/
-	printf("Iterative Check\n");
+	printf("Iterative check:\n");
 	counter = clientNumberOfBank(&maxBalance);
 	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
 }
@@ -244,8 +244,10 @@ int clientNumberOfBank(amount *biggestBalnce){
 	amount biggestBalance=0;
 
 	while (current->next!=CLIENTSTAIL(masterBank)){
-		if(biggestBalance<=current->balance){
+		if(biggestBalance==current->balance){
 			counter++;
+		}else if(biggestBalance>current->balance ){
+			counter=1;
 			biggestBalance=current->balance;
 		}
 		current=current->next;
