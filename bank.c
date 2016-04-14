@@ -231,15 +231,15 @@ int clientNumberOfBank_REC(client *head, int *biggestBalance){
 /* check which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
-int clientNumberOfBank(int *biggestBalance){
+int clientNumberOfBank(int){
 	client* current=CLIENTSHEAD(masterBank);
 	int counter=0;
-	*biggestBalance=0;
+	int biggestBalance=0;
 
 	while (current->next!=CLIENTSTAIL(masterBank)){
-		if(*biggestBalance<=current->balance){
+		if(biggestBalance<=current->balance){
 			counter++;
-			*biggestBalance=current->balance;
+			biggestBalance=current->balance;
 		}
 		current=current->next;
 	}
