@@ -17,8 +17,8 @@ typedef struct branches{
     int numOfActiveLoans;		/*amount of loans currently activated in branch*/
     int closeTime;				/*closing hours of the branch*/
     int openTime;				/*opening hours of the branch*/
-    int balance;				/*the branch's balance*/
-    int yearProfit;				/*profit of current year in branch*/
+    double balance;				/*the branch's balance*/
+    double yearProfit;				/*profit of current year in branch*/
     clientsLinkedList clientList;/*list of all the clients registered to branch*/
     struct branches *next;		/*point to next branch in branch list*/
     
@@ -27,16 +27,16 @@ typedef struct branches{
 
 
 branch* createBranchList();
-/*create and init branch array of 'N' size */
+/*create branch list */
 
 try addNewBranch();
-/*add new branch to list*/
+/*create a new branch and add to list. get info from user*/
 
 void createBranchClientList(clientsLinkedList*);
-/*create and init 'L' size client list. returns client list pointer*/
+/*create list of clients to branch*/
 
 try addNewClientToBranch();
-/*add client to branch. receive data from user*/
+/*create new client and add to client list belong to branch. get info from user*/
 
 int clientNumberWithGivenBalance();
 /*get branch ID and balance from user. returns amount of clients with higher balance*/

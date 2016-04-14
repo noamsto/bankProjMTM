@@ -11,8 +11,10 @@
 #define MAXBRANCHCLIENT 1000
 #define N 500
 #define HOURSINDAY 24
-
-
+#define MILLION 10e6
+#define MINBALANCE 1
+#define MAXBALANCE 500
+#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head->next
 /*---------------------LOCAL BRANCHLIST-----------------*/
 branch* head;
 branch* tail;
@@ -48,6 +50,8 @@ void initBranch(branch *brancInit)
     brancInit->closeTime=0;
     brancInit->currentClients=0;
     brancInit->numOfActiveLoans=0;
+    brancInit->balance = 1;
+    brancInit->yearProfit = 1;
 }
 
 
@@ -83,8 +87,6 @@ void createBranchClientList(clientsLinkedList* list)
 {
 	list->head = ALLOC(client,1);
 	list->tail = ALLOC(client,1);
-	initClient(head);
-	initClient(tail);
 	list->head->next = list->tail;
 	list->tail->next = NULL;
 }
@@ -128,8 +130,8 @@ try addNewClientToBranch()
     newClient->brID=brID;
     temp->currentClients++;
     addNewClientToBank(newClient);
-    newClient->next = temp->clientList.head->next;
-    temp->clientList.head->next = newClient;
+    newClient->next = CLIENTSHEAD(temp);
+    CLIENTSHEAD(temp) = newClient;
     printf("Add new client finished successfully\n");
     return SUCCESS;
 }
@@ -149,7 +151,7 @@ int clientNumberWithGivenBalance()
     brID = getBranchID(EXIST);
     tempBranch = getBranch(brID,NOCHECK);
     getInt(&balance, "please enter balance:\n");
-    tempClient = tempBranch->clientList.head->next;
+    tempClient = CLIENTSHEAD(tempBranch);
     while(tempClient!=NULL){
         if(tempClient->balance > balance)
             clientsNumber++;
@@ -167,7 +169,7 @@ void clientNumberWithBiggerLoansThanBalance(){
 	branchID brID;
 	brID = getBranchID(EXIST);
 	tempBranch = getBranch(brID,NOCHECK);
-	tempClient = tempBranch->clientList.head->next;
+	tempClient = CLIENTSHEAD(tempBranch);
 	while(tempClient != tempBranch->clientList.tail){
 		if(tempClient->balance < tempClient->debt)
 			numberOfClients++;
@@ -280,11 +282,19 @@ try updateBranchBalance(branchID brID, amount am,addremove remove)
         return BRANCHNOTFOUND;
     }
     if (remove==REMOVE) {/*if needed to decrease (client leave, has less money, etc.)*/
-    	tempBranch->balance-=am;
+    	if(tempBranch->balance - (am/MILLION) > MINBALANCE){
+    		printf("branch balance is at minimum, can't withdraw more money\n");
+    		return FAIL;
+    	}
+    	tempBranch->balance -= (am/MILLION);
         return SUCCESS;
     }
     else{
-    	tempBranch->balance += am;
+    	if(tempBranch->balance - (am/MILLION) < MAXBALANCE){
+    		printf("branch balance is at maximum, can't deposit more money\n");
+    	    return FAIL;
+    	}
+    	tempBranch->balance += am/MILLION;
     }
     return SUCCESS;
 }
