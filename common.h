@@ -8,7 +8,7 @@
 
 #include "matam.h"
 
-
+#define BANK_AHAMELIM
 #define NOCHECK 0
 #define CLIENTIDL 9
 #define GETSPECIFIC NULL

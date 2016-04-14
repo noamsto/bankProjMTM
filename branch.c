@@ -50,8 +50,8 @@ void initBranch(branch *brancInit)
     brancInit->closeTime=0;
     brancInit->currentClients=0;
     brancInit->numOfActiveLoans=0;
-    brancInit->balance = 1;
-    brancInit->yearProfit = 1;
+    brancInit->balance = 1.0;
+    brancInit->yearProfit = 1.0;
 }
 
 
@@ -136,7 +136,7 @@ try addNewClientToBranch()
     return SUCCESS;
 }
 
-//#ifdef Bank_hamelim
+#ifdef BANK_AHAMELIM
 int clientNumberWithGivenBalance()
 {
     int clientsNumber=0;
@@ -150,7 +150,7 @@ int clientNumberWithGivenBalance()
     }
     brID = getBranchID(EXIST);
     tempBranch = getBranch(brID,NOCHECK);
-    getInt(&balance, "please enter balance:\n");
+    getDouble(&balance, "please enter balance:\n");
     tempClient = CLIENTSHEAD(tempBranch);
     while(tempClient!=NULL){
         if(tempClient->balance > balance)
@@ -159,7 +159,7 @@ int clientNumberWithGivenBalance()
     }
     return clientsNumber;
 }
-//#endif
+#endif
 
 
 void clientNumberWithBiggerLoansThanBalance(){
@@ -282,19 +282,19 @@ try updateBranchBalance(branchID brID, amount am,addremove remove)
         return BRANCHNOTFOUND;
     }
     if (remove==REMOVE) {/*if needed to decrease (client leave, has less money, etc.)*/
-    	if(tempBranch->balance - (am/MILLION) > MINBALANCE){
+    	if(tempBranch->balance - (am/MILLION) < MINBALANCE){
     		printf("branch balance is at minimum, can't withdraw more money\n");
     		return FAIL;
     	}
-    	tempBranch->balance -= (am/MILLION);
+    	tempBranch->balance = tempBranch->balance - (double)am/MILLION;
         return SUCCESS;
     }
     else{
-    	if(tempBranch->balance - (am/MILLION) < MAXBALANCE){
+    	if(tempBranch->balance - (am/MILLION) > MAXBALANCE){
     		printf("branch balance is at maximum, can't deposit more money\n");
     	    return FAIL;
     	}
-    	tempBranch->balance += am/MILLION;
+    	tempBranch->balance = (double)am/MILLION + tempBranch->balance;
     }
     return SUCCESS;
 }
@@ -430,7 +430,7 @@ void printBranchInfo()
 	printf("Number of loans: %d\n",tempBranch->numOfActiveLoans);
 	printf("Opening time: %d\n",tempBranch->openTime);
 	printf("Closing time: %d\n",tempBranch->closeTime);
-	printf("Branch balance: %d\n",tempBranch->balance);
-	printf("Yearly profit: %d\n",tempBranch->yearProfit);
+	printf("Branch balance: %g\n",tempBranch->balance);
+	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 	printf("\n\"Do not take life too seriously.\n You will never get out of it alive\"\n\n");
 }
