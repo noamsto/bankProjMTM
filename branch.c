@@ -23,6 +23,7 @@ int isBranchFull(branch *);/*check if branch is full (has more room from clients
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
 int getTime(char*); /*get hours from user.*/
+int clientWithBiggerLoans(client*);
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -31,6 +32,8 @@ branch* createBranchList()
 {
     head = ALLOC(branch,1);
     tail = ALLOC(branch,1);
+    initBranch(head);
+    initBranch(tail);
     head->next=tail;
     tail->next=NULL;
     return head;
@@ -80,6 +83,8 @@ void createBranchClientList(clientsLinkedList* list)
 {
 	list->head = ALLOC(client,1);
 	list->tail = ALLOC(client,1);
+	initClient(head);
+	initClient(tail);
 	list->head->next = list->tail;
 	list->tail->next = NULL;
 }
@@ -112,6 +117,7 @@ try addNewClientToBranch()
     newClient = ALLOC(client,1);
     
     /*receive client data from user*/
+    initClient(newClient);
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = temp->bankName;
@@ -172,8 +178,23 @@ void clientNumberWithBiggerLoansThanBalance(){
 }
 
 void clientNumberWithBiggerLoansThanBalance_rec(){
+	int clientAmount=0;
+	branchID brID;
+	branch *tempBranch;
+	brID = getBranchID(EXIST);
+	tempBranch = getBranch(brID,NOCHECK);
+	clientAmount = clientWithBiggerLoans(tempBranch->clientList.head);
+	printf("%d clients owes the branch number %d money\n",clientAmount,tempBranch->brID);
+}
 
-
+int clientWithBiggerLoans(client *list){
+	int amountOfClients=0;
+	if(list->next == NULL)
+		return 0;
+	amountOfClients = clientWithBiggerLoans(list->next);
+	if(list->debt > list->balance)
+		amountOfClients++;
+	return amountOfClients;
 }
 
 
