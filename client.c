@@ -5,7 +5,7 @@
  */
 
 #include "bank.h"
-
+#define GETBRID(ACC) getBankClient(ACC,GETSPECIFIC )->brID
 
 
 
@@ -165,7 +165,7 @@ try loanToClient() {
     }
     /*update the client data.*/
     updateClientDebt(acc,money, ADD);
-    updateBranchLoan(acc,ADD);
+    updateBranchLoan(GETBRID(acc),ADD);
     updateNumOfActiveLoans(ADD);
     
     printf("loan finished succssefuly.\n");
