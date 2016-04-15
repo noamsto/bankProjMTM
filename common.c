@@ -39,7 +39,7 @@ void getName(char** name , int length, char* output){
             }
     }while(check==FALSE);
     temp[i]='\0';
-    *name = strdup(temp);
+    *name = STRDUP(temp);
 }
 
 /*get client id from user with 9 digits.*/

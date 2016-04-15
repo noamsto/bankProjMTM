@@ -129,6 +129,8 @@ try deleteBankClient(accountNum acc){
 	/*delete the Client*/
 	getPreClient->next=getNextClient;
 
+	FREE(clientToBeDeleted->name);
+	FREE(clientToBeDeleted->surname);
 	FREE(clientToBeDeleted);
 	return SUCCESS;
 }
@@ -263,6 +265,7 @@ int clientNumberOfBank(amount *biggestBalance){
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
+	FREE(masterBank->name);
 	FREE(CLIENTSHEAD(masterBank));
 	FREE(CLIENTSTAIL(masterBank));
 	FREE(masterBank);

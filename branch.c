@@ -267,6 +267,8 @@ void deleteAllBranches()
     numberOfBranches = getNumOfBranches();
     while(numberOfBranches>0)
         deleteBranch(head->next->brID);
+    FREE(head);
+    FREE(tail);
 }
 
 /*--------------------------- BRANCH INFO UPDATE -------------------------*/
