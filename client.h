@@ -42,14 +42,17 @@ try deleteClient(accountNum);
 /*update the client balance.*/
 try updateClientBalance(accountNum,amount,addremove);
 
-/*make a deposit transaction, update all that neccssary.*/
+/*make a deposit transaction, update all that necessary.*/
 try depositeMoneyToClientAccount();
 
-/*make a loan transaction, update all that neccssary.*/
+/*make a loan transaction, update all that necessary.*/
 try loanToClient();
 
 /*Get account number from user, check if exist or not.*/
 accountNum getAcc(availble);
+
+/*print client info (according to account number) to screen. get client account number from user
+void printClientInfo();
 
 
 #endif /* client_h */

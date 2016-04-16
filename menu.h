@@ -13,10 +13,10 @@
 
 
 
-void mainMenu();
-void add_Delete_Menu();
-void infoMenu();
-void transactionAndReports();
+void mainMenu();/*the main menu of the testing code*/
+void add_Delete_Menu();/*add client/branch or delete client/branch*/
+void infoMenu();/*check bank/branch/client information*/
+void transactionAndReports();/*deposit money, loan money, get details about branch and bank costumers*/
 
 
 #endif
