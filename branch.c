@@ -11,7 +11,7 @@
 #define MAXBRANCHCLIENT 1000
 #define N 500
 #define HOURSINDAY 24
-#define MILLION 10e6
+#define MILLION 1e6
 #define MINBALANCE 1
 #define MAXBALANCE 500
 #define CLIENTSHEAD(STRUCT) STRUCT->clientList.head->next
