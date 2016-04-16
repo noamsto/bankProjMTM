@@ -263,10 +263,11 @@ try deleteBranch(branchID brID)
 
 void deleteAllBranches()
 {
-    int numberOfBranches;
-    numberOfBranches = getNumOfBranches();
-    while(numberOfBranches>0)
-        deleteBranch(head->next->brID);
+	branch *temp =  head;
+    while(temp->next!=tail){
+    	   deleteBranch(temp->next->brID);
+    	   temp=temp->next;
+    }
     FREE(head);
     FREE(tail);
 }
