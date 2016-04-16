@@ -103,8 +103,12 @@ void updateNumOfBranches(addremove remove){
 }
 
 /*update number of clients of the bank.*/
-void updateNumOfBankClients(addremove REMOVE){
-	masterBank->numOfClients++;
+void updateNumOfBankClients(addremove remove){
+	if (remove==REMOVE){
+		masterBank->numOfClients--;
+	}else{
+		masterBank->numOfClients++;
+	}
 }
 
 
