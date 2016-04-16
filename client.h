@@ -51,7 +51,7 @@ try loanToClient();
 /*Get account number from user, check if exist or not.*/
 accountNum getAcc(availble);
 
-/*print client info (according to account number) to screen. get client account number from user
+/*print client info (according to account number) to screen. get client account number from user*/
 void printClientInfo();
 
 

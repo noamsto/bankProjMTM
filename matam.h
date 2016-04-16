@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-  
+
 char *checked_strdup (char *);
 void *checked_malloc(unsigned int);
 void checked_free(void *);

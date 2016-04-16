@@ -1,6 +1,7 @@
 #include "matam.h"
 #include <string.h>
 
+
 static unsigned int allocated_blocks = 0;
 
 void *checked_malloc(unsigned int size)
