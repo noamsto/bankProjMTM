@@ -39,7 +39,8 @@ void getName(char** name , int length, char* output){
             }
     }while(check==FALSE);
     temp[i]='\0';
-    *name = STRDUP(temp);
+    *name=ALLOC(char,len);
+    strcpy(*name,temp);
 }
 
 /*get client id from user with 9 digits.*/
