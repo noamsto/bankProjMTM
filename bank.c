@@ -18,7 +18,7 @@ int clientNumberOfBank();
 
 
 /* The bank instance, will be used only in this file*/
-bank* masterBank=NULL;
+static bank* masterBank=NULL;
 
 
 /*Initialize bank struct.*/
@@ -290,5 +290,4 @@ void printBankInfo()
 	printf("Number of loans: %d\n",masterBank->numOfActiveLoans);
 	printf("Bank balance: %g\n",masterBank->balance);
 	printf("Yearly profit: %g\n",masterBank->yearProfit);
-	printf("Try not to become a man of success, but rather try to become a man of value\nAlbert Einstein\n");
 }

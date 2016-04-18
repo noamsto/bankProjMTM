@@ -16,8 +16,8 @@
 #define MAXBALANCE 500
 #define CLIENTSHEAD(STRUCT) STRUCT->clientList.head->next
 /*---------------------LOCAL BRANCHLIST-----------------*/
-branch* head;
-branch* tail;
+static branch* head;
+static branch* tail;
 
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
@@ -430,5 +430,4 @@ void printBranchInfo()
 	printf("Closing time: %d\n",tempBranch->closeTime);
 	printf("Branch balance: %g\n",tempBranch->balance);
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
-	printf("\n\"Do not take life too seriously.\n You will never get out of it alive\"\n\n");
 }

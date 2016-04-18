@@ -39,6 +39,7 @@ void mainMenu(){
 	    }
 }
 
+/*add or delete client, branch menu.*/
 void add_Delete_Menu(){
 	int subMenu;
 	boolean finish=FALSE;
@@ -73,6 +74,7 @@ void add_Delete_Menu(){
 	}
 }
 
+/* information about branch client or bank menu*/
 void infoMenu(){
 	int subMenu;
 	boolean finish=FALSE;
@@ -80,7 +82,7 @@ void infoMenu(){
 		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
-				"4: back to main menu\n");
+				"9: back to main menu\n");
 		subMenu = getchar();
 		getchar();
 		switch(subMenu){
@@ -93,7 +95,7 @@ void infoMenu(){
 			case '3':
 				printClientInfo();
 				break;
-			case '4':
+			case '9':
 				finish=TRUE;
 				break;
 			default:
@@ -103,6 +105,7 @@ void infoMenu(){
 		}
 }
 
+/*transcation and reports of clients.*/
 void transactionAndReports(){
 	int subMenu;
 		boolean finish=FALSE;
@@ -130,7 +133,7 @@ void transactionAndReports(){
 				case '4':
 					clientNumberWithBiggerLoansThanBalance_print();
 					break;
-#ifdef BANK_AHAMELIM
+#ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
 				case '5':
 				   printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
 				   break;

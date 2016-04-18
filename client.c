@@ -50,10 +50,7 @@ void initClient(client* c)
 try deleteClient(accountNum acc){
     try echo;
     client *deleteC=NULL;
-    
-    
-    printf("client deletion:\n");
-    
+
     if (!acc) {
         /*get client acc from user*/
         acc=getAcc(EXIST);
@@ -238,6 +235,5 @@ void printClientInfo()
 	printf("client balance: %g\n",tempClient->balance);
 	printf("Client debt: %g\n",tempClient->debt);
 	printf("Client's max overdraft: %d\n",tempClient->maxOverdraft);
-	printf("It takes two to lie:\n one to lie and one to listen\n\n");
 }
 
