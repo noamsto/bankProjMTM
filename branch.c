@@ -25,7 +25,6 @@ int isBranchFull(branch *);/*check if branch is full (has more room from clients
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
 int getTime(char*); /*get hours from user.*/
-int clientWithBiggerLoans(client*);/*recursive function. returns amount of clients with bigger debt then they're balance*/
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -234,8 +233,6 @@ try deleteBranchClient(branchID brID,accountNum acc)
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
     /*delete all clients fields*/
-    FREE(tempClient->name);
-    FREE(tempClient->surname);
     beforeClient->next = tempClient->next;
     FREE(tempClient);
     tempBranch->currentClients--;
@@ -244,7 +241,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
 }
 
 
-try deleteBranch(branchID brID)
+try  deleteBranch(branchID brID)
 {
     branch *deleteB=NULL,*previus;
     if(brID==NOCHECK)
@@ -263,9 +260,9 @@ try deleteBranch(branchID brID)
 
 void deleteAllBranches()
 {
-	branch *temp =  head;
-    while(temp->next!=tail){
-    	   deleteBranch(temp->next->brID);
+	branch *temp =  head->next;
+    while(temp!=tail){
+    	   deleteBranch(temp->brID);
     	   temp=temp->next;
     }
     FREE(head);
