@@ -18,10 +18,11 @@ typedef struct branches{
     int closeTime;				/*closing hours of the branch*/
     int openTime;				/*opening hours of the branch*/
     double balance;				/*the branch's balance*/
-    double yearProfit;				/*profit of current year in branch*/
-    clientsLinkedList clientList;/*list of all the clients registered to branch*/
-    struct branches *next;		/*point to next branch in branch list*/
-    
+    double yearProfit;			/*profit of current year in branch*/
+    client* clientList;			/*list of all the clients registered to branch*/
+    struct branches *left;		/*point to left leaf of branch tree list*/
+    struct branches *right;		/*point to left leaf of branch tree list*/
+
 }branch;
 
 
