@@ -26,6 +26,7 @@ typedef struct clients{
     
     struct clients *left;
     struct clients *right;
+    struct clients *next;
 }client;
 
 

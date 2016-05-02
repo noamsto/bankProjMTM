@@ -42,6 +42,9 @@ void initClient(client* c)
     c->investment=0;
     c->maxOverdraft=0;
     c->accNum=0;
+    c->next=NULL;
+    c->left=NULL;
+    c->right=NULL;
 }
 
 
@@ -74,7 +77,23 @@ try deleteClient(accountNum acc){
 
 
 
-client* findClient
+client* findClientID(client *root, clientID id, client **foundClients){
+	if (root==NULL)
+		return NULL;
+
+	findClientID(root->left, id, foundClients);
+	if (root->cID==id){
+		if  (*foundClients==NULL)
+			*foundClients=root;
+		else{
+			root->next=*foundClients;
+			foundClients->next=root;
+		}
+	}
+	findClientID
+
+
+}
 
 
 /*******************************************************NEW***********/
@@ -96,11 +115,11 @@ client* findClient (){
 			switch (c) {
 				case 1:
 					getClientID(&id);
-					clients=findClientsID(root, id);
+					clients=findClientsID(root, id, &clients);
 					break;
 				case 2:
 					getInt(&acc,"Please Enter Account Number:\n");
-					clients=findClientsAcc(root,acc);
+					clients=findClientsAcc(root,acc, &clients);
 					break;
 				default:
 		            printf("the number is not in the menu.\n try again\n");
