@@ -76,28 +76,47 @@ try deleteClient(accountNum acc){
 
 
 
+/*******************************************************NEW***********/
 
-client* findClientID(client *root, clientID id, client **foundClients){
+void	printClientsLinkedList(client *clients){
+	if (clients==NULL){
+		return;
+	}
+	printClientsLinkedList(clients->next);
+	clients->next-=NULL;
+	printClientInfo(clients);
+}
+
+/*******************************************************NEW***********/
+void	findClientAcc(client *root, accountNum acc, client **foundClients){
 	if (root==NULL)
-		return NULL;
+		return;
+
+	findClientID(root->left, acc, foundClients);
+	if (root->accNum==acc){
+			root->next=*foundClients;
+			*foundClients=root;
+	}
+	findClientID(root->right, acc,foundClients);
+	return;
+}
+/*******************************************************NEW***********/
+void findClientID(client *root, clientID id, client **foundClients){
+	if (root==NULL)
+		return;
 
 	findClientID(root->left, id, foundClients);
 	if (root->cID==id){
-		if  (*foundClients==NULL)
-			*foundClients=root;
-		else{
 			root->next=*foundClients;
-			foundClients->next=root;
-		}
+			*foundClients=root;
 	}
-	findClientID
-
-
+	findClientID(root->right, id ,foundClients);
+	return;
 }
 
 
 /*******************************************************NEW***********/
-client* findClient (){
+void findClient (){
 	char c;
 	client* clients=NULL, * root=NULL;
 	clientID id; accountNum acc;
@@ -127,6 +146,11 @@ client* findClient (){
 			}
 	}
 
+	if (clients==NULL){
+		printf("No clients found\n");
+		return ;
+	}
+	printClientsLinkedList(clients);
 
 }
 
@@ -296,12 +320,15 @@ accountNum getAcc(availble checkif){
 
 }
 
-void printClientInfo()
+void printClientInfo(client* c)
 {
 	accountNum accNumber;
 	client *tempClient;
-	accNumber = getAcc(EXIST);
-	tempClient = getBankClient(accNumber,NOCHECK);
+	if (c==NULL){
+		accNumber = getAcc(EXIST);
+		tempClient = getBankClient(accNumber,NOCHECK);
+	}
+	tempClient=c;
 	printf("Client name: %s  %s\n",tempClient->name,tempClient->surname);
 	printf("Client Bank name: %s\n",tempClient->bankName);
 	printf("Client branch ID : %d\n",tempClient->brID);
