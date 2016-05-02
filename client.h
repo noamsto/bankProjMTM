@@ -24,7 +24,9 @@ typedef struct clients{
     amount debt;					/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
-    struct clients *next;
+    struct clients *left;
+    struct clients *right;
+
 }client;
 
 

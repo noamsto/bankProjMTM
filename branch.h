@@ -33,7 +33,7 @@ branch* createBranchList();
 try addNewBranch();
 /*create a new branch and add to list. get info from user*/
 
-void createBranchClientList(clientsLinkedList*);
+client* createBranchClientList();
 /*create list of clients to branch*/
 
 try addNewClientToBranch();
