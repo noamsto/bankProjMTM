@@ -145,12 +145,31 @@ int BankNumberOfClients(){
 	return masterBank->numOfClients;
 }
 
+client* findBankClient(client* root, accountNum acc){
+
+	if (root==NULL){
+		return NULL;
+	}
+	if (root->accNum>acc)
+		return findBankClient(root->right, acc);
+
+	if (root->accNum<acc)
+		return findBankClient(root->left,acc)
 
 
-/*find a client in bank Client list.*/
+
+}
+
+
+
+
+
+
+/*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
-
-	findBankClient(CLIENTS)
+	client* getClient=NULL;
+	getClient= findBankClient(CLIENTSROOT(masterBank), acc);
+	return getClient;
 }
 
 /*********_Information_Functions_START_******************/
