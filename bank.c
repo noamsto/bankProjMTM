@@ -8,7 +8,8 @@
 
 void initBank(bank*);
 
-#define CLIENTSROOT(STRUCT) STRUCT->root
+#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
+#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
 
 int clientNumberOfBank_REC(client *head, amount *biggestBalance);
 int clientNumberOfBank();

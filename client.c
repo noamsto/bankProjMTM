@@ -5,8 +5,8 @@
  */
 
 #include "bank.h"
+#define GETBRID(ACC) getBankClient(ACC,GETSPECIFIC )->brID
 
-client* findClient ();
 
 /*get the transaction info from user, accoun number and amount of money.*/
 void getTransactionInfo(accountNum* acc,amount* money);
