@@ -31,6 +31,7 @@ int getTime(char*); /*get hours from user.*/
 branch *replaceBranch(branch* to_replace);/* replace a member in the tree with a different member*/
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 branch* findSmallest(branch*);/* finds and returns the smallest member of a certain tree  */
+void insertClientTree(client*,client*);
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -107,57 +108,69 @@ client* createBranchClientList()
 	client *temp;
 	temp = ALLOC(client,1);
 	return temp;
-	/*list->head = ALLOC(client,1);
-	list->tail = ALLOC(client,1);
-	list->head->next = list->tail;
-	list->tail->next = NULL;*/
 }
 
 try addNewClientToBranch()
 {
     /*prepare data to receive client*/
-    branchID brID;
     branch *temp;
     client *newClient;
     
     printf("Starting new client registry:\n");
-    /*get branch and check if available place for another client*/
-    if(getNumOfBranches()==0){
-            printf("first add a branch\n");
-            return FAIL;
-    }
-    if (isBankFull()) {
-        printf("The bank is full\n");
-        return FAIL;
-    }
-    brID=getBranchID(EXIST);
-    temp = getBranch(brID,NOCHECK);
+    if(addClientConditiones()==FALSE)
+    	return FAIL;
+    temp = getBranch(getBranchID(EXIST));
     
     if (isBranchFull(temp)) {
         printf("the branch is full\n");
         return FAIL;
     }
-    newClient = ALLOC(client,1);
-    
-    getClie
-    /*receive client data from user*/
-    initClient(newClient);
-    getName(&(newClient->name), MAXNAME, "please enter client name:\n");
-    getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
-    newClient->bankName = temp->bankName;
-    getClientID(newClient->cID);
-    newClient->accNum=getAcc(NOTEXIST);
+    newClient = getDetailsFromUser(temp->brID,temp->bankName);
     
     /*inform branch and bank on new client*/
-    newClient->brID=brID;
     temp->currentClients++;
     addNewClientToBank(newClient);
-    newClient->next = CLIENTSHEAD(temp);
-    CLIENTSHEAD(temp) = newClient;
+    insertClientTree(temp->clientList,newClient);
     printf("Add new client finished successfully\n");
     return SUCCESS;
 }
 
+boolean getClientConditions(){
+if(getNumOfBranches()==0){
+           printf("first add a branch\n");
+           return FALSE;
+   }
+   if (isBankFull()) {
+       printf("The bank is full\n");
+       return FALSE;
+   }
+   return TRUE;
+}
+
+client* getDetailsFromUser(branchID brID,char* bankName){
+	client* newClient;
+	newClient = ALLOC(client,1);
+    initClient(newClient);
+    getName(&(newClient->name), MAXNAME, "please enter client name:\n");
+    getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
+    newClient->bankName = bankName;
+    getClientID(newClient->cID);
+    newClient->accNum=getAcc(NOTEXIST);
+    newClient->brID=brID;
+    return newClient;
+}
+
+void insertClientTree(client* root,client* new)
+{
+	if(root==NULL){
+		root=new;
+		return;
+	}
+	if(root->accNum > new->accNum)
+		insertClientTree(root->left,new);
+	else
+		insertClientTree(root->right,new);
+}
 #ifdef BANK_AHAMELIM
 int clientNumberWithGivenBalance()
 {
@@ -372,7 +385,7 @@ int isBranchFull(branch *tempBranch)
 
 branch* getBranch(branchID brID,branch** super)
 {
-    return findBranch(ROOT,brID);
+    return findBranch(branchRoot,brID);
 }
 
 
