@@ -24,14 +24,10 @@ typedef struct clients{
     amount debt;					/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
-    struct clients *next;
+    struct clients *left;
+    struct clients *right;
 }client;
 
-
-typedef struct linkedList{
-	client *head;
-	client *tail;
-}clientsLinkedList;
 
 /*init client struct*/
 void initClient(client* );

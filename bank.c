@@ -8,8 +8,7 @@
 
 void initBank(bank*);
 
-#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
-#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
+#define CLIENTSROOT(STRUCT) STRUCT->root
 
 int clientNumberOfBank_REC(client *head, amount *biggestBalance);
 int clientNumberOfBank();
@@ -28,6 +27,7 @@ void initBank(bank* masterBank){
 	masterBank->numOfBranch=0;
 	masterBank->numOfClients=0;
 	masterBank->yearProfit=0;
+	CLIENTSROOT(masterBank)=NULL;
 }
 
 
@@ -39,23 +39,6 @@ void createBank(){
 	getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
-
-/*create and init client list*/
-void createBankClientList()
-{
-	client* tempHead=NULL , *tempTail=NULL;
-
-	tempTail=ALLOC(client,1);
-	tempTail->next=NULL;
-
-
-	tempHead=ALLOC(client,1);
-	tempHead->next=tempTail;
-
-	CLIENTSHEAD(masterBank)=tempHead;
-	CLIENTSTAIL(masterBank)=tempTail;
-	return;
-}
 
 /*********_Bank_Creation_Functions_END_******************/
 
@@ -165,23 +148,9 @@ int BankNumberOfClients(){
 
 
 /*find a client in bank Client list.*/
-client* getBankClient(accountNum acc, client** nextClient){
-	client* preClient=CLIENTSHEAD(masterBank), *tail=CLIENTSTAIL(masterBank);
+client* getBankClient(accountNum acc){
 
-
-	while (preClient->next!=tail)
-	{
-		if (preClient->next->accNum==acc){
-
-			if (nextClient==GETSPECIFIC){
-				return preClient->next;
-			}
-			*nextClient=preClient->next->next;
-			return preClient;
-		}
-		preClient=preClient->next;
-	}
-	return NULL;
+	findBankClient(CLIENTS)
 }
 
 /*********_Information_Functions_START_******************/
