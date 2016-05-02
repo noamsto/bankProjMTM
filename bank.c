@@ -143,21 +143,7 @@ void addNewClientToBank(client* createdClient){
 /*return number clients of bank.*/
 int BankNumberOfClients(){
 	return masterBank->numOfClients;
-}
 
-client* findBankClient(client* root, accountNum acc){
-
-	if (root==NULL){
-		return NULL;
-	}
-	if (root->accNum>acc)
-		return findBankClient(root->right, acc);
-
-	if (root->accNum<acc)
-		return findBankClient(root->left,acc);
-
-
-}
 
 
 
@@ -167,7 +153,7 @@ client* findBankClient(client* root, accountNum acc){
 /*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
 	client* getClient=NULL;
-	getClient= findBankClient(CLIENTSROOT(masterBank), acc);
+	getClient= getClient(CLIENTSROOT(masterBank), acc);
 	return getClient;
 }
 

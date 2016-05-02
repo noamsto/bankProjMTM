@@ -5,9 +5,8 @@
  */
 
 #include "bank.h"
-#define GETBRID(ACC) getBankClient(ACC,GETSPECIFIC )->brID
 
-
+client* findClient ();
 
 /*get the transaction info from user, accoun number and amount of money.*/
 void getTransactionInfo(accountNum* acc,amount* money);
@@ -70,6 +69,63 @@ try deleteClient(accountNum acc){
         return FAIL;
     }
     return SUCCESS;
+}
+
+
+
+
+client* findClient
+
+
+/*******************************************************NEW***********/
+client* findClient (){
+	char c;
+	client* clients=NULL, * root=NULL;
+	clientID id; accountNum acc;
+	boolean finish=FALSE;
+	root=getBankClientRoot();
+
+	while (finish!=TRUE){
+		printf("Find Client by:\n"
+						  "1. ID\n"
+						  "2.Account Number\n");
+
+			c=getchar();
+			getchar();
+
+			switch (c) {
+				case 1:
+					getClientID(&id);
+					clients=findClientsID(root, id);
+					break;
+				case 2:
+					getInt(&acc,"Please Enter Account Number:\n");
+					clients=findClientsAcc(root,acc);
+					break;
+				default:
+		            printf("the number is not in the menu.\n try again\n");
+					break;
+			}
+	}
+
+
+}
+
+
+
+client* getClient(client* root, accountNum acc){
+
+	if (root==NULL){
+		return NULL;
+	}
+
+	if (root->accNum>acc)
+		return findBankClient(root->right, acc);
+
+	if (root->accNum<acc)
+		return findBankClient(root->left,acc);
+
+	return root;
 }
 
 
