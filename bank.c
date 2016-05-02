@@ -154,8 +154,7 @@ client* findBankClient(client* root, accountNum acc){
 		return findBankClient(root->right, acc);
 
 	if (root->accNum<acc)
-		return findBankClient(root->left,acc)
-
+		return findBankClient(root->left,acc);
 
 
 }
