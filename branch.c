@@ -105,9 +105,7 @@ void insertBranch(branch* root,branch* new)/* insert branch to tree. recursive f
 /*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE*/
 client* createBranchClientList()
 {
-	client *temp;
-	temp = ALLOC(client,1);
-	return temp;
+	return NULL;
 }
 
 try addNewClientToBranch()
@@ -147,30 +145,7 @@ if(getNumOfBranches()==0){
    return TRUE;
 }
 
-client* getDetailsFromUser(branchID brID,char* bankName){
-	client* newClient;
-	newClient = ALLOC(client,1);
-    initClient(newClient);
-    getName(&(newClient->name), MAXNAME, "please enter client name:\n");
-    getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
-    newClient->bankName = bankName;
-    getClientID(newClient->cID);
-    newClient->accNum=getAcc(NOTEXIST);
-    newClient->brID=brID;
-    return newClient;
-}
 
-void insertClientTree(client* root,client* new)
-{
-	if(root==NULL){
-		root=new;
-		return;
-	}
-	if(root->accNum > new->accNum)
-		insertClientTree(root->left,new);
-	else
-		insertClientTree(root->right,new);
-}
 #ifdef BANK_AHAMELIM
 int clientNumberWithGivenBalance()
 {
@@ -183,8 +158,7 @@ int clientNumberWithGivenBalance()
         printf("no branches\n");
         return 0;
     }
-    brID = getBranchID(EXIST);
-    tempBranch = getBranch(brID,NOCHECK);
+    tempBranch = getBranch(getBranchID(EXIST));
     getDouble(&balance, "please enter balance:\n");
     tempClient = CLIENTSHEAD(tempBranch);
     while(tempClient!=NULL){
@@ -232,46 +206,37 @@ int clientNumberWithBiggerLoansThanBalance_rec(client *list){
 	return amountOfClients;
 }
 
-/*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE
 try deleteAllBranchClients(branchID id)
 {
     branch *temp=NULL;
-    if (!id) {/*if no ID has been received. get branch id from user*//*
+    if (!id) {/*if no ID has been received. get branch id from user*/
         getInt(&id, "please enter branch ID:\n");
     }
-    temp = getBranch(id,NOCHECK);
-    while(temp->currentClients>0){
-        deleteClient(temp->clientList.head->next->accNum);
-    }
-    
+    temp = getBranch(id);
+    /*delete all clients*/
     updateBranchBalance(id,0,REMOVE);
     return SUCCESS;
-}*/
+}
 
-/*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE
 try deleteBranchClient(branchID brID,accountNum acc)
 {
-    /*set variables*//*
-    client* tempClient=NULL,*beforeClient;
+    /*set variables*/
+    client* tempClient=NULL;
     branch* tempBranch;
-    tempClient=getBranchClient(acc, brID,&beforeClient);
-    if (tempClient==NULL) {/*if the  client is not in branch*//*
-        printf("client not in branch.\n");
-        return CLIENTNOTFOUND;
-    }
-    tempBranch=getBranch(tempClient->brID,NOCHECK);
-    
-    /*update branch on leaving costumer*//*
+
+    tempBranch=getBranch(brID);
+    if ((tempClient = findClient(tempBranch->clientList,acc)) == NULL ) {
+           printf("client not in branch.\n");/*if the  client is not in branch*/
+           return CLIENTNOTFOUND;
+       }
+    /*update branch on leaving costumer*/
     updateBranchBalance(tempClient->brID,tempClient->balance, REMOVE);
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
-    /*delete all clients fields*//*
-    beforeClient->next = tempClient->next;
-    FREE(tempClient);
     tempBranch->currentClients--;
-    
+    deleteClient(tempBranch->clientList,tempClient);
     return SUCCESS;
-}*/
+}
 
 
 try  deleteBranch(branchID brID)
@@ -286,7 +251,7 @@ try  deleteBranch(branchID brID)
     if(brID==NOCHECK)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
-    deleteBranchFromTree(ROOT,deleteB);
+    deleteBranchFromTree(branchRoot,deleteB);
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
@@ -315,13 +280,12 @@ void deleteBranchFields(branch* deleted_Branch)
 {
 	deleteAllBranchClients(deleted_Branch->clientList);
     FREE(deleted_Branch->branchName);
-    FREE(deleted_Branch->clientList);
     FREE(deleted_Branch);
 }
 
 void deleteAllBranches()
 {
-	clearBranchTree(ROOT);
+	clearBranchTree(branchRoot);
 }
 
 /*----------------------------------------------------*/
@@ -329,8 +293,8 @@ void deleteAllBranches()
 try updateBranchBalance(branchID brID, amount am,addremove remove)
 {
     branch *tempBranch;
-    tempBranch = getBranch(brID,NOCHECK);
-    if (tempBranch==NULL){/*if branch not found*/
+    ;
+    if ((tempBranch = getBranch(brID))==NULL){/*if branch not found*/
         printf("branch not found.\n");
         return BRANCHNOTFOUND;
     }
@@ -351,8 +315,6 @@ try updateBranchBalance(branchID brID, amount am,addremove remove)
     }
     return SUCCESS;
 }
-
-
 
 void updateBranchLoan(branchID brID,addremove remove)
 {
@@ -383,40 +345,26 @@ int isBranchFull(branch *tempBranch)
 }
 
 
-branch* getBranch(branchID brID,branch** super)
+branch* getBranch(branchID brID)
 {
     return findBranch(branchRoot,brID);
 }
 
 
 
-/*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE
-client* getBranchClient(accountNum acc, branchID brID, client **previus)
+client* getBranchClient(accountNum acc, branchID brID)
 {
     branch *tempBranch=NULL;
-    client *tempClient;
-
-    tempBranch=getBranch(brID,NOCHECK);
-    tempClient = tempBranch->clientList.head;
-
-    while(tempClient->next != tempBranch->clientList.tail){
-    	if(tempClient->next->accNum == acc){
-    		if(previus != NULL)
-    			*previus = tempClient;
-    		return tempClient->next;
-    	}
-    	tempClient = tempClient->next;
-    }
-
-    return NULL;
+    tempBranch=getBranch(brID);
+    return getClient(tempBranch->clientList,acc);
 }
-*/
+
 
 
 /*---------------HELP SEARCH IN TREE BRANCH-------------------*/
 boolean checkBranchID(branchID brID)
 {
-    if(findBranch(ROOT,brID) != NULL)
+    if(findBranch(branchRoot,brID) != NULL)
     	return TRUE;
     return FALSE;
 }
@@ -427,8 +375,8 @@ branch* findBranch(branch* root, branchID brID){
 	if(root->brID == brID)
 		return root;
 	if(root->brID > brID)
-		return findBranch(root->right,brID);
-	return findBranch(root->left,brID);
+		return findBranch(root->left,brID);
+	return findBranch(root->right,brID);
 
 }
 
@@ -436,8 +384,8 @@ void clearBranchTree(branch* root)
 {
 	if(root == NULL)
 		return;
-	clearBranchTree(root->right);
 	clearBranchTree(root->left);
+	clearBranchTree(root->right);
 	deleteBranchFields(root);
 	FREE(root);
 	updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
@@ -445,24 +393,24 @@ void clearBranchTree(branch* root)
 
 branch *replaceBranch(branch* root)/*replace the current junction with the wanted member of the tree*/
 {
-	if(root->left != NULL){
+	if(root->right != NULL){
 		branch *to_replace;
-		to_replace = findSmallest(root->left);
-		to_replace->right = root->right;
+		to_replace = findSmallest(root->right);
 		to_replace->left = root->left;
+		to_replace->right = root->right;
 		deleteBranchFields(root);
 		return to_replace;
 	}
 	deleteBranchFields(root);
-	return root->left;
+	return root->right;
 }
 
 branch* findSmallest(branch* root)/*finds and returns the smallest member of the tree*/
 {
-	if(root->right == NULL)
+	if(root->left == NULL)
 		return root;
 	else
-		return findSmallest(root->right);
+		return findSmallest(root->left);
 
 }
 
