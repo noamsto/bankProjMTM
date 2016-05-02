@@ -26,14 +26,8 @@ typedef struct clients{
     
     struct clients *left;
     struct clients *right;
-
 }client;
 
-
-typedef struct linkedList{
-	client *head;
-	client *tail;
-}clientsLinkedList;
 
 /*init client struct*/
 void initClient(client* );

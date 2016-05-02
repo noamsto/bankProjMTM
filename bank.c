@@ -28,6 +28,7 @@ void initBank(bank* masterBank){
 	masterBank->numOfBranch=0;
 	masterBank->numOfClients=0;
 	masterBank->yearProfit=0;
+	CLIENTSROOT(masterBank)=NULL;
 }
 
 
@@ -39,23 +40,6 @@ void createBank(){
 	getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
-
-/*create and init client list*/
-void createBankClientList()
-{
-	client* tempHead=NULL , *tempTail=NULL;
-
-	tempTail=ALLOC(client,1);
-	tempTail->next=NULL;
-
-
-	tempHead=ALLOC(client,1);
-	tempHead->next=tempTail;
-
-	CLIENTSHEAD(masterBank)=tempHead;
-	CLIENTSTAIL(masterBank)=tempTail;
-	return;
-}
 
 /*********_Bank_Creation_Functions_END_******************/
 
@@ -160,28 +144,18 @@ void addNewClientToBank(client* createdClient){
 /*return number clients of bank.*/
 int BankNumberOfClients(){
 	return masterBank->numOfClients;
-}
 
 
 
-/*find a client in bank Client list.*/
-client* getBankClient(accountNum acc, client** nextClient){
-	client* preClient=CLIENTSHEAD(masterBank), *tail=CLIENTSTAIL(masterBank);
 
 
-	while (preClient->next!=tail)
-	{
-		if (preClient->next->accNum==acc){
 
-			if (nextClient==GETSPECIFIC){
-				return preClient->next;
-			}
-			*nextClient=preClient->next->next;
-			return preClient;
-		}
-		preClient=preClient->next;
-	}
-	return NULL;
+
+/*get client in bank Client list.*/
+client* getBankClient(accountNum acc){
+	client* getClient=NULL;
+	getClient= getClient(CLIENTSROOT(masterBank), acc);
+	return getClient;
 }
 
 /*********_Information_Functions_START_******************/
