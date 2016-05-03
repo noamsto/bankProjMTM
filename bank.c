@@ -8,8 +8,7 @@
 
 void initBank(bank*);
 
-#define CLIENTSHEAD(STRUCT) STRUCT->clientList.head
-#define CLIENTSTAIL(STRUCT) STRUCT->clientList.tail
+#define CLIENTSROOT(STRUCT) STRUCT->root
 
 int clientNumberOfBank_REC(client *head, amount *biggestBalance);
 int clientNumberOfBank();
@@ -154,7 +153,7 @@ int BankNumberOfClients(){
 /*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
 	client* getClient=NULL;
-	getClient= getClient(CLIENTSROOT(masterBank), acc);
+	getClient= findClientAcc(CLIENTSROOT(masterBank), acc);
 	return getClient;
 }
 
