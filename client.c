@@ -48,6 +48,19 @@ void initClient(client* c)
 }
 
 
+client* getDetailsFromUser(branchID brID,char* bankName){
+	client* newClient;
+	newClient = ALLOC(client,1);
+    initClient(newClient);
+    getName(&(newClient->name), MAXNAME, "please enter client name:\n");
+    getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
+    newClient->bankName = bankName;
+    getClientID(newClient->cID);
+    newClient->accNum=getAcc(NOTEXIST);
+    newClient->brID=brID;
+    return newClient;
+}
+
 /*delete client from system.*/
 try deleteClient(accountNum acc){
     try echo;
