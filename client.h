@@ -32,6 +32,10 @@ typedef struct clients{
 /*get information from user about new client.*/
 client* getDetailsFromUser(branchID ,char* );
 
+/*find a client in a tree structure*/
+client* getClient(client* root, accountNum acc);
+
+
 /*init client struct*/
 void initClient(client* );
 

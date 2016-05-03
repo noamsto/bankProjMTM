@@ -68,10 +68,10 @@ try updateBranchBalance(branchID, amount,addremove);
 void updateBranchLoan(branchID, addremove);
 /*update amount of loans from branch*/
 
-branch* getBranch(branchID,branch**);
+branch* getBranch(branchID);
 /*enter branch ID and receive pointer to the wanted branch*/
 
-client *getBranchClient(accountNum,branchID,client**);
+client *getBranchClient(accountNum,branchID);
 /* send client account and branch ID and receive client pointer if exist*/
 
 

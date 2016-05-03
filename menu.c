@@ -92,7 +92,7 @@ void infoMenu(){
 				printBranchInfo();
 				break;
 			case '3':
-				printClientInfo();
+				printClientInfo(NULL);
 				break;
 			case '9':
 				finish=TRUE;
@@ -127,7 +127,7 @@ void transactionAndReports(){
 				   loanToClient();
 				   break;
 				case '3':
-					clientNumberOfBank_print();
+					//clientNumberOfBank_print();
 					break;
 				case '4':
 					clientNumberWithBiggerLoansThanBalance_print();

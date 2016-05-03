@@ -37,7 +37,7 @@ int BankNumberOfClients();
 
 
 /*find a client in bankClient List.*/
-client *getBankClient(accountNum,client**);
+client *getBankClient(accountNum);
 
 /*update the bank balance.*/
 void updateBankBalance(amount ,addremove);

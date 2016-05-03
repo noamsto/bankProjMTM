@@ -21,9 +21,9 @@ static branch* branchRoot;
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
 branch *createBranch();/* create a new branch. get information from user */
-void insertBranch(branch*,branch*);/* insert branch to tree. recursive function */
+void insertBranch(branch**,branch*);/* insert branch to tree. recursive function */
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
-boolean deleteBranchFromTree(branch*,branchID);
+boolean deleteBranchFromTree(branch* ,branchID);
 branch *replaceBranch(branch* to_replace);/* replace a member in the tree with a different member*/
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 branch* findSmallest(branch*);/* finds and returns the smallest member of a certain tree  */
@@ -54,7 +54,7 @@ try addNewBranch()
         return MAX_BANK_REACHED;
     }
     newBranch = createBranch();
-    insertBranch(branchRoot,newBranch);
+    insertBranch(&branchRoot,newBranch);
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
     return SUCCESS;
 }
@@ -71,9 +71,11 @@ try addNewClientToBranch()
     /*prepare data to receive client*/
     branch *temp;
     client *newClient;
+    boolean check;
     
     printf("Starting new client registry:\n");
-    if(addClientConditiones()==FALSE)
+    check=addClientConditions();
+    if(check==FALSE)
     	return FAIL;
     temp = getBranch(getBranchID(EXIST));
     
@@ -86,7 +88,7 @@ try addNewClientToBranch()
     /*inform branch and bank on new client*/
     temp->currentClients++;
     addNewClientToBank(newClient);
-    insertClientTree(temp->clientList,newClient);
+    temp->clientList = insertClientTree(temp->clientList,newClient);
     printf("Add new client finished successfully\n");
     return SUCCESS;
 }
@@ -116,7 +118,7 @@ int clientNumberWithGivenBalance()
     tempBranch = getBranch(getBranchID(EXIST));
     getDouble(&balance, "please enter balance:\n");
 
-    return countClients(tempBranch->clientList,balance/*,pointer to func*/);
+    return  1 ;//countClients(tempBranch->clientList,balance/*,pointer to func*/);
 }
 //#endif
 void clientNumberWithBiggerLoansThanBalance_print(){
@@ -124,7 +126,7 @@ void clientNumberWithBiggerLoansThanBalance_print(){
 	branch *tempBranch;
 	branchID brID;
 	brID = getBranchID(EXIST);
-	tempBranch = getBranch(brID,NOCHECK);
+	tempBranch = getBranch(brID);
 	//clientNum_iter = clientNumberWithBiggerLoansThanBalance(CLIENTSHEAD(tempBranch));
 	//clientNum_rec = clientNumberWithBiggerLoansThanBalance_rec(CLIENTSHEAD(tempBranch));
 	printf("iterative check:\n"
@@ -184,7 +186,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
     tempBranch->currentClients--;
-    deleteClient(tempBranch->clientList,tempClient);
+    //deleteClient(tempBranch->clientList,tempClient);
     return SUCCESS;
 }
 
@@ -201,12 +203,12 @@ try  deleteBranch(branchID brID)
     if(brID==NOCHECK)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
-    deleteBranchFromTree(branchRoot,deleteB);
+    //deleteBranchFromTree(branchRoot,deleteB);
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
 
-boolean deleteBranchFromTree(branch* root,branchID removed_branch)
+/*boolean deleteBranchFromTree(branch* root,branchID removed_branch)
 {
 	if(root == NULL)
 		return FALSE;
@@ -223,7 +225,7 @@ boolean deleteBranchFromTree(branch* root,branchID removed_branch)
 		return TRUE;
 	}
 	return FALSE;
-}
+}*/
 
 
 void deleteBranchFields(branch* deleted_Branch)
@@ -269,7 +271,7 @@ try updateBranchBalance(branchID brID, amount am,addremove remove)
 void updateBranchLoan(branchID brID,addremove remove)
 {
     branch *tempBranch;
-    tempBranch = getBranch(brID,NOCHECK);
+    tempBranch = getBranch(brID);
     if(remove)
     	tempBranch->numOfActiveLoans--;
     else
@@ -278,7 +280,7 @@ void updateBranchLoan(branchID brID,addremove remove)
 
 void updateCurrentClient(branchID brID,addremove remove){
     branch *tempBranch;
-    tempBranch = getBranch(brID,NOCHECK);
+    tempBranch = getBranch(brID);
     if(remove)
     	tempBranch->currentClients--;
     else
@@ -409,7 +411,7 @@ void printBranchInfo()
 	branchID brID;
 	branch *tempBranch;
 	brID = getBranchID(EXIST);
-	tempBranch = getBranch(brID,NOCHECK);
+	tempBranch = getBranch(brID);
 	printf("Branch name: %s\n",tempBranch->branchName);
 	printf("Branch Bank name: %s\n",tempBranch->bankName);
 	printf("Branch ID : %d\n",tempBranch->brID);
@@ -434,20 +436,20 @@ branch *createBranch()/* create branch, receive data from user */
     newBranch->brID=getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
-    createBranchClientList(&(newBranch->clientList));    /*create the client list of the branch*/
+    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
     return newBranch;
 }
 
-void insertBranch(branch* root,branch* new)/* insert branch to tree. recursive function */
+void insertBranch(branch** root,branch* new)/* insert branch to tree. recursive function */
 {
-	if(root == NULL){
-		root = new;
+	if(*root == NULL){
+		*root = new;
 		return;
 	}
-	if(root->brID > new->brID)
-		insertBranch(root->left,new);
+	if((*root)->brID > new->brID)
+		insertBranch(&((*root)->left),new);
 	else
-		insertBranch(root->right,new);
+		insertBranch(&((*root)->right),new);
 }
 
 void initBranch(branch *brancInit)

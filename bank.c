@@ -35,7 +35,6 @@ void initBank(bank* masterBank){
 void createBank(){
 	masterBank=ALLOC(bank, 1);
 	initBank(masterBank);
-	createBankClientList();
 	getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
 }
 
@@ -97,24 +96,19 @@ void updateNumOfBankClients(addremove remove){
 
 /*delete a client from the bank.*/
 try deleteBankClient(accountNum acc){
-	client *getPreClient=NULL, *getNextClient=NULL,
-			*clientToBeDeleted=NULL;
+	client *clientToBeDeleted=NULL;
 
 	/*find bank client;*/
-	getPreClient=getBankClient(acc, &getNextClient);
+		clientToBeDeleted=getBankClient(acc);
 
-	if (getPreClient==NULL) {
+	if (clientToBeDeleted==NULL) {
 		return CLIENTNOTFOUND;
 	}
 
-	clientToBeDeleted=getPreClient->next;
 
 	/*update bank balance / client size*/
 	updateBankBalance(clientToBeDeleted->balance, REMOVE);
 	updateNumOfBankClients(REMOVE);
-
-	/*delete the Client*/
-	getPreClient->next=getNextClient;
 
 	FREE(clientToBeDeleted->name);
 	FREE(clientToBeDeleted->surname);
@@ -130,7 +124,7 @@ void addNewClientToBank(client* createdClient){
 
 	*newClient=*createdClient;
 
-	insertClientTree(CLIENTSROOT(masterBank), newClient);
+	CLIENTSROOT(masterBank)=insertClientTree(CLIENTSROOT(masterBank), newClient);
 
 	masterBank->numOfClients++;
 }
@@ -150,9 +144,9 @@ int BankNumberOfClients(){
 
 /*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
-	client* getClient=NULL;
-	getClient= findClientAcc(CLIENTSROOT(masterBank), acc);
-	return getClient;
+	client* getCl=NULL;
+	getCl= getClient(CLIENTSROOT(masterBank), acc);
+	return getCl;
 }
 
 /*********_Information_Functions_START_******************/
@@ -171,26 +165,28 @@ int isBankFull(){
 	return TRUE;
 }
 
-/*print the number of richest client and the bigget balance*/
+/*
+print the number of richest client and the bigget balance
 void clientNumberOfBank_print(){
 	int counter;
 	amount maxBalance=0;
-	/*the recursive calculation of the number of richest client and the biggest balance*/
+	the recursive calculation of the number of richest client and the biggest balance
 	counter = clientNumberOfBank_REC(CLIENTSHEAD(masterBank),&maxBalance);
 	printf("Recursive check:\n");
 	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
 
-	/*the Iterative calculation of the number of richest client and the biggest balance*/
+	the Iterative calculation of the number of richest client and the biggest balance
 	printf("Iterative check:\n");
 	counter = clientNumberOfBank(&maxBalance);
 	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
 }
+*/
 
 /* check Recursively which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
 /******need testsss *******/
-int clientNumberOfBank_REC(client *head, amount *biggestBalance){
+/*int clientNumberOfBank_REC(client *head, amount *biggestBalance){
 	int counter=0;
 	amount maxBalance=0;
 
@@ -210,13 +206,13 @@ int clientNumberOfBank_REC(client *head, amount *biggestBalance){
 	*biggestBalance=maxBalance;
 	return counter;
 
-}
+}*/
 
 
 /* check which are the client/s with biggest balance and return their number and
  * biggest balance.
  */
-int clientNumberOfBank(amount *biggestBalance){
+/*int clientNumberOfBank(amount *biggestBalance){
 	client* current=CLIENTSHEAD(masterBank);
 	int counter=0;
 	*biggestBalance=0;
@@ -232,7 +228,7 @@ int clientNumberOfBank(amount *biggestBalance){
 	}
 	return counter;
 
-}
+}*/
 
 /*********_Information_Functions_END_******************/
 
