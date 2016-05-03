@@ -47,7 +47,7 @@ void initClient(client* c)
     c->right=NULL;
 }
 
-
+/*get information from user about new client.*/
 client* getDetailsFromUser(branchID brID,char* bankName){
 	client* newClient;
 	newClient = ALLOC(client,1);

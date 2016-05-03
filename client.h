@@ -29,6 +29,8 @@ typedef struct clients{
     struct clients *next;
 }client;
 
+/*get information from user about new client.*/
+client* getDetailsFromUser(branchID ,char* );
 
 /*init client struct*/
 void initClient(client* );

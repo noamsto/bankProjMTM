@@ -124,15 +124,13 @@ try deleteBankClient(accountNum acc){
 
 /*add a new client to the bank.*/
 void addNewClientToBank(client* createdClient){
-	client *tempNext=NULL, *newClient=NULL;
+	client  *newClient=NULL;
 
 	newClient=ALLOC(client,1);
 
 	*newClient=*createdClient;
 
-	tempNext = CLIENTSHEAD(masterBank)->next;
-	CLIENTSHEAD(masterBank)->next=newClient;
-	newClient->next=tempNext;
+	insertClientTree(CLIENTSROOT(masterBank), newClient);
 
 	masterBank->numOfClients++;
 }
@@ -143,7 +141,7 @@ void addNewClientToBank(client* createdClient){
 /*return number clients of bank.*/
 int BankNumberOfClients(){
 	return masterBank->numOfClients;
-
+}
 
 
 
@@ -243,8 +241,6 @@ int clientNumberOfBank(amount *biggestBalance){
 void deleteBank(){
 	deleteAllBranches();
 	FREE(masterBank->name);
-	FREE(CLIENTSHEAD(masterBank));
-	FREE(CLIENTSTAIL(masterBank));
 	FREE(masterBank);
 }
 
