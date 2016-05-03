@@ -22,16 +22,16 @@ static branch* branchRoot;
 void initBranch(branch*);/*init branch struct*/
 branch *createBranch();/* create a new branch. get information from user */
 void insertBranch(branch*,branch*);/* insert branch to tree. recursive function */
-int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 boolean deleteBranchFromTree(branch*,branchID);
-branch* findBranch(branch* , branchID );
-branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
-int getTime(char*); /*get hours from user.*/
 branch *replaceBranch(branch* to_replace);/* replace a member in the tree with a different member*/
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 branch* findSmallest(branch*);/* finds and returns the smallest member of a certain tree  */
-void insertClientTree(client*,client*);
+boolean addClientConditions(); /* check if possible to add new client to the bank */
+branch* findBranch(branch* , branchID );
+branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
+int getTime(char*); /*get hours from user.*/
+int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -41,21 +41,6 @@ branch* createBranchList()
 	branchRoot = ALLOC(branch,1);
     initBranch(branchRoot);
     return branchRoot;
-}
-
-
-void initBranch(branch *brancInit)
-{
-    brancInit->brID = 0;
-    brancInit->balance=0;
-    brancInit->openTime=0;
-    brancInit->closeTime=0;
-    brancInit->currentClients=0;
-    brancInit->numOfActiveLoans=0;
-    brancInit->balance = 1.0;
-    brancInit->yearProfit = 1.0;
-    brancInit->left = NULL;
-    brancInit->right = NULL;
 }
 
 
@@ -74,33 +59,6 @@ try addNewBranch()
     return SUCCESS;
 }
 
-branch *createBranch()/* create branch, receive data from user */
-{
-	branch *newBranch;
-	printf("Add new branch start:\n");
-    newBranch = ALLOC(branch,1);
-	initBranch(newBranch);
-    /*receive data from user*/
-	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
-    newBranch->bankName = getBankName();
-    newBranch->brID=getBranchID(NOTEXIST);
-    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
-    newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
-    createBranchClientList(&(newBranch->clientList));    /*create the client list of the branch*/
-    return newBranch;
-}
-
-void insertBranch(branch* root,branch* new)/* insert branch to tree. recursive function */
-{
-	if(root == NULL){
-		root = new;
-		return;
-	}
-	if(root->brID > new->brID)
-		insertBranch(root->left,new);
-	else
-		insertBranch(root->right,new);
-}
 
 /*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE*/
 client* createBranchClientList()
@@ -133,7 +91,7 @@ try addNewClientToBranch()
     return SUCCESS;
 }
 
-boolean getClientConditions(){
+boolean addClientConditions(){
 if(getNumOfBranches()==0){
            printf("first add a branch\n");
            return FALSE;
@@ -146,29 +104,21 @@ if(getNumOfBranches()==0){
 }
 
 
-#ifdef BANK_AHAMELIM
+//#ifdef BANK_AHAMELIM
 int clientNumberWithGivenBalance()
 {
-    int clientsNumber=0;
     amount balance;
-    branchID  brID;
     branch *tempBranch;
-    client *tempClient;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return 0;
     }
     tempBranch = getBranch(getBranchID(EXIST));
     getDouble(&balance, "please enter balance:\n");
-    tempClient = CLIENTSHEAD(tempBranch);
-    while(tempClient!=NULL){
-        if(tempClient->balance > balance)
-            clientsNumber++;
-        tempClient = tempClient->next;
-    }
-    return clientsNumber;
+
+    return countClients(tempBranch->clientList,balance/*,pointer to func*/);
 }
-#endif
+//#endif
 void clientNumberWithBiggerLoansThanBalance_print(){
 	int clientNum_rec,clientNum_iter;
 	branch *tempBranch;
@@ -470,3 +420,47 @@ void printBranchInfo()
 	printf("Branch balance: %g\n",tempBranch->balance);
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 }
+
+/*----------ADD NEW BRANCH FUNCTIONS-------------*/
+branch *createBranch()/* create branch, receive data from user */
+{
+	branch *newBranch;
+	printf("Add new branch start:\n");
+    newBranch = ALLOC(branch,1);
+	initBranch(newBranch);
+    /*receive data from user*/
+	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
+    newBranch->bankName = getBankName();
+    newBranch->brID=getBranchID(NOTEXIST);
+    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
+    newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
+    createBranchClientList(&(newBranch->clientList));    /*create the client list of the branch*/
+    return newBranch;
+}
+
+void insertBranch(branch* root,branch* new)/* insert branch to tree. recursive function */
+{
+	if(root == NULL){
+		root = new;
+		return;
+	}
+	if(root->brID > new->brID)
+		insertBranch(root->left,new);
+	else
+		insertBranch(root->right,new);
+}
+
+void initBranch(branch *brancInit)
+{
+    brancInit->brID = 0;
+    brancInit->balance=0;
+    brancInit->openTime=0;
+    brancInit->closeTime=0;
+    brancInit->currentClients=0;
+    brancInit->numOfActiveLoans=0;
+    brancInit->balance = 1.0;
+    brancInit->yearProfit = 1.0;
+    brancInit->left = NULL;
+    brancInit->right = NULL;
+}
+
