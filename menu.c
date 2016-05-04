@@ -132,12 +132,15 @@ void transactionAndReports(){
 					findClient();
 					break;
 				case '4':
-					clientNumberWithBiggerLoansThanBalance_print();
+					clientNumberWithBiggerLoansThanBalance();
 					break;
-#ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
 				case '5':
-				   printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
+					printClientAccountsNumberAndBalance();
 				   break;
+#ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
+				case '6':
+					clientNumberWithGivenBalance();
+					break;
 #endif
 				case '9':
 					finish=TRUE;
