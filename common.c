@@ -55,9 +55,9 @@ void getClientID(clientID * id){
         fgets(temp, MAXSTRING, stdin);
         /*check id length*/
         len=(int)strlen(temp);
-        if(len-1!=CLIENTIDL){   /* -1 in order to ignore the '\n'*/
+        if(len-1!=CLIENTIDL-1){   /* -1 in order to ignore the '\n'*/
             check=FALSE;
-            printf("Wrong id length (%d)\n",CLIENTIDL);
+            printf("Wrong id length (%d)\n",CLIENTIDL-1);
             continue;
         }
         /*check if id have only digits*/
@@ -68,7 +68,7 @@ void getClientID(clientID * id){
                 break;
             }
     }while(check==FALSE);
-    temp[i]='\0';
+    temp[CLIENTIDL]='\0';
     strcpy(id, temp);
 }
 

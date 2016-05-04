@@ -27,6 +27,9 @@ typedef struct banks{
 
 
 
+client * getBankClientRoot ();
+
+
 
 /*create and init M size client list. */
 void createBankClientList();

@@ -101,6 +101,22 @@ try deleteClient(accountNum acc){
 
 
 
+
+void buildClientLinkedList(client **list, client* add){
+	client *head=*list;
+	client *swap;
+
+	while (head!=NULL){
+		if (head->cID> add->cID){
+			add->next=head;
+			head=add;
+			return;
+		}
+		head=head->next;
+	}
+	head=add;
+}
+
 /*******************************************************NEW***********/
 
 void	printClientsLinkedList(client *clients){
@@ -113,27 +129,26 @@ void	printClientsLinkedList(client *clients){
 }
 
 /*******************************************************NEW***********/
-void	findClientAcc(client *root, accountNum acc, client **foundClients){
+void	findClientBalance(client *root, amount balance, client **foundClients){
 	if (root==NULL)
 		return;
 
-	findClientID(root->left, acc, foundClients);
-	if (root->accNum==acc){
-		root->next=*foundClients;
-		*foundClients=root;
+	findClientBalance(root->left, balance, foundClients);
+	if (root->balance==balance){
+		buildClientLinkedList(foundClients, root);
 	}
-	findClientID(root->right, acc,foundClients);
+	findClientBalance(root->right, balance,foundClients);
 	return;
 }
 /*******************************************************NEW***********/
+
 void findClientID(client *root, clientID id, client **foundClients){
 	if (root==NULL)
 		return;
 
 	findClientID(root->left, id, foundClients);
-	if (root->cID==id){
-		root->next=*foundClients;
-		*foundClients=root;
+	if (!strcmp(root->cID, id)){
+		buildClientLinkedList(foundClients, root);
 	}
 	findClientID(root->right, id ,foundClients);
 	return;
@@ -144,26 +159,27 @@ void findClientID(client *root, clientID id, client **foundClients){
 void findClient (){
 	char c;
 	client* clients=NULL, * root=NULL;
-	clientID id; accountNum acc;
+	clientID id; accountNum balance;
 	boolean finish=FALSE;
-	//root=getBankClientRoot();
+	root=getBankClientRoot();
 
 	while (finish!=TRUE){
 		printf("Find Client by:\n"
 				"1. ID\n"
-				"2.Account Number\n");
-
+				"2.Balance\n");
 		c=getchar();
 		getchar();
 
 		switch (c) {
-		case 1:
+		case '1':
 			getClientID(&id);
-			//clients=findClientsID(root, id, &clients);
+			findClientID(root, id, &clients);
+			finish = TRUE;
 			break;
-		case 2:
-			getInt(&acc,"Please Enter Account Number:\n");
-			//clients=findClientsAcc(root,acc, &clients);
+		case '2':
+			getInt(&balance,"Please Enter Account Number:\n");
+			findClientBalance(root,balance, &clients);
+			finish = TRUE;
 			break;
 		default:
 			printf("the number is not in the menu.\n try again\n");

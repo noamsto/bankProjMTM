@@ -111,7 +111,8 @@ void transactionAndReports(){
 		while(finish == FALSE){
 			printf( "\n1: deposit money to client\n"
 					"2: loan money to client\n"
-					"3: biggest balance in bank\n"
+					//"3: biggest balance in bank\n"
+					"3: find client\n"
 					"4: number of clients with bigger loans\n"
 					#ifdef BANK_AHAMELIM
 					"5: number of clients with given balance\n"
@@ -128,6 +129,7 @@ void transactionAndReports(){
 				   break;
 				case '3':
 					//clientNumberOfBank_print();
+					findClient();
 					break;
 				case '4':
 					clientNumberWithBiggerLoansThanBalance_print();

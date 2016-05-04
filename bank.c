@@ -233,6 +233,10 @@ void clientNumberOfBank_print(){
 /*********_Information_Functions_END_******************/
 
 
+client * getBankClientRoot (){
+	return CLIENTSROOT(masterBank);
+}
+
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
