@@ -125,6 +125,7 @@ void	printClientsLinkedList(client *clients){
 	printClientsLinkedList(clients->next);
 	clients->next=NULL;
 	printClientInfo(clients);
+	printf("\n");
 }
 
 

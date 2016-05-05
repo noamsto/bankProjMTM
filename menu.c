@@ -81,7 +81,7 @@ void infoMenu(){
 		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
-				"4:Find client"
+				"4:Find client\n"
 				"9: back to main menu\n");
 		subMenu = getchar();
 		getchar();
