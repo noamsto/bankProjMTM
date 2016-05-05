@@ -17,6 +17,25 @@ try updateClientDebt(accountNum acc, amount money, addremove add);
 
 
 
+/*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
+void findClient ();
+
+/*function search the tree, compare either balance or id, and build client linked list */
+void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*));
+
+/* 2 generic compare functions . one for client id and one for balance;*/
+int compareID(client* check, void* id);
+int compareBal(client* check, void *bal);
+
+/*print clients linked list*/
+void	printClientsLinkedList(client *clients);
+
+/*insert a client to a client linked list*/
+void buildClientLinkedList(client *list, client* add);
+
+
+
+
 client * insertClientTree(client* root, client* newClient){
 
 	if (!root){
@@ -101,12 +120,10 @@ try deleteClient(accountNum acc){
 }
 
 
-/*********************** WOKING **********************/
-void buildClientLinkedList(client *list, client* add){
+/*insert a client to a client linked list*/
+void buildClientLinkedList(client *list, client* add){	/*recieve the head of the list and client to add.*/
 	client *current=list;
-
-
-	while (current->next!=NULL){
+	while (current->next!=NULL){		/*sort the list by client id.*/
 		if (strcmp(current->next->cID, add->cID)<= 0){
 			add->next=current->next;
 			break;
@@ -116,19 +133,18 @@ void buildClientLinkedList(client *list, client* add){
 	current->next=add;
 }
 
-/*******************************************************NEW***********/
-
-void	printClientsLinkedList(client *clients){
+/*print clients linked list*/
+void	printClientsLinkedList(client *clients){		/*recieve the list head.*/
 	if (clients==NULL){
 		return;
 	}
 	printClientsLinkedList(clients->next);
-	clients->next=NULL;
-	printClientInfo(clients);
+	clients->next=NULL;	/*destroy created list.*/
+	printClientInfo(clients); /*send each client to a single client print function.*/
 	printf("\n");
 }
 
-
+/* 2 generic compare functions . one for client id and one for balance;*/
 int compareID(client* check, void* id){
 	return !strcmp(check->cID, (clientID*) id);
 }
@@ -136,27 +152,28 @@ int compareBal(client* check, void *bal){
 	return check->balance== *((amount*)(bal) )? 1:0;
 }
 
-
+/*function search the tree, compare either balance or id, and build client linked list */
 void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*)){
 	if (root==NULL)
 		return;
 
 	findClientGen(root->left, tocmpare, foundClients, compare);
-	if ((*compare)(root,tocmpare)){
+	if ((*compare)(root,tocmpare)){	//*rigger the correct compare function.*/
 		buildClientLinkedList(foundClients, root);
 	}
 	findClientGen(root->right, tocmpare,foundClients, compare);
 	return;
 }
 
-/*******************************************************NEW***********/
+/*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
 void findClient (){
 	char c;
 	client clientsLinkedList, * bankRoot=NULL;
 	clientID id[CLIENTIDL]; amount balance;
 	boolean finish=FALSE;
-	bankRoot=getBankClientRoot();
-	initClient(&clientsLinkedList);
+
+	bankRoot=getBankClientRoot();	/*get the clients tree root from the bank*/
+	initClient(&clientsLinkedList);		/*init the linked list head*/
 
 	while (finish!=TRUE){
 		printf("Find Client by:\n"
@@ -165,15 +182,16 @@ void findClient (){
 		c=getchar();
 		getchar();
 
+		/*prompt the user to chose which method to look for in client list.*/
 		switch (c) {
 		case '1':
 			getClientID(id);
-			findClientGen(bankRoot,id,&clientsLinkedList,&compareID);
+			findClientGen(bankRoot,id,&clientsLinkedList,&compareID);	/*call the find client function with the id compare function pointer*/
 			finish = TRUE;
 			break;
 		case '2':
 			getDouble(&balance,"Please enter Balance:\n");
-			findClientGen(bankRoot,&balance,&clientsLinkedList,&compareBal);
+			findClientGen(bankRoot,&balance,&clientsLinkedList,&compareBal);	/*call the find client function with the balance compare function pointer*/
 
 			finish = TRUE;
 			break;
@@ -192,7 +210,7 @@ void findClient (){
 }
 
 
-
+/*function recieve root of clients tree, and return client with given account number*/
 client* getClient(client* root, accountNum acc){
 
 	if (root==NULL){
