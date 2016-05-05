@@ -118,8 +118,9 @@ void transactionAndReports(){
 					//"3: biggest balance in bank\n"
 					"3: find client\n"
 					"4: number of clients with bigger loans\n"
+					"5: print client account and balance\n"
 					#ifdef BANK_AHAMELIM
-					"5: number of clients with given balance\n"
+					"6: number of clients with given balance\n"
 					#endif
 					"9: back to main menu\n");
 			subMenu = getchar();
@@ -135,12 +136,15 @@ void transactionAndReports(){
 					//clientNumberOfBank_print();
 					break;
 				case '4':
-					clientNumberWithBiggerLoansThanBalance_print();
+					clientNumberWithBiggerLoansThanBalance();
 					break;
-#ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
 				case '5':
-				   printf("Number of clients with given balance: %d\n",clientNumberWithGivenBalance());
+					printClientAccountsNumberAndBalance();
 				   break;
+#ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
+				case '6':
+					clientNumberWithGivenBalance();
+					break;
 #endif
 				case '9':
 					finish=TRUE;

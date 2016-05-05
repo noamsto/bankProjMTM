@@ -15,9 +15,10 @@
 #define MILLION 1e6
 #define MINBALANCE 1
 #define MAXBALANCE 500
+
 /*---------------------LOCAL BRANCHLIST-----------------*/
 static branch* branchRoot;
-
+int (*cmp_func)(client*,amount);
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
 branch *createBranch();/* create a new branch. get information from user */
@@ -33,6 +34,11 @@ branchID getBranchID(availble checkif);/* get branch ID from user, including che
 int getTime(char*); /*get hours from user.*/
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 
+/*        TEMPORARY      */
+int countClients(client* , amount ,int (*cmp_func)(client*,amount));
+int compareClientsWithBiggerBalance(client* client, amount balance);
+int compareClientsWithBiggerLoans(client* client, amount balance);
+int printClientDetails(client* client,amount s);
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
@@ -60,7 +66,6 @@ try addNewBranch()
 }
 
 
-/*    NEED TO WAIT FOR CLIENT.H , CLIENT.C UPDATE*/
 client* createBranchClientList()
 {
 	return NULL;
@@ -106,57 +111,49 @@ if(getNumOfBranches()==0){
 }
 
 
-//#ifdef BANK_AHAMELIM
-int clientNumberWithGivenBalance()
+#ifdef BANK_AHAMELIM
+void clientNumberWithGivenBalance()
 {
+	int numberOfClients;
     amount balance;
     branch *tempBranch;
     if(getNumOfBranches()==0){
         printf("no branches\n");
-        return 0;
+        return ;
     }
     tempBranch = getBranch(getBranchID(EXIST));
     getDouble(&balance, "please enter balance:\n");
-
-    return  1 ;//countClients(tempBranch->clientList,balance/*,pointer to func*/);
+    numberOfClients = countClients(tempBranch->clientList,balance,&compareClientsWithBiggerBalance);
+    printf("the number of clients with bigger balance then %f is : %d\n",balance,numberOfClients);
 }
-//#endif
-void clientNumberWithBiggerLoansThanBalance_print(){
-	int clientNum_rec,clientNum_iter;
+#endif
+
+void printClientAccountsNumberAndBalance()
+{
 	branch *tempBranch;
-	branchID brID;
-	brID = getBranchID(EXIST);
-	tempBranch = getBranch(brID);
-	//clientNum_iter = clientNumberWithBiggerLoansThanBalance(CLIENTSHEAD(tempBranch));
-	//clientNum_rec = clientNumberWithBiggerLoansThanBalance_rec(CLIENTSHEAD(tempBranch));
-	printf("iterative check:\n"
-			"there are %d clients owe to branch more then they're balance\n",clientNum_iter);
-	printf("recursive check:\n"
-				"there are %d clients owe to branch more then they're balance\n",clientNum_rec);
+    if(getNumOfBranches()==0){
+        printf("no branches\n");
+        return ;
+    }
+    tempBranch = getBranch(getBranchID(EXIST));
+    countClients(tempBranch->clientList,NOCHECK,&printClientDetails);
+
+}
+void clientNumberWithBiggerLoansThanBalance()
+{
+	int numberOfClients;
+    branch *tempBranch;
+    if(getNumOfBranches()==0){
+        printf("no branches\n");
+        return ;
+    }
+    tempBranch = getBranch(getBranchID(EXIST));
+    numberOfClients = countClients(tempBranch->clientList,NOCHECK,&compareClientsWithBiggerLoans);
+    printf("amount of clients with bigger loans then balance : %d",numberOfClients);
 }
 
 
-int clientNumberWithBiggerLoansThanBalance(client *list){
-	int numberOfClients=0;
-	client *tempClient;
-	tempClient = list;
-	while(tempClient->next != NULL){
-		if(tempClient->balance < tempClient->debt)
-			numberOfClients++;
-	tempClient = tempClient->next;
-	}
-	return numberOfClients;
-}
 
-int clientNumberWithBiggerLoansThanBalance_rec(client *list){
-	int amountOfClients=0;
-	if(list->next == NULL)/*if list is empty, no clients with bigger loans then balance*/
-		return 0;
-	amountOfClients = clientNumberWithBiggerLoansThanBalance_rec(list->next);/*get amount of clients from rest of the list*/
-	if(list->debt > list->balance)
-		amountOfClients++;/*if the client has bigger debt then balance, count him*/
-	return amountOfClients;
-}
 
 try deleteAllBranchClients(branchID id)
 {
@@ -466,3 +463,37 @@ void initBranch(branch *brancInit)
     brancInit->right = NULL;
 }
 
+/*---------------SEARCH CLIENT FUNCTIONS-----------*/
+int countClients(client* root, amount balance,int (*cmp_func)(client*,amount)){
+	int numberOfClients;
+	if(root == NULL)
+		return 0;
+	numberOfClients = countClients(root->right,balance,cmp_func);
+	numberOfClients +=countClients(root->left,balance,cmp_func);
+	if(cmp_func(root,balance))
+		numberOfClients += 1;
+	return numberOfClients;
+}
+
+int compareClientsWithBiggerBalance(client* client, amount balance){
+	if(client->balance > balance)
+		return 1;
+	if(client->balance < balance)
+		return -1;
+	return 0;
+}
+
+int compareClientsWithBiggerLoans(client* client, amount balance){
+	if(client->debt > client->balance)
+		return 1;
+	if(client->debt > client->balance)
+		return -1;
+	return 0;
+}
+
+int printClientDetails(client* client,amount s)
+{
+	printf("Client account number : %d\n",client->accNum);
+	printf("Client Balance : %f\n",client->balance);
+	return 0;
+}

@@ -11,6 +11,7 @@
 #define NOCHECK 0
 #define CLIENTIDL 10
 #define GETSPECIFIC NULL
+#define BANK_AHAMELIM
 
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;
