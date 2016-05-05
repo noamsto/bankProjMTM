@@ -114,8 +114,9 @@ void transactionAndReports(){
 					//"3: biggest balance in bank\n"
 					"3: find client\n"
 					"4: number of clients with bigger loans\n"
+					"5: print client account and balance\n"
 					#ifdef BANK_AHAMELIM
-					"5: number of clients with given balance\n"
+					"6: number of clients with given balance\n"
 					#endif
 					"9: back to main menu\n");
 			subMenu = getchar();

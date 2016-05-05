@@ -494,6 +494,6 @@ int compareClientsWithBiggerLoans(client* client, amount balance){
 int printClientDetails(client* client,amount s)
 {
 	printf("Client account number : %d\n",client->accNum);
-	printf("Client Balance : %f",client->balance);
+	printf("Client Balance : %f\n",client->balance);
 	return 0;
 }
