@@ -68,7 +68,7 @@ void getClientID(clientID * id){
                 break;
             }
     }while(check==FALSE);
-    temp[CLIENTIDL]='\0';
+    temp[CLIENTIDL-1]='\0';
     strcpy(id, temp);
 }
 

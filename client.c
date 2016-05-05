@@ -6,6 +6,7 @@
 
 #include "bank.h"
 #define GETBRID(ACC) getBankClient(ACC )->brID
+#include <string.h>
 
 
 /*get the transaction info from user, accoun number and amount of money.*/
@@ -101,20 +102,23 @@ try deleteClient(accountNum acc){
 
 
 
-
+/***********************NOT WOKING **********************/
 void buildClientLinkedList(client **list, client* add){
 	client *head=*list;
-	client *swap;
+
+	if (!*list){
+		*list=add;
+		return;
+	}
 
 	while (head!=NULL){
-		if (head->cID> add->cID){
+		if (strcmp(head->cID, add->cID)>= 0){
 			add->next=head;
-			head=add;
+			*list=add;
 			return;
 		}
 		head=head->next;
 	}
-	head=add;
 }
 
 /*******************************************************NEW***********/
@@ -126,6 +130,27 @@ void	printClientsLinkedList(client *clients){
 	printClientsLinkedList(clients->next);
 	clients->next=NULL;
 	printClientInfo(clients);
+}
+
+
+int compareID(client* check, void* id){
+	return !strcmp(check->cID, (clientID*) id);
+}
+int compareBal(client* check, void *bal){
+	return check->balance== *(amount*)bal ? 1:0;
+}
+
+
+void findClientGen (client *root, void* tocmpare, client **foundClients , int (*compare)(client*,void*)){
+	if (root==NULL)
+		return;
+
+	findClientGen(root->left, tocmpare, foundClients, compare);
+	if ((*compare)(root,tocmpare)){
+		buildClientLinkedList(foundClients, root);
+	}
+	findClientGen(root->right, tocmpare,foundClients, compare);
+	return;
 }
 
 /*******************************************************NEW***********/
@@ -140,9 +165,10 @@ void	findClientBalance(client *root, amount balance, client **foundClients){
 	findClientBalance(root->right, balance,foundClients);
 	return;
 }
+
 /*******************************************************NEW***********/
 
-void findClientID(client *root, clientID id, client **foundClients){
+void findClientID(client *root, clientID *id, client **foundClients){
 	if (root==NULL)
 		return;
 
@@ -159,7 +185,7 @@ void findClientID(client *root, clientID id, client **foundClients){
 void findClient (){
 	char c;
 	client* clients=NULL, * root=NULL;
-	clientID id; accountNum balance;
+	clientID id[CLIENTIDL]; accountNum balance;
 	boolean finish=FALSE;
 	root=getBankClientRoot();
 
@@ -172,13 +198,16 @@ void findClient (){
 
 		switch (c) {
 		case '1':
-			getClientID(&id);
-			findClientID(root, id, &clients);
+			getClientID(id);
+			//findClientID(root, id, &clients);
+			findClientGen(root,id,&clients,&compareID);
 			finish = TRUE;
 			break;
 		case '2':
-			getInt(&balance,"Please Enter Account Number:\n");
-			findClientBalance(root,balance, &clients);
+			getInt(&balance,"Please enter Balance:\n");
+			//findClientBalance(root,balance, &clients);
+			findClientGen(root,&balance,&clients,&compareBal);
+
 			finish = TRUE;
 			break;
 		default:

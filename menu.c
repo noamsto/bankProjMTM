@@ -81,6 +81,7 @@ void infoMenu(){
 		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
+				"4:Find client"
 				"9: back to main menu\n");
 		subMenu = getchar();
 		getchar();
@@ -93,6 +94,9 @@ void infoMenu(){
 				break;
 			case '3':
 				printClientInfo(NULL);
+				break;
+			case '4':
+				findClient();
 				break;
 			case '9':
 				finish=TRUE;
@@ -129,7 +133,6 @@ void transactionAndReports(){
 				   break;
 				case '3':
 					//clientNumberOfBank_print();
-					findClient();
 					break;
 				case '4':
 					clientNumberWithBiggerLoansThanBalance_print();
