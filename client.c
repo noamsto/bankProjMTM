@@ -101,24 +101,19 @@ try deleteClient(accountNum acc){
 }
 
 
+/*********************** WOKING **********************/
+void buildClientLinkedList(client *list, client* add){
+	client *current=list;
 
-/***********************NOT WOKING **********************/
-void buildClientLinkedList(client **list, client* add){
-	client *head=*list;
 
-	if (!*list){
-		*list=add;
-		return;
+	while (current->next!=NULL){
+		if (strcmp(current->next->cID, add->cID)<= 0){
+			add->next=current->next;
+			break;
+		}else
+				current=current->next;
 	}
-
-	while (head!=NULL){
-		if (strcmp(head->cID, add->cID)>= 0){
-			add->next=head;
-			*list=add;
-			return;
-		}
-		head=head->next;
-	}
+	current->next=add;
 }
 
 /*******************************************************NEW***********/
@@ -137,11 +132,11 @@ int compareID(client* check, void* id){
 	return !strcmp(check->cID, (clientID*) id);
 }
 int compareBal(client* check, void *bal){
-	return check->balance== *(amount*)bal ? 1:0;
+	return check->balance== *((amount*)(bal) )? 1:0;
 }
 
 
-void findClientGen (client *root, void* tocmpare, client **foundClients , int (*compare)(client*,void*)){
+void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*)){
 	if (root==NULL)
 		return;
 
@@ -154,40 +149,13 @@ void findClientGen (client *root, void* tocmpare, client **foundClients , int (*
 }
 
 /*******************************************************NEW***********/
-void	findClientBalance(client *root, amount balance, client **foundClients){
-	if (root==NULL)
-		return;
-
-	findClientBalance(root->left, balance, foundClients);
-	if (root->balance==balance){
-		buildClientLinkedList(foundClients, root);
-	}
-	findClientBalance(root->right, balance,foundClients);
-	return;
-}
-
-/*******************************************************NEW***********/
-
-void findClientID(client *root, clientID *id, client **foundClients){
-	if (root==NULL)
-		return;
-
-	findClientID(root->left, id, foundClients);
-	if (!strcmp(root->cID, id)){
-		buildClientLinkedList(foundClients, root);
-	}
-	findClientID(root->right, id ,foundClients);
-	return;
-}
-
-
-/*******************************************************NEW***********/
 void findClient (){
 	char c;
-	client* clients=NULL, * root=NULL;
-	clientID id[CLIENTIDL]; accountNum balance;
+	client clientsLinkedList, * bankRoot=NULL;
+	clientID id[CLIENTIDL]; amount balance;
 	boolean finish=FALSE;
-	root=getBankClientRoot();
+	bankRoot=getBankClientRoot();
+	initClient(&clientsLinkedList);
 
 	while (finish!=TRUE){
 		printf("Find Client by:\n"
@@ -199,14 +167,12 @@ void findClient (){
 		switch (c) {
 		case '1':
 			getClientID(id);
-			//findClientID(root, id, &clients);
-			findClientGen(root,id,&clients,&compareID);
+			findClientGen(bankRoot,id,&clientsLinkedList,&compareID);
 			finish = TRUE;
 			break;
 		case '2':
-			getInt(&balance,"Please enter Balance:\n");
-			//findClientBalance(root,balance, &clients);
-			findClientGen(root,&balance,&clients,&compareBal);
+			getDouble(&balance,"Please enter Balance:\n");
+			findClientGen(bankRoot,&balance,&clientsLinkedList,&compareBal);
 
 			finish = TRUE;
 			break;
@@ -216,11 +182,11 @@ void findClient (){
 		}
 	}
 
-	if (clients==NULL){
+	if (clientsLinkedList.next==NULL){
 		printf("No clients found\n");
 		return ;
 	}
-	printClientsLinkedList(clients);
+	printClientsLinkedList(clientsLinkedList.next);
 
 }
 
