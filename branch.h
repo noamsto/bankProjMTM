@@ -46,6 +46,8 @@ void printClientAccountsNumberAndBalance();
 
 void clientNumberWithBiggerLoansThanBalance();
 
+void averageNumberOfAccountsInBranches();
+
 try deleteAllBranchClients(branchID);
 /*delete all clients of a certain branch. returns whether the action succeeded*/
 

@@ -25,28 +25,30 @@ branch *createBranch();/* create a new branch. get information from user */
 void insertBranch(branch**,branch*);/* insert branch to tree. recursive function */
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 boolean deleteBranchFromTree(branch* ,branchID);
-branch *replaceBranch(branch* to_replace);/* replace a member in the tree with a different member*/
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
-branch* findSmallest(branch*);/* finds and returns the smallest member of a certain tree  */
 boolean addClientConditions(); /* check if possible to add new client to the bank */
 branch* findBranch(branch* , branchID );
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
 int getTime(char*); /*get hours from user.*/
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
+branch* findFather(branch*,branchID,branch**);/*find wanted branch and a branch pointing to it */
+boolean is_leaf(branch*);/*check if certain branch is the leaf in the tree */
 
 /*        TEMPORARY      */
 int countClients(client* , amount ,int (*cmp_func)(client*,amount));
 int compareClientsWithBiggerBalance(client* client, amount balance);
 int compareClientsWithBiggerLoans(client* client, amount balance);
 int printClientDetails(client* client,amount s);
-
+int averageClients(branch*,double*);
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
 branch* createBranchList()
 {
-	branchRoot = ALLOC(branch,1);
-    initBranch(branchRoot);
-    return branchRoot;
+	branchRoot = NULL;
+	 /*  ALLOC(branch,1);
+    initBranch(branchRoot);*/
+
+    return NULL;
 }
 
 
@@ -153,6 +155,35 @@ void clientNumberWithBiggerLoansThanBalance()
 }
 
 
+void averageNumberOfAccountsInBranches()
+{
+	int numOfBranches=0;
+	double clientsAverage=0;
+	numOfBranches = averageClients(branchRoot,&clientsAverage);
+	printf("number of branches : %d\n"
+			"Average number of clients in single branch : %f\n",
+			numOfBranches,clientsAverage);
+}
+int averageClients(branch* root,double* averageNum)
+{
+	int count =0,currBranch=0;
+	double average=0,currClients=0;
+	if(root==NULL){
+		*averageNum = 0;
+		return 0;
+	}
+	count = averageClients(root->left,&average);
+	currClients += average * count;
+	currBranch += count;
+	count = averageClients(root->right,&average);
+	currClients += average * count;
+	currBranch += count;
+	currBranch++;
+	currClients += root->currentClients;
+	*averageNum = currClients / currBranch;
+	return currBranch;
+}
+
 
 
 try deleteAllBranchClients(branchID id)
@@ -205,25 +236,37 @@ try  deleteBranch(branchID brID)
     return SUCCESS;
 }
 
-/*boolean deleteBranchFromTree(branch* root,branchID removed_branch)
+branch* deleteBranchFromTree(branch* root,branchID removed_branch)
 {
-	if(root == NULL)
-		return FALSE;
-	if(deleteBranchFromTree(root->right,removed_branch) == TRUE)
-		return TRUE;
-	if(deleteBranchFromTree(root->left,removed_branch) == TRUE)
-		return TRUE;
-	if(root->right->brID == removed_branch){
-		root->right = repalceBranch(root->right);
-		return TRUE;
+	branch *wanted,*to_replace, *father=NULL;
+	wanted = findFather(branchRoot,removed_branch,&father);
+	if(wanted == NULL){
+		printf("branch not found in tree\n");
+		return NULL;
 	}
-	if(root->left->brID == removed_branch){
-		root->left = repalceBranch(root->left);
-		return TRUE;
+	if(is_leaf(wanted)){
+		case_leaf(wanted,father);
 	}
-	return FALSE;
-}*/
+	if(one_side(wanted))
 
+}
+
+/**********************LEAF*********************8/
+boolean is_leaf(branch* wanted)/*check if branch is leaf in the tree*/
+{
+	if(wanted->left == NULL && wanted->right == NULL)
+		return TRUE;
+	return FALSE;
+}
+
+void case_leaf(branch* wanted,branch* father)
+{
+	if(father->left == wanted)
+		father->left = NULL;
+	else
+		father->right = NULL;
+	deleteBranchFields(wanted);
+}
 
 void deleteBranchFields(branch* deleted_Branch)
 {
@@ -318,6 +361,32 @@ boolean checkBranchID(branchID brID)
     return FALSE;
 }
 
+/* search for wanted branch and a branch that points at him */
+branch* findFather(branch* root,branchID brID, branch** father)
+{
+	if(root == NULL)
+		return NULL;
+	if(root->brID == brID)/*in case it is the root of the tree*/
+		return root;
+	if(root->brID > brID)/*if the id is smaller then the root's id check in left side */
+		if(root->left->brID == brID){/*if next is the wanted branch */
+			*father = root;
+			return root->left;
+		}
+		else{
+			return findFather(root->left,brID,father);
+		}
+	else/* if the id is bigger the the root's check in the right side */
+		if(root->left->brID == brID){/*if next is the wanted branch */
+				*father = root;
+				return root->left;
+			}
+			else{
+				return findFather(root->left,brID,father);
+			}
+}
+
+
 branch* findBranch(branch* root, branchID brID){
 	if(root == NULL)
 		return NULL;
@@ -340,28 +409,7 @@ void clearBranchTree(branch* root)
 	updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
 }
 
-branch *replaceBranch(branch* root)/*replace the current junction with the wanted member of the tree*/
-{
-	if(root->right != NULL){
-		branch *to_replace;
-		to_replace = findSmallest(root->right);
-		to_replace->left = root->left;
-		to_replace->right = root->right;
-		deleteBranchFields(root);
-		return to_replace;
-	}
-	deleteBranchFields(root);
-	return root->right;
-}
 
-branch* findSmallest(branch* root)/*finds and returns the smallest member of the tree*/
-{
-	if(root->left == NULL)
-		return root;
-	else
-		return findSmallest(root->left);
-
-}
 
 
 /*------------------------------------RECIEVE DATA FROM USER-------------------------------*/
