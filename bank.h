@@ -27,7 +27,7 @@ typedef struct banks{
 
 
 
-client * getBankClientRoot ();
+client ** getBankClientRoot ();
 
 
 
@@ -54,7 +54,7 @@ void updateNumOfBranches(addremove remove);
 int getNumOfBranches();
 
 /*delete a client from the bank.*/
-try deleteBankClient(accountNum );
+void deleteBankClient(client* );
 
 /*update the number of active loans.*/
 void updateNumOfActiveLoans(addremove remove);

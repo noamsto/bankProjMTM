@@ -21,7 +21,7 @@ typedef struct clients{
     accountNum accNum;			/*the account number of the client*/
     int maxOverdraft;			/*the maximum overdraft allowed to the client*/
     amount balance;				/*client's balance*/
-    amount debt;					/*client's debt to bank/branch*/
+    amount debt;				/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
     struct clients *left;
@@ -48,6 +48,9 @@ client* getClient(client* root, accountNum acc,client**);
 
 /*init client struct*/
 void initClient(client* );
+
+/*delete client from tree.*/
+client * deleteClientFromTree(client *root, accountNum acc);
 
 /*delete client from system.*/
 try deleteClient(accountNum);

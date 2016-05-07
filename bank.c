@@ -32,19 +32,20 @@ void initBank(bank* masterBank){
 
 
 /*create a single bank struct.*/
-void createBank(){
+void createBank(char* name){
 	masterBank=ALLOC(bank, 1);
 	initBank(masterBank);
-	getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
+    if (name==NULL){
+        getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
+        return;
+    }
+    masterBank->name=name;
 }
-
-
 /*********_Bank_Creation_Functions_END_******************/
 
 
 
 /*********_Update_bank_Fields_START_******************/
-
 
 /*update bank balance.*/
 void updateBankBalance(amount money,addremove remove){
@@ -92,118 +93,19 @@ void updateNumOfBankClients(addremove remove){
 		masterBank->numOfClients++;
 	}
 }
-
-
-
-
-/*find Client With max balance*/
-
-client *findMaxACC(client *root){
-    if (!root)
-        return NULL;
-    if (!root->right)
-        return root;
-    
-    return findMaxACC(root->right);
-}
-
-/*find Client With min balance*/
-
-client *findMinACC(client *root){
-    if (!root)
-        return NULL;
-    if (!root->left)
-        return root;
-    
-    return findMaxACC(root->left);
-}
-
-/*swap 2 clients nodes*/
-void swapClients(client **client1, client**client2){
-    client tempclient;
-    tempclient=**client1;
-    *client1=*client2;
-    **client2=tempclient;
-}
-
-
-
-
-
-
-/*delete a client from the bank **new**.*/
-
-client * deleteBankCLient(client *root, accountNum acc){
-    client *findClient= NULL, *swapClient=NULL,  *parent=NULL;
-    
-    if (!root)
-        return NULL;
-        
-    findClient=getClient(root,acc, &parent);
-    
-    if (!findClient){
-        printf("client to be deleted not found\n");
-        return NULL;
-    }
-        
-    if (findClient->left){
-        swapClient=findMaxACC(findClient->left);
-        swapClients(&findClient,&swapClient);
-        findClient->left=deleteBankCLient(findClient->left, acc);
-        return findClient;
-    }else if (findClient->right){
-        swapClient=findMinACC(findClient->right);
-        swapClients(&findClient,&swapClient);
-        findClient->right=deleteBankCLient(findClient->right, acc);
-        return findClient;
-    }
-    
-    
-    updateBankBalance(findClient->balance, REMOVE);
-    updateNumOfBankClients(REMOVE);
-    
-    if (parent->left==findClient)
-        parent->left=NULL;
-    else
-        parent->right=NULL;
-    
-    
-    FREE(findClient->name);
-    FREE(findClient->surname);
-    FREE(findClient);
-    
-    return root;
-}
- 
- 
- 
- 
- 
- 
- 
- 
  
  
 /*delete a client from the bank.*/
-try deleteBankClient(accountNum acc){
-	client *clientToBeDeleted=NULL;
+void deletBankClient(client * deleteC) {
+    client** bankRoot;
+    
+    bankRoot=getBankClientRoot();
+  
+    updateBankBalance(deleteC->balance, REMOVE);
+    updateNumOfBankClients(REMOVE);
 
-	/*find bank client;*/
-		clientToBeDeleted=getBankClient(acc);
-
-	if (clientToBeDeleted==NULL) {
-		return CLIENTNOTFOUND;
-	}
-
-
-	/*update bank balance / client size*/
-	updateBankBalance(clientToBeDeleted->balance, REMOVE);
-	updateNumOfBankClients(REMOVE);
-
-	FREE(clientToBeDeleted->name);
-	FREE(clientToBeDeleted->surname);
-	FREE(clientToBeDeleted);
-	return SUCCESS;
+    *bankRoot=deleteClientFromTree(*bankRoot, deleteC->accNum);
+    
 }
 
 /*add a new client to the bank.*/
@@ -221,15 +123,10 @@ void addNewClientToBank(client* createdClient){
 
 /*********_Update_bank_Fields_END_******************/
 
-
 /*return number clients of bank.*/
 int BankNumberOfClients(){
 	return masterBank->numOfClients;
 }
-
-
-
-
 
 
 /*get client in bank Client list.*/
@@ -255,76 +152,11 @@ int isBankFull(){
 	return TRUE;
 }
 
-/*
-print the number of richest client and the bigget balance
-void clientNumberOfBank_print(){
-	int counter;
-	amount maxBalance=0;
-	the recursive calculation of the number of richest client and the biggest balance
-	counter = clientNumberOfBank_REC(CLIENTSHEAD(masterBank),&maxBalance);
-	printf("Recursive check:\n");
-	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
-
-	the Iterative calculation of the number of richest client and the biggest balance
-	printf("Iterative check:\n");
-	counter = clientNumberOfBank(&maxBalance);
-	printf("There %s: %d clients with max Balance of: %g\n", counter==1? "is":"are" , counter,  maxBalance);
-}
-*/
-
-/* check Recursively which are the client/s with biggest balance and return their number and
- * biggest balance.
- */
-/******need testsss *******/
-/*int clientNumberOfBank_REC(client *head, amount *biggestBalance){
-	int counter=0;
-	amount maxBalance=0;
-
-	if (head==CLIENTSTAIL(masterBank)){
-		*biggestBalance=0;
-		return 0;
-	}
-
-	counter= clientNumberOfBank_REC(head->next,&maxBalance);
-
-	if (head->balance==maxBalance){
-		counter+=1;
-	}else if(head->balance>maxBalance){
-		counter=1;
-		maxBalance=head->balance;
-	}
-	*biggestBalance=maxBalance;
-	return counter;
-
-}*/
-
-
-/* check which are the client/s with biggest balance and return their number and
- * biggest balance.
- */
-/*int clientNumberOfBank(amount *biggestBalance){
-	client* current=CLIENTSHEAD(masterBank);
-	int counter=0;
-	*biggestBalance=0;
-
-	while (current!=CLIENTSTAIL(masterBank)){
-		if(*biggestBalance==current->balance){
-			counter++;
-		}else if(*biggestBalance<current->balance ){
-			counter=1;
-			*biggestBalance=current->balance;
-		}
-			current=current->next;
-	}
-	return counter;
-
-}*/
-
 /*********_Information_Functions_END_******************/
 
 
-client * getBankClientRoot (){
-	return CLIENTSROOT(masterBank);
+client ** getBankClientRoot (){
+	return &(CLIENTSROOT(masterBank));
 }
 
 /* Delete the bank*/
@@ -342,7 +174,6 @@ char* getBankName(){
 /*print all of the bank information and status.*/
 void printBankInfo()
 {
-
 	printf("Bank name: %s\n",masterBank->name);
 	printf("Bank amount of branches: %d\n",masterBank->numOfBranch);
 	printf("Number of clients: %d\n",masterBank->numOfClients);

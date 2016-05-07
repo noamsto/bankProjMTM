@@ -8,6 +8,8 @@
 
 #include "matam.h"
 
+
+
 #define NOCHECK 0
 #define CLIENTIDL 10
 #define GETSPECIFIC NULL
@@ -17,7 +19,7 @@ typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;
 typedef enum{NOTEXIST,EXIST}availble;   
 
-typedef enum ret_val{SUCCESS, FAIL, ALOC_FAIL, MAX_BRANCH_REACHED, MAX_BANK_REACHED,NO_BALANCE, CLIENTNOTFOUND, BRANCHNOTFOUND} try;
+typedef enum ret_val{SUCCESS, FAIL, ALOC_FAIL, MAX_BRANCH_REACHED, MAX_BANK_REACHED,NO_BALANCE, CLIENTNOTFOUND, BRANCHNOTFOUND, CANCELED} try;
 
 typedef enum{deposit,loan,leaveBranch} transType;
 
