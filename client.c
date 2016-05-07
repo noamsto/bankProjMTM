@@ -28,7 +28,7 @@ int compareID(client* check, void* id);
 int compareBal(client* check, void *bal);
 
 /*print clients linked list*/
-void	printClientsLinkedList(client *clients);
+void printClientsLinkedList(client *clients);
 
 /*insert a client to a client linked list*/
 void buildClientLinkedList(client *list, client* add);
@@ -36,7 +36,7 @@ void buildClientLinkedList(client *list, client* add);
 
 
 
-client * insertClientTree(client* root, client* newClient){
+client *insertClientTree(client* root, client* newClient){
 
 	if (!root){
 		return newClient;
@@ -211,18 +211,24 @@ void findClient (){
 
 
 /*function recieve root of clients tree, and return client with given account number*/
-client* getClient(client* root, accountNum acc){
-
+client* getClient(client* root, accountNum acc,client **parent){
+    
 	if (root==NULL){
+        if (parent)
+            *parent=NULL;
 		return NULL;
 	}
 
-	if (root->accNum>acc)
-		return getClient(root->left, acc);
-
-	if (root->accNum<acc)
-		return getClient(root->right,acc);
-
+    if (root->accNum>acc){
+        if (parent)
+            *parent=root;
+		return getClient(root->left, acc,parent);
+    }
+    if (root->accNum<acc){
+        if (parent)
+            *parent=root;
+		return getClient(root->right,acc,parent);
+    }
 	return root;
 }
 

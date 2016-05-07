@@ -30,6 +30,11 @@ typedef struct clients{
 }client;
 
 
+
+/*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
+void findClient ();
+
+
 /*insert client to tree */
 client * insertClientTree(client* root, client* newClient);
 
@@ -38,7 +43,7 @@ client * insertClientTree(client* root, client* newClient);
 client* getDetailsFromUser(branchID ,char* );
 
 /*find a client in a tree structure*/
-client* getClient(client* root, accountNum acc);
+client* getClient(client* root, accountNum acc,client**);
 
 
 /*init client struct*/

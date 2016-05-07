@@ -94,6 +94,96 @@ void updateNumOfBankClients(addremove remove){
 }
 
 
+
+
+/*find Client With max balance*/
+
+client *findMaxACC(client *root){
+    if (!root)
+        return NULL;
+    if (!root->right)
+        return root;
+    
+    return findMaxACC(root->right);
+}
+
+/*find Client With min balance*/
+
+client *findMinACC(client *root){
+    if (!root)
+        return NULL;
+    if (!root->left)
+        return root;
+    
+    return findMaxACC(root->left);
+}
+
+/*swap 2 clients nodes*/
+void swapClients(client **client1, client**client2){
+    client tempclient;
+    tempclient=**client1;
+    *client1=*client2;
+    **client2=tempclient;
+}
+
+
+
+
+
+
+/*delete a client from the bank **new**.*/
+
+client * deleteBankCLient(client *root, accountNum acc){
+    client *findClient= NULL, *swapClient=NULL,  *parent=NULL;
+    
+    if (!root)
+        return NULL;
+        
+    findClient=getClient(root,acc, &parent);
+    
+    if (!findClient){
+        printf("client to be deleted not found\n");
+        return NULL;
+    }
+        
+    if (findClient->left){
+        swapClient=findMaxACC(findClient->left);
+        swapClients(&findClient,&swapClient);
+        findClient->left=deleteBankCLient(findClient->left, acc);
+        return findClient;
+    }else if (findClient->right){
+        swapClient=findMinACC(findClient->right);
+        swapClients(&findClient,&swapClient);
+        findClient->right=deleteBankCLient(findClient->right, acc);
+        return findClient;
+    }
+    
+    
+    updateBankBalance(findClient->balance, REMOVE);
+    updateNumOfBankClients(REMOVE);
+    
+    if (parent->left==findClient)
+        parent->left=NULL;
+    else
+        parent->right=NULL;
+    
+    
+    FREE(findClient->name);
+    FREE(findClient->surname);
+    FREE(findClient);
+    
+    return root;
+}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 /*delete a client from the bank.*/
 try deleteBankClient(accountNum acc){
 	client *clientToBeDeleted=NULL;
@@ -145,7 +235,7 @@ int BankNumberOfClients(){
 /*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
 	client* getCl=NULL;
-	getCl= getClient(CLIENTSROOT(masterBank), acc);
+    getCl= getClient(CLIENTSROOT(masterBank), acc, NOCHECK);
 	return getCl;
 }
 
