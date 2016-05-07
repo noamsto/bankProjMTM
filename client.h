@@ -21,7 +21,7 @@ typedef struct clients{
     accountNum accNum;			/*the account number of the client*/
     int maxOverdraft;			/*the maximum overdraft allowed to the client*/
     amount balance;				/*client's balance*/
-    amount debt;					/*client's debt to bank/branch*/
+    amount debt;				/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
     struct clients *left;
@@ -29,15 +29,28 @@ typedef struct clients{
     struct clients *next;
 }client;
 
+
+
+/*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
+void findClient ();
+
+
+/*insert client to tree */
+client * insertClientTree(client* root, client* newClient);
+
+
 /*get information from user about new client.*/
 client* getDetailsFromUser(branchID ,char* );
 
 /*find a client in a tree structure*/
-client* getClient(client* root, accountNum acc);
+client* getClient(client* root, accountNum acc,client**);
 
 
 /*init client struct*/
 void initClient(client* );
+
+/*delete client from tree.*/
+client * deleteClientFromTree(client *root, accountNum acc);
 
 /*delete client from system.*/
 try deleteClient(accountNum);
