@@ -213,7 +213,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     branch* tempBranch;
 
     tempBranch=getBranch(brID);
-    if ((tempClient = getClient(tempBranch->clientList,acc)) == NULL ) {
+    if ((tempClient = getClient(tempBranch->clientList,acc,NULL)) == NULL ) {
            printf("client not in branch.\n");/*if the  client is not in branch*/
            return CLIENTNOTFOUND;
        }
@@ -222,7 +222,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
     tempBranch->currentClients--;
-    //deleteClient(tempBranch->clientList,tempClient);
+    tempBranch->clientList = deleteClientFromTree(tempBranch->clientList,tempClient->accNum);
     return SUCCESS;
 }
 
@@ -315,7 +315,7 @@ client* getBranchClient(accountNum acc, branchID brID)
 {
     branch *tempBranch=NULL;
     tempBranch=getBranch(brID);
-    return getClient(tempBranch->clientList,acc);
+    return getClient(tempBranch->clientList,acc,NULL);
 }
 
 
