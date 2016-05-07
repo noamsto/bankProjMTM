@@ -29,6 +29,11 @@ typedef struct clients{
     struct clients *next;
 }client;
 
+
+/*insert client to tree */
+client * insertClientTree(client* root, client* newClient);
+
+
 /*get information from user about new client.*/
 client* getDetailsFromUser(branchID ,char* );
 
