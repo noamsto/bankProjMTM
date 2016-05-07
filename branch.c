@@ -22,17 +22,13 @@ int (*cmp_func)(client*,amount);
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
 branch *createBranch();/* create a new branch. get information from user */
-void insertBranch(branch**,branch*);/* insert branch to tree. recursive function */
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
-boolean deleteBranchFromTree(branch* ,branchID);
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 boolean addClientConditions(); /* check if possible to add new client to the bank */
 branch* findBranch(branch* , branchID );
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
 int getTime(char*); /*get hours from user.*/
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
-branch* findFather(branch*,branchID,branch**);/*find wanted branch and a branch pointing to it */
-boolean is_leaf(branch*);/*check if certain branch is the leaf in the tree */
 
 /*        TEMPORARY      */
 int countClients(client* , amount ,int (*cmp_func)(client*,amount));
@@ -40,6 +36,17 @@ int compareClientsWithBiggerBalance(client* client, amount balance);
 int compareClientsWithBiggerLoans(client* client, amount balance);
 int printClientDetails(client* client,amount s);
 int averageClients(branch*,double*);
+/*        TREE       */
+void insertBranch(branch**,branch*);/* insert branch to tree. recursive function */
+branch* deleteBranchFromTree(branch*, branchID);/* remove a certain branch in the tree according to ID */
+branch* findFather(branch*,branchID,branch**);/*find the wanted branch and a branch in the tree that points at him*/
+boolean delete_leaf(branch*,branch*,branch**);/*check if certain branch is a leaf in the tree and if it is a leaf reamove from tree*/
+void swapBranch(branch*,branch*);/* swap two branches in the tree */
+branch* findMaxInTree(branch*);/*find  and return the biggest branch in the tree (according to ID) */
+branch* findMinInTree(branch*);/*find  and return the smallest branch in the tree (according to ID) */
+void clearBranchTree(branch*);
+
+
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
 branch* createBranchList()
@@ -194,7 +201,8 @@ try deleteAllBranchClients(branchID id)
     }
     temp = getBranch(id);
     /*delete all clients*/
-    updateBranchBalance(id,0,REMOVE);
+    temp->balance = 1;
+    temp->currentClients = 0;
     return SUCCESS;
 }
 
@@ -205,7 +213,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     branch* tempBranch;
 
     tempBranch=getBranch(brID);
-    if ((tempClient = findClient(tempBranch->clientList,acc)) == NULL ) {
+    if ((tempClient = getClient(tempBranch->clientList,acc)) == NULL ) {
            printf("client not in branch.\n");/*if the  client is not in branch*/
            return CLIENTNOTFOUND;
        }
@@ -221,8 +229,6 @@ try deleteBranchClient(branchID brID,accountNum acc)
 
 try  deleteBranch(branchID brID)
 {
-    branch *deleteB=NULL;
-
     if(getNumOfBranches()==0){
     	printf("There are no active branches\n");
     	return SUCCESS;
@@ -231,48 +237,9 @@ try  deleteBranch(branchID brID)
     if(brID==NOCHECK)
         brID=getBranchID(EXIST);/*receive branch from user*/
     
-    //deleteBranchFromTree(branchRoot,deleteB);
+    deleteBranchFromTree(branchRoot,brID);
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
-}
-
-branch* deleteBranchFromTree(branch* root,branchID removed_branch)
-{
-	branch *wanted,*to_replace, *father=NULL;
-	wanted = findFather(branchRoot,removed_branch,&father);
-	if(wanted == NULL){
-		printf("branch not found in tree\n");
-		return NULL;
-	}
-	if(is_leaf(wanted)){
-		case_leaf(wanted,father);
-	}
-	if(one_side(wanted))
-
-}
-
-/**********************LEAF*********************8/
-boolean is_leaf(branch* wanted)/*check if branch is leaf in the tree*/
-{
-	if(wanted->left == NULL && wanted->right == NULL)
-		return TRUE;
-	return FALSE;
-}
-
-void case_leaf(branch* wanted,branch* father)
-{
-	if(father->left == wanted)
-		father->left = NULL;
-	else
-		father->right = NULL;
-	deleteBranchFields(wanted);
-}
-
-void deleteBranchFields(branch* deleted_Branch)
-{
-	deleteAllBranchClients(deleted_Branch->clientList);
-    FREE(deleted_Branch->branchName);
-    FREE(deleted_Branch);
 }
 
 void deleteAllBranches()
@@ -361,30 +328,6 @@ boolean checkBranchID(branchID brID)
     return FALSE;
 }
 
-/* search for wanted branch and a branch that points at him */
-branch* findFather(branch* root,branchID brID, branch** father)
-{
-	if(root == NULL)
-		return NULL;
-	if(root->brID == brID)/*in case it is the root of the tree*/
-		return root;
-	if(root->brID > brID)/*if the id is smaller then the root's id check in left side */
-		if(root->left->brID == brID){/*if next is the wanted branch */
-			*father = root;
-			return root->left;
-		}
-		else{
-			return findFather(root->left,brID,father);
-		}
-	else/* if the id is bigger the the root's check in the right side */
-		if(root->left->brID == brID){/*if next is the wanted branch */
-				*father = root;
-				return root->left;
-			}
-			else{
-				return findFather(root->left,brID,father);
-			}
-}
 
 
 branch* findBranch(branch* root, branchID brID){
@@ -398,18 +341,14 @@ branch* findBranch(branch* root, branchID brID){
 
 }
 
-void clearBranchTree(branch* root)
+
+
+void deleteBranchFields(branch* to_be_deleted)
 {
-	if(root == NULL)
-		return;
-	clearBranchTree(root->left);
-	clearBranchTree(root->right);
-	deleteBranchFields(root);
-	FREE(root);
-	updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
+	FREE(to_be_deleted->branchName);
+	//FREE(to_be_deleted->clientList); ask steller who free's the root
+	FREE(to_be_deleted);
 }
-
-
 
 
 /*------------------------------------RECIEVE DATA FROM USER-------------------------------*/
@@ -544,4 +483,99 @@ int printClientDetails(client* client,amount s)
 	printf("Client account number : %d\n",client->accNum);
 	printf("Client Balance : %f\n",client->balance);
 	return 0;
+}
+
+
+/*DELETE FROM TREE*/
+
+branch* deleteBranchFromTree(branch* root, branchID brID)
+{
+	branch *branchA,*branchB,*father;
+	father = NULL;
+	branchA = findFather(root,brID,&father);/*get branch wanted to delete and set the "father of the branch*/
+	if(!branchA)
+		return root;
+	if(delete_leaf(branchA,father,&root))/*if branch is leaf, delete from tree*/
+		return root;
+	if(branchA->left){
+		branchB = findMaxInTree(branchA->left);
+		swapBranch(branchA,branchB);
+		branchA->left = deleteBranchFromTree(branchA->left,brID);
+	}
+	else{
+		branchB = findMinInTree(branchA->right);
+		swapBranch(branchB,branchA);
+		branchA->right = deleteBranchFromTree(branchA->right,brID);
+	}
+	return root;
+}
+
+branch* findFather(branch* root,branchID brID,branch** father)
+{
+	if(!root)/*if root is null*/
+		return NULL;
+	if(root->brID == brID){
+		return root;
+	}
+	if(father)
+		*father = root;
+	if(root->brID > brID){
+		return findFather(root->left,brID,father);
+	}
+	else
+		return findFather(root->right,brID,father);
+}
+
+boolean delete_leaf(branch* delete,branch* father,branch** root)
+{
+	if(delete->right || delete->left)
+		return FALSE;
+	if(father){
+		if(father->right == delete)
+			father->right = NULL;
+		else
+			father->left = NULL;
+		FREE(delete);
+		return TRUE;
+	}
+	FREE(delete);
+	*root = NULL;
+	return TRUE;
+
+}
+
+branch* findMinInTree(branch* root)
+{
+	if(root == NULL)
+		return NULL;
+	if(root->left)
+		return findMaxInTree(root->left);
+	return root;
+}
+
+branch* findMaxInTree(branch* root)
+{
+	if(root == NULL)
+		return NULL;
+	if(root->right)
+		return findMaxInTree(root->right);
+	return root;
+}
+
+void swapBranch(branch* a,branch* b)
+{
+	branch temp;
+	temp =*a;
+	*a = *b;
+	*b = temp;
+}
+
+void clearBranchTree(branch* root)
+{
+	if(root == NULL)
+		return;
+	clearBranchTree(root->left);
+	clearBranchTree(root->right);
+	deleteBranchFields(root);
+	updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
 }
