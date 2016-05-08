@@ -86,12 +86,16 @@ try addNewClientToBranch()
     branch *temp;
     client *newClient;
     boolean check;
+    branchID brID;
     
     printf("Starting new client registry:\n");
     check=addClientConditions();
     if(check==FALSE)
     	return FAIL;
-    temp = getBranch(getBranchID(EXIST));
+    brID = getBranchID(EXIST);
+    if(brID == CANCEL)
+        return SUCCESS;
+    temp = getBranch(brID);
     
     if (isBranchFull(temp)) {
         printf("the branch is full\n");
@@ -126,11 +130,15 @@ void clientNumberWithGivenBalance()
 	int numberOfClients;
     amount balance;
     branch *tempBranch;
+    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    tempBranch = getBranch(getBranchID(EXIST));
+    brID = getBranchID(EXIST);
+    if(brID == CANCEL)
+        return;
+    tempBranch = getBranch(brID);
     getDouble(&balance, "please enter balance:\n");
     numberOfClients = countClients(tempBranch->clientList,balance,&compareClientsWithBiggerBalance);
     printf("the number of clients with bigger balance then %f is : %d\n",balance,numberOfClients);
@@ -140,11 +148,15 @@ void clientNumberWithGivenBalance()
 void printClientAccountsNumberAndBalance()
 {
 	branch *tempBranch;
+    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    tempBranch = getBranch(getBranchID(EXIST));
+    brID = getBranchID(EXIST);
+    if(brID == CANCEL)
+        return;
+    tempBranch = getBranch(brID);
     countClients(tempBranch->clientList,NOCHECK,&printClientDetails);
 
 }
@@ -152,11 +164,15 @@ void clientNumberWithBiggerLoansThanBalance()
 {
 	int numberOfClients;
     branch *tempBranch;
+    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    tempBranch = getBranch(getBranchID(EXIST));
+    brID = getBranchID(EXIST);
+    if(brID == CANCEL)
+        return;
+    tempBranch = getBranch(brID);
     numberOfClients = countClients(tempBranch->clientList,NOCHECK,&compareClientsWithBiggerLoans);
     printf("amount of clients with bigger loans then balance : %d",numberOfClients);
 }
@@ -234,10 +250,12 @@ try  deleteBranch(branchID brID)
     	return SUCCESS;
     }
 
-    if(brID==NOCHECK)
+    if(brID==NOCHECK){
         brID=getBranchID(EXIST);/*receive branch from user*/
-    
-    deleteBranchFromTree(branchRoot,brID);
+        if(brID == CANCEL)
+            return SUCCESS;
+    }
+    branchRoot = deleteBranchFromTree(branchRoot,brID);
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
@@ -366,8 +384,8 @@ branchID getBranchID(availble checkif){
     branchID brID;
     boolean flag = FALSE;
     do{
-        getInt(&brID,"please enter branch id (1-500):\n");
-        if (brID>N || brID<1) {
+        getInt(&brID,"please enter branch id (1-500): (type 0 to cancel)\n");
+        if (brID>N || brID<0) {
             printf("Branch id not in range (1-500)\n");
             continue;
         }
@@ -390,11 +408,22 @@ branchID getBranchID(availble checkif){
 
 
 /*-----------------------------INFORMATION FUNCTIONS-------------------*/
+void printBranchID(branch* root)
+{
+    if(root==NULL)
+        return;
+    printBranchID(root->left);
+    printf("BRANCHID: %d\n",root->brID);
+    printBranchID(root->right);
+}
 void printBranchInfo()
 {
 	branchID brID;
 	branch *tempBranch;
-	brID = getBranchID(EXIST);
+    printBranchID(branchRoot);
+    brID = getBranchID(EXIST);
+    if(brID == CANCEL)
+        return;
 	tempBranch = getBranch(brID);
 	printf("Branch name: %s\n",tempBranch->branchName);
 	printf("Branch Bank name: %s\n",tempBranch->bankName);
@@ -490,7 +519,7 @@ int printClientDetails(client* client,amount s)
 
 branch* deleteBranchFromTree(branch* root, branchID brID)
 {
-	branch *branchA,*branchB,*father;
+	branch *branchA,*branchB = NULL,*father;
 	father = NULL;
 	branchA = findFather(root,brID,&father);/*get branch wanted to delete and set the "father of the branch*/
 	if(!branchA)
@@ -562,11 +591,18 @@ branch* findMaxInTree(branch* root)
 	return root;
 }
 
-void swapBranch(branch* a,branch* b)
+void swapBranch(branch* a,branch* b)/* a is the one to delete */
 {
 	branch temp;
+    branch *tempL, *tempR;
+    tempL = b->left;
+    tempR = b->right;
 	temp =*a;
 	*a = *b;
+    a->left = temp.left;
+    a->right = temp.right;
+    temp.left = tempL;
+    temp.right = tempR;
 	*b = temp;
 }
 

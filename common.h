@@ -7,6 +7,7 @@
 #define common_h
 
 #include "matam.h"
+#include <string.h>
 
 
 
@@ -14,6 +15,8 @@
 #define CLIENTIDL 10
 #define GETSPECIFIC NULL
 #define BANK_AHAMELIM
+#define CANCEL 0
+
 
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;

@@ -7,8 +7,6 @@
 #include "bank.h"
 #define GETBRID(ACC) getBankClient(ACC )->brID
 #define ACTIONCANCELD printf("Action aborted\n")
-#include <string.h>
-#define CANCEL 0
 
 
 /*get the transaction info from user, account number and amount of money.*/
@@ -37,7 +35,7 @@ client *findMaxACC(client *root);
 client *findMinACC(client *root);
 
 /*swap 2 clients nodes*/
-void swapClients(client **client1, client**client2);
+void swapClients(client *client1, client*client2);
 
 /*free a single Clinet node*/
 void freeClient(client *findClient);
@@ -93,14 +91,14 @@ client * deleteClientFromTree(client *root, accountNum acc){
     if (findClient->left){  /*if there is a left tree, getting the max node*/
         
         swapClient=findMaxACC(findClient->left);
-        swapClients(&findClient,&swapClient);   /*swap the client and recurse on the left tree*/
+        swapClients(findClient,swapClient);   /*swap the client and recurse on the left tree*/
         findClient->left=deleteClientFromTree(findClient->left, acc);
         return findClient;
     }
     else if (findClient->right){   /*else look in the right tree for the min node*/
         
         swapClient=findMinACC(findClient->right);
-        swapClients(&findClient,&swapClient);   /*swap the client and recurse on the right tree*/
+        swapClients(findClient,swapClient);   /*swap the client and recurse on the right tree*/
         findClient->right=deleteClientFromTree(findClient->right, acc);
         return findClient;
     }
@@ -493,17 +491,17 @@ client *findMinACC(client *root){
 }
 
 /*swap 2 clients nodes*/
-void swapClients(client **client1, client**client2){
+void swapClients(client *client1, client*client2){
     client tempclient;
-    tempclient=**client1;
+    tempclient=*client1;
     *client1=*client2;
-    **client2=tempclient;
+    *client2=tempclient;
     
     /*preserve tree structure*/
-    (*client2)->left=(*client1)->left;
-    (*client2)->right=(*client1)->right;
-    (*client1)->left=tempclient.left;
-    (*client1)->right=tempclient.right;
+    client2->left=client1->left;
+    client2->right=client1->right;
+    client1->left=tempclient.left;
+    client1->right=tempclient.right;
     
 }
 

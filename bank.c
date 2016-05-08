@@ -96,7 +96,7 @@ void updateNumOfBankClients(addremove remove){
  
  
 /*delete a client from the bank.*/
-void deletBankClient(client * deleteC) {
+void deleteBankClient(client * deleteC) {
     client** bankRoot;
     
     bankRoot=getBankClientRoot();
@@ -115,7 +115,10 @@ void addNewClientToBank(client* createdClient){
 	newClient=ALLOC(client,1);
 
 	*newClient=*createdClient;
+    newClient->name=strdup(createdClient->name);
+    newClient->surname=strdup(createdClient->name);
 
+    
 	CLIENTSROOT(masterBank)=insertClientTree(CLIENTSROOT(masterBank), newClient);
 
 	masterBank->numOfClients++;
