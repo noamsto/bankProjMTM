@@ -441,9 +441,9 @@ branch *createBranch()/* create branch, receive data from user */
     /*receive data from user*/
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
-    newBranch->brID= (rand()%500);//getBranchID(NOTEXIST);
-    newBranch->openTime = 1;// getTime("please enter opening time (between 0-23)\n");
-    newBranch->closeTime = 1;// getTime("please enter closing time (between 0-23)\n");
+    newBranch->brID= (rand()%500);/*getBranchID(NOTEXIST);*/
+    newBranch->openTime = 1;/* getTime("please enter opening time (between 0-23)\n");*/
+    newBranch->closeTime = 1;/* getTime("please enter closing time (between 0-23)\n");*/
     newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
     return newBranch;
 }
