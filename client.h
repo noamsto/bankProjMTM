@@ -67,6 +67,8 @@ try loanToClient();
 /*Get account number from user, check if exist or not.*/
 accountNum getAcc(availble);
 
+void clearClientTree(client* root);
+
 /*print client info (according to account number) to screen. get client account number from user*/
 void printClientInfo();
 

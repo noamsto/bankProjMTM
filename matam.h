@@ -7,6 +7,8 @@
 void *checked_malloc(unsigned int);
 void checked_free(void *);
 void check_for_exit();
+char* str_dup(const char*);
+
 
 #define ALLOC(typ,no) ((typ *) checked_malloc(sizeof(typ)*(no)))
 #define FREE(ptr) checked_free(ptr)

@@ -32,3 +32,11 @@ void check_for_exit() {
 	}
         return;
 }
+
+char* str_dup(const char* copy)
+{
+    char* create;
+    create = ALLOC(char,(int)strlen(copy));
+    strcpy(create,copy);
+    return create;
+}

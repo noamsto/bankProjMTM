@@ -361,12 +361,7 @@ branch* findBranch(branch* root, branchID brID){
 
 
 
-void deleteBranchFields(branch* to_be_deleted)
-{
-	FREE(to_be_deleted->branchName);
-	//FREE(to_be_deleted->clientList); ask steller who free's the root
-	FREE(to_be_deleted);
-}
+
 
 
 /*------------------------------------RECIEVE DATA FROM USER-------------------------------*/
@@ -446,9 +441,9 @@ branch *createBranch()/* create branch, receive data from user */
     /*receive data from user*/
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
-    newBranch->brID=getBranchID(NOTEXIST);
-    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
-    newBranch->closeTime = getTime("please enter closing time (between 0-23)\n");
+    newBranch->brID= (rand()%500);//getBranchID(NOTEXIST);
+    newBranch->openTime = 1;// getTime("please enter opening time (between 0-23)\n");
+    newBranch->closeTime = 1;// getTime("please enter closing time (between 0-23)\n");
     newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
     return newBranch;
 }
@@ -613,5 +608,12 @@ void clearBranchTree(branch* root)
 	clearBranchTree(root->left);
 	clearBranchTree(root->right);
 	deleteBranchFields(root);
-	updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
+}
+
+void deleteBranchFields(branch* to_be_deleted)
+{
+    FREE(to_be_deleted->branchName);
+    clearClientTree(to_be_deleted->clientList);
+    FREE(to_be_deleted);
+    updateNumOfBranches(REMOVE); 	  /* decrease amount of branches in bank*/
 }

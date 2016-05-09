@@ -115,8 +115,8 @@ void addNewClientToBank(client* createdClient){
 	newClient=ALLOC(client,1);
 
 	*newClient=*createdClient;
-    newClient->name=strdup(createdClient->name);
-    newClient->surname=strdup(createdClient->name);
+    newClient->name=str_dup(createdClient->name);
+    newClient->surname=str_dup(createdClient->name);
 
     
 	CLIENTSROOT(masterBank)=insertClientTree(CLIENTSROOT(masterBank), newClient);
@@ -165,6 +165,7 @@ client ** getBankClientRoot (){
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
+    clearClientTree(masterBank->root);
 	FREE(masterBank->name);
 	FREE(masterBank);
 }

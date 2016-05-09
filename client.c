@@ -417,7 +417,8 @@ void	printClientsLinkedList(client *clients){		/*recieve the list head.*/
 client* getDetailsFromUser(branchID brID,char* bankName){
     client* newClient;
     accountNum acc;
-    acc=getAcc(NOTEXIST);
+    //acc= getAcc(NOTEXIST);
+    acc = (rand()%10000);
     if (acc==CANCEL){
         ACTIONCANCELD;
         return NULL;
@@ -427,7 +428,8 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = bankName;
-    getClientID(newClient->cID);
+    strcpy(newClient->cID,"123123123");
+    //getClientID(newClient->cID);
     newClient->brID=brID;
     newClient->accNum=acc;
     return newClient;
@@ -513,6 +515,15 @@ void freeClient(client *findClient){
     FREE(findClient);
 }
 
+
+void clearClientTree(client* root)
+{
+    if(root == NULL)
+        return;
+    clearClientTree(root->left);
+    clearClientTree(root->right);
+    freeClient(root);
+}
 
 /*print a sing client information*/
 void printClientInfo(client* c)
