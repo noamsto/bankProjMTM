@@ -93,8 +93,11 @@ try addNewClientToBranch()
     if(check==FALSE)
     	return FAIL;
     brID = getBranchID(EXIST);
-    if(brID == CANCEL)
-        return SUCCESS;
+    if(brID == CANCEL){
+        printf("Action aborted\n");
+        return CANCEL;
+    }
+    
     temp = getBranch(brID);
     
     if (isBranchFull(temp)) {
@@ -136,8 +139,11 @@ void clientNumberWithGivenBalance()
         return ;
     }
     brID = getBranchID(EXIST);
-    if(brID == CANCEL)
+    if(brID == CANCEL){
+        printf("Aborted the action\n");
         return;
+    }
+    
     tempBranch = getBranch(brID);
     getDouble(&balance, "please enter balance:\n");
     numberOfClients = countClients(tempBranch->clientList,balance,&compareClientsWithBiggerBalance);
@@ -154,8 +160,10 @@ void printClientAccountsNumberAndBalance()
         return ;
     }
     brID = getBranchID(EXIST);
-    if(brID == CANCEL)
+    if(brID == CANCEL){
+        printf("Aborted the action\n");
         return;
+    }
     tempBranch = getBranch(brID);
     countClients(tempBranch->clientList,NOCHECK,&printClientDetails);
 
@@ -170,8 +178,11 @@ void clientNumberWithBiggerLoansThanBalance()
         return ;
     }
     brID = getBranchID(EXIST);
-    if(brID == CANCEL)
+    if(brID == CANCEL){
+        printf("Aborted the action\n");
         return;
+    }
+    
     tempBranch = getBranch(brID);
     numberOfClients = countClients(tempBranch->clientList,NOCHECK,&compareClientsWithBiggerLoans);
     printf("amount of clients with bigger loans then balance : %d",numberOfClients);
@@ -252,8 +263,10 @@ try  deleteBranch(branchID brID)
 
     if(brID==NOCHECK){
         brID=getBranchID(EXIST);/*receive branch from user*/
-        if(brID == CANCEL)
-            return SUCCESS;
+        if(brID == CANCEL){
+            printf("Aborted the action\n");
+            return CANCEL;
+        }
     }
     branchRoot = deleteBranchFromTree(branchRoot,brID);
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
@@ -380,6 +393,9 @@ branchID getBranchID(availble checkif){
     boolean flag = FALSE;
     do{
         getInt(&brID,"please enter branch id (1-500): (type 0 to cancel)\n");
+        if (brID==CANCEL){
+            return CANCEL;
+        }
         if (brID>N || brID<0) {
             printf("Branch id not in range (1-500)\n");
             continue;
@@ -418,7 +434,10 @@ void printBranchInfo()
     printBranchID(branchRoot);
     brID = getBranchID(EXIST);
     if(brID == CANCEL)
+    {
+        printf("Aborted the action\n");
         return;
+    }
 	tempBranch = getBranch(brID);
 	printf("Branch name: %s\n",tempBranch->branchName);
 	printf("Branch Bank name: %s\n",tempBranch->bankName);
