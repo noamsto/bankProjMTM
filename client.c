@@ -522,7 +522,7 @@ void clearClientTree(client* root)
         return;
     clearClientTree(root->left);
     clearClientTree(root->right);
-    freeClient(root);
+    deleteClient(root->accNum);
 }
 
 /*print a sing client information*/

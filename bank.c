@@ -165,7 +165,6 @@ client ** getBankClientRoot (){
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
-    clearClientTree(masterBank->root);
 	FREE(masterBank->name);
 	FREE(masterBank);
 }

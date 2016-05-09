@@ -559,9 +559,11 @@ boolean delete_leaf(branch* delete,branch* father,branch** root)
 			father->right = NULL;
 		else
 			father->left = NULL;
+        FREE(delete->branchName);
 		FREE(delete);
 		return TRUE;
 	}
+    FREE(delete->branchName);
 	FREE(delete);
 	*root = NULL;
 	return TRUE;
@@ -607,7 +609,7 @@ void clearBranchTree(branch* root)
 		return;
 	clearBranchTree(root->left);
 	clearBranchTree(root->right);
-	deleteBranchFields(root);
+	deleteBranch(root->brID);
 }
 
 void deleteBranchFields(branch* to_be_deleted)
