@@ -35,10 +35,6 @@ client ** getBankClientRoot ();
 void createBankClientList();
 
 
-/*return bank amount of clients.*/
-int BankNumberOfClients();
-
-
 /*find a client in bankClient List.*/
 client *getBankClient(accountNum);
 
@@ -76,8 +72,9 @@ char* getBankName();
 
 /*print all of the bank info*/
 void printBankInfo();
-/*printing the richest client or clients and the biggest balance*/
-void clientNumberOfBank_print();
+
+/*return the number of clients in bank*/
+int clientNumberOfBank();
 
 #endif /* bank_h */
 

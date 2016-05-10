@@ -72,11 +72,7 @@ client *insertClientTree(client* root, client* newClient){
     return root;
 }
 
-
-
-
-
-/*delete a client from a tree **new**.*/
+/*delete a client from a tree*/
 client * deleteClientFromTree(client *root, accountNum acc){
     client *findClient= NULL, *swapClient=NULL,  *parent=NULL;
     if (!root)  /*empty tree case*/

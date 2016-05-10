@@ -10,8 +10,6 @@ void initBank(bank*);
 
 #define CLIENTSROOT(STRUCT) STRUCT->root
 
-int clientNumberOfBank_REC(client *head, amount *biggestBalance);
-int clientNumberOfBank();
 
 /*********_Bank_Creation_Functions_START_******************/
 
@@ -127,7 +125,7 @@ void addNewClientToBank(client* createdClient){
 /*********_Update_bank_Fields_END_******************/
 
 /*return number clients of bank.*/
-int BankNumberOfClients(){
+int clientNumberOfBank(){
 	return masterBank->numOfClients;
 }
 
