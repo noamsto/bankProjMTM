@@ -1,7 +1,7 @@
 /* bank project
  Yahel Tsufim 304952898
  Noam Stolero 201581683
- file:client.h
+ file:menu.c
  */
 
 #include "menu.h"
