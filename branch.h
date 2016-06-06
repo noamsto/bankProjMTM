@@ -19,21 +19,19 @@ typedef struct branches{
     int openTime;				/*opening hours of the branch*/
     double balance;				/*the branch's balance*/
     double yearProfit;			/*profit of current year in branch*/
-    client* clientList;			/*list of all the clients registered to branch*/
-    struct branches *left;		/*point to left leaf of branch tree list*/
-    struct branches *right;		/*point to left leaf of branch tree list*/
+    genTree* clientList;			/*list of all the clients registered to branch*/
 
 }branch;
 
 
 
-branch* createBranchList();
+void createBranchList();
 /*create branch list */
 
 try addNewBranch();
 /*create a new branch and add to list. get info from user*/
 
-client* createBranchClientList();
+genTree* createBranchClientList();
 /*create list of clients to branch*/
 
 try addNewClientToBranch();
