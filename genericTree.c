@@ -121,9 +121,26 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
 
 
 
-
-genTree * find_Node_Parent(genTree * ,void* ,genTree **,genCmp cmp){
+/*find a node and his parent*/
+genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp){
+    comparison c;
     
+    
+    if (!t){
+        *parent=NULL;
+        return NULL;
+    }
+    
+    c=cmp(t->data,data);
+    
+    if (c==EQUAL){
+        return t;
+    }
+    *parent=t;
+    if (c==SMALLER)
+        return find_Node_Parent(t->left, data, parent, cmp);
+    else
+        return find_Node_Parent(t->right, data, parent, cmp);
 }
 
 

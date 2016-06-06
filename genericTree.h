@@ -52,11 +52,11 @@ genTree * remove_node(genTree*,void*,genDelete, genCmp);
 
 genTree * find_Node_Parent(genTree *,void* ,genTree **,genCmp cmp);
 
-double average_key(genTree*, genValue);
+//double average_key(genTree*, genValue);
 
 genTree * tree_to_array(genTree*);
 
-void print_List(genTree*, genPrintList);
+//void print_List(genTree*, genPrintList);
 
 void free_list(genTree*);
 
