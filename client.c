@@ -16,23 +16,17 @@ try getTransactionInfo(accountNum* acc,amount* money);
 try updateClientDebt(accountNum acc, amount money, addremove add);
 
 /*function search the tree, compare either balance or id, and build client linked list */
-void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*));
+genLinked* findClientGen (genTree *root, void* tocmpare , genCmp);
 
 /* 2 generic compare functions . one for client id and one for balance;*/
 int compareID(client* check, void* id);
 int compareBal(client* check, void *bal);
 
 /*print clients linked list*/
-void printClientsLinkedList(client *clients);
+void printClientsLinkedList(genLinked *clients);
 
 /*insert a client to a client linked list*/
 void buildClientLinkedList(client *list, client* add);
-
-/*find Client With max balance*/
-client *findMaxACC(client *root);
-
-/*find Client With min balance*/
-client *findMinACC(client *root);
 
 /*swap 2 clients nodes*/
 void swapClients(client *client1, client*client2);
@@ -95,9 +89,6 @@ void initClient(client* c)
     c->investment=0;
     c->maxOverdraft=0;
     c->accNum=0;
-    c->next=NULL;
-    c->left=NULL;
-    c->right=NULL;
 }
 
 
@@ -121,7 +112,7 @@ genTree *insertClientTree(genTree* root, client* newClient){
 
 /*delete a client from a tree*/
 genTree * deleteClientFromTree(genTree *root, accountNum acc){
-    client *findClient= NULL, *parent=NULL;
+    client *findClient= NULL;
     if (!root)  /*empty tree case*/
         return NULL;
     
@@ -169,12 +160,12 @@ try deleteClient(accountNum acc){
 /*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
 void findClient (){
     char c;
-    client clientsLinkedList, * bankRoot=NULL;
+    genLinked *clientsLinkedList=NULL;
+    genTree* bankRoot=NULL;
     clientID id[CLIENTIDL]; amount balance;
     boolean finish=FALSE;
     
     bankRoot=*getBankClientRoot();	/*get the clients tree root from the bank*/
-    initClient(&clientsLinkedList);		/*init the linked list head*/
     
     while (finish!=TRUE){
         printf("Find Client by:\n"
@@ -187,12 +178,12 @@ void findClient (){
         switch (c) {
             case '1':
                 getClientID(id);
-                findClientGen(bankRoot,id,&clientsLinkedList,&compareID);	/*call the find client function with the id compare function pointer*/
+                clientsLinkedList=findClientGen(bankRoot,id,(genCmp)&compareClientID);	/*call the find client function with the id compare function pointer*/
                 finish = TRUE;
                 break;
             case '2':
                 getDouble(&balance,"Please enter Balance:\n");
-                findClientGen(bankRoot,&balance,&clientsLinkedList,&compareBal);	/*call the find client function with the balance compare function pointer*/
+                clientsLinkedList=findClientGen(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find client function with the balance compare function pointer*/
                 
                 finish = TRUE;
                 break;
@@ -202,11 +193,11 @@ void findClient (){
         }
     }
     
-    if (clientsLinkedList.next==NULL){
+    if (clientsLinkedList==NULL){
         printf("No clients found\n");
         return ;
     }
-    printClientsLinkedList(clientsLinkedList.next);
+    printClientsLinkedList(clientsLinkedList);
     
 }
 
@@ -404,13 +395,13 @@ accountNum getAcc(availble checkif){
 }
 
 /*print clients linked list*/
-void	printClientsLinkedList(client *clients){		/*recieve the list head.*/
+void printClientsLinkedList(genLinked *clients){		/*recieve the list head.*/
     if (clients==NULL){
         return;
     }
     printClientsLinkedList(clients->next);
     clients->next=NULL;	/*destroy created list.*/
-    printClientInfo(clients); /*send each client to a single client print function.*/
+    printClientInfo((client*)clients->data); /*send each client to a single client print function.*/
     printf("\n");
 }
 
@@ -442,39 +433,12 @@ client* getDetailsFromUser(branchID brID,char* bankName){
 
 
 /*function search the tree, compare either balance or id, and build client linked list */
-void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*)){
+genLinked* findClientGen (genTree *root, void* tocmpare , genCmp cmp){
     if (root==NULL)
-        return;
-    
-    findClientGen(root->left, tocmpare, foundClients, compare);
-    if ((*compare)(root,tocmpare)){	/*rigger the correct compare function.*/
-        buildClientLinkedList(foundClients, root);
-    }
-    findClientGen(root->right, tocmpare,foundClients, compare);
-    return;
-}
-
-
-/*find Client With max balance*/
-client *findMaxACC(client *root){
-    if (!root)
         return NULL;
-    if (!root->right)
-        return root;
     
-    return findMaxACC(root->right);
+    return find_node(root, tocmpare, cmp);
 }
-
-/*find Client With min balance*/
-client *findMinACC(client *root){
-    if (!root)
-        return NULL;
-    if (!root->left)
-        return root;
-    
-    return findMaxACC(root->left);
-}
-
 
 
 /*free a single Clinet node*/
@@ -485,13 +449,15 @@ void freeClient(client *c){
 }
 
 
-void clearClientTree(client* root)
+genTree* clearClientTree(genTree* root)
 {
     if(root == NULL)
-        return;
-    clearClientTree(root->left);
-    clearClientTree(root->right);
-    deleteClient(root->accNum);
+        return NULL;
+    root->left=clearClientTree(root->left);
+    root->right=clearClientTree(root->right);
+    freeClient((client*)root->data);
+    FREE(root);
+    return NULL;
 }
 
 /*print a sing client information*/
