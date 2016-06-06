@@ -70,5 +70,9 @@ genTree* clearClientTree(genTree* root);
 /*print client info (according to account number) to screen. get client account number from user*/
 void printClientInfo();
 
+comparison cmpClientAcc(client* c1, client* c2);
+
+void freeClient(client *c);
+
 
 #endif /* client_h */
