@@ -95,7 +95,7 @@ void updateNumOfBankClients(addremove remove){
  
 /*delete a client from the bank.*/
 void deleteBankClient(client * deleteC) {
-    client** bankRoot;
+    genTree** bankRoot;
     
     bankRoot=getBankClientRoot();
   
@@ -156,7 +156,7 @@ int isBankFull(){
 /*********_Information_Functions_END_******************/
 
 
-client ** getBankClientRoot (){
+genTree ** getBankClientRoot (){
 	return &(CLIENTSROOT(masterBank));
 }
 

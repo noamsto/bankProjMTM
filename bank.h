@@ -22,17 +22,14 @@ typedef struct banks{
     double balance;				/*balance of bank*/
     double yearProfit;			/*the yearly profit of the bank*/
     
-    client* root;			/*list of all the clients registered to bank*/
+    genTree* root;			/*list of all the clients registered to bank*/
 }bank;
 
 
 
-client ** getBankClientRoot ();
+/*return the bank client list*/
+genTree ** getBankClientRoot ();
 
-
-
-/*create and init M size client list. */
-void createBankClientList();
 
 
 /*find a client in bankClient List.*/

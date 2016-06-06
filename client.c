@@ -44,6 +44,48 @@ void freeClient(client *findClient);
 
 /****************** Client Managment Functions START ********************/
 
+/****************** compare Functions ***********************************/
+
+
+
+comparison cmpClientAcc(client* c1, client* c2){
+    if (c1->accNum>c2->accNum)
+        return GREATER;
+    else if (c1->accNum<c2->accNum)
+        return SMALLER;
+    return EQUAL;
+}
+
+comparison cmpClientAccNum(client* c, accountNum *acc){
+    if (c->accNum>*acc)
+        return GREATER;
+    else if (c->accNum<*acc)
+        return SMALLER;
+    return EQUAL;
+}
+
+
+/* 2 generic compare functions . one for client id and one for balance;*/
+comparison compareClientID(client* c, clientID id){
+    if(strcmp(c->cID,&id)>0)
+        return GREATER;
+    else if (strcmp(c->cID,&id)<0)
+        return SMALLER;
+    return EQUAL;
+}
+comparison compareClientBal(client* c, amount *bal){
+    if(c->balance>*bal)
+        return GREATER;
+    else if (c->balance<*bal)
+        return SMALLER;
+    return EQUAL;
+}
+
+
+
+/*************************************************************************/
+
+
 /*init client struct*/
 void initClient(client* c)
 {
@@ -58,65 +100,38 @@ void initClient(client* c)
     c->right=NULL;
 }
 
+
+
+
 /*insert a single client node to a tree*/
-void *insertClientTree(client* root, client* newClient){
+genTree *insertClientTree(genTree* root, client* newClient){
     
     if (!root){
-        return newClient;
+        genTree *newTree;
+        newTree=create_Tree();
+        newTree=add_new_node(newTree,(void*)newClient, (genCmp)&cmpClientAcc );
+        return newTree;
     }
     
-    if (root->accNum> newClient->accNum){
-        root->left = insertClientTree(root->left, newClient);
-    }else{
-        root->right=insertClientTree(root->right,newClient);
-    }
+    root=add_new_node(root, (void*)newClient, (genCmp)&cmpClientAcc );
     return root;
 }
 
 
 
 /*delete a client from a tree*/
-client * deleteClientFromTree(client *root, accountNum acc){
-    client *findClient= NULL, *swapClient=NULL,  *parent=NULL;
+genTree * deleteClientFromTree(genTree *root, accountNum acc){
+    client *findClient= NULL, *parent=NULL;
     if (!root)  /*empty tree case*/
         return NULL;
     
-    findClient=getClient(root,acc, &parent);
-    if (!findClient){   /*client not found case*/
-        printf("client to be deleted not found\n");
-        return root;
-    }
+    findClient=getClient(root,acc,NOCHECK);
     
-    if (findClient->left){  /*if there is a left tree, getting the max node*/
-        
-        swapClient=findMaxACC(findClient->left);
-        swapClients(findClient,swapClient);   /*swap the client and recurse on the left tree*/
-        findClient->left=deleteClientFromTree(findClient->left, acc);
-        return findClient;
-    }
-    else if (findClient->right){   /*else look in the right tree for the min node*/
-        
-        swapClient=findMinACC(findClient->right);
-        swapClients(findClient,swapClient);   /*swap the client and recurse on the right tree*/
-        findClient->right=deleteClientFromTree(findClient->right, acc);
-        return findClient;
-    }
-    /*if non of the above is found*/
-    /*leaf case*/
-    
-    if (parent){    /*check if its not the root*/
-        if (parent->left==findClient)
-            parent->left=NULL;
-        else
-            parent->right=NULL;
-        
-        freeClient(findClient);
-        return root;
-    }
-    /*root case, returning NULL*/
-    freeClient(findClient);
-    return NULL;
+    root=remove_node(root, (void*)&acc,(genDelete)&freeClient, (genCmp)cmpClientAcc);
+    return root;
 }
+
+
 
 
 /*delete client from system.*/
@@ -197,25 +212,13 @@ void findClient (){
 
 
 /*function recieve root of clients tree, and return client with given account number*/
-client* getClient(client* root, accountNum acc,client **parent){
+client* getClient(genTree* root, accountNum acc,client** parent ){
     
     if (root==NULL){
-        if (parent)
-            *parent=NULL;
         return NULL;
     }
+    return (client*)find_Node_Parent(root, (void*)&acc, NOCHECK,(genCmp)&cmpClientAccNum)->data;
     
-    if (root->accNum>acc){
-        if (parent)
-            *parent=root;
-        return getClient(root->left, acc,parent);
-    }
-    if (root->accNum<acc){
-        if (parent)
-            *parent=root;
-        return getClient(root->right,acc,parent);
-    }
-    return root;
 }
 
 
@@ -435,27 +438,8 @@ client* getDetailsFromUser(branchID brID,char* bankName){
 }
 
 
-/*insert a client to a client linked list*/
-void buildClientLinkedList(client *list, client* add){	/*recieve the head of the list and client to add.*/
-    client *current=list;
-    while (current->next!=NULL){		/*sort the list by client id.*/
-        if (strcmp(current->next->cID, add->cID)<= 0){
-            add->next=current->next;
-            break;
-        }else
-            current=current->next;
-    }
-    current->next=add;
-}
 
 
-/* 2 generic compare functions . one for client id and one for balance;*/
-int compareID(client* check, void* id){
-    return !strcmp(check->cID, (clientID*) id);
-}
-int compareBal(client* check, void *bal){
-    return check->balance== *((amount*)(bal) )? 1:0;
-}
 
 /*function search the tree, compare either balance or id, and build client linked list */
 void findClientGen (client *root, void* tocmpare, client *foundClients , int (*compare)(client*,void*)){
@@ -491,27 +475,13 @@ client *findMinACC(client *root){
     return findMaxACC(root->left);
 }
 
-/*swap 2 clients nodes*/
-void swapClients(client *client1, client*client2){
-    client tempclient;
-    tempclient=*client1;
-    *client1=*client2;
-    *client2=tempclient;
-    
-    /*preserve tree structure*/
-    client2->left=client1->left;
-    client2->right=client1->right;
-    client1->left=tempclient.left;
-    client1->right=tempclient.right;
-    
-}
 
 
 /*free a single Clinet node*/
-void freeClient(client *findClient){
-    FREE(findClient->name);
-    FREE(findClient->surname);
-    FREE(findClient);
+void freeClient(client *c){
+    FREE(c->name);
+    FREE(c->surname);
+    FREE(c);
 }
 
 

@@ -24,10 +24,8 @@ typedef struct clients{
     amount debt;				/*client's debt to bank/branch*/
     int investment;				/*client's investment*/
     
-    struct clients *left;
-    struct clients *right;
-    struct clients *next;
 }client;
+
 
 
 
@@ -36,21 +34,21 @@ void findClient ();
 
 
 /*insert client to tree */
-client * insertClientTree(client* root, client* newClient);
+genTree * insertClientTree(genTree* root, client* newClient);
 
 
 /*get information from user about new client.*/
 client* getDetailsFromUser(branchID ,char* );
 
 /*find a client in a tree structure*/
-client* getClient(client* root, accountNum acc,client**);
+client* getClient(genTree* root, accountNum acc, client**);
 
 
 /*init client struct*/
 void initClient(client* );
 
 /*delete client from tree.*/
-client * deleteClientFromTree(client *root, accountNum acc);
+genTree * deleteClientFromTree(genTree *root, accountNum acc);
 
 /*delete client from system.*/
 try deleteClient(accountNum);

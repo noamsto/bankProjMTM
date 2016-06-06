@@ -127,7 +127,8 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
     
     
     if (!t){
-        *parent=NULL;
+        if (parent)
+            *parent=NULL;
         return NULL;
     }
     
@@ -136,7 +137,8 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
     if (c==EQUAL){
         return t;
     }
-    *parent=t;
+    if (parent)
+        *parent=t;
     if (c==SMALLER)
         return find_Node_Parent(t->left, data, parent, cmp);
     else
