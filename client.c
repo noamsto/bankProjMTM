@@ -41,6 +41,7 @@ void swapClients(client *client1, client*client2);
 void freeClient(client *findClient);
 
 
+
 /****************** Client Managment Functions START ********************/
 
 /*init client struct*/
@@ -58,7 +59,7 @@ void initClient(client* c)
 }
 
 /*insert a single client node to a tree*/
-client *insertClientTree(client* root, client* newClient){
+void *insertClientTree(client* root, client* newClient){
     
     if (!root){
         return newClient;
@@ -71,6 +72,8 @@ client *insertClientTree(client* root, client* newClient){
     }
     return root;
 }
+
+
 
 /*delete a client from a tree*/
 client * deleteClientFromTree(client *root, accountNum acc){

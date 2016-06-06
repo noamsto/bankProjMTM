@@ -8,7 +8,7 @@
 
 #include "matam.h"
 #include <string.h>
-
+#include "genericTree.h"
 
 
 #define NOCHECK 0
