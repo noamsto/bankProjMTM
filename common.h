@@ -34,7 +34,7 @@ typedef char clientID;
 /*testing purpose*/
 static char* testName= "a\0";
 static accountNum testAcc = 1;
-static clientID* testID = "123123121";
+static clientID testID[10] = "123123121\0";
 static branchID testBID = 1;
 /*testing purpose*/
 
