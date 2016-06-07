@@ -422,20 +422,11 @@ branchID getBranchID(availble checkif){
 
 
 /*-----------------------------INFORMATION FUNCTIONS-------------------*/
-/*
-void printBranchID(branch* root)
-{
-    if(root==NULL)
-        return;
-    printBranchID(root->left);
-    printf("BRANCHID: %d\n",root->brID);
-    printBranchID(root->right);
-}
+
 void printBranchInfo()
 {
 	branchID brID;
 	branch *tempBranch;
-    printBranchID(branchRoot);
     brID = getBranchID(EXIST);
     if(brID == CANCEL)
     {
@@ -453,7 +444,7 @@ void printBranchInfo()
 	printf("Branch balance: %g\n",tempBranch->balance);
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 }
-*/
+
 /*----------ADD NEW BRANCH FUNCTIONS-------------*/
 branch *createBranch()/* create branch, receive data from user */
 {
@@ -475,7 +466,7 @@ branch *createBranch()/* create branch, receive data from user */
     
     newBranch->bankName = getBankName();
     newBranch->branchName=str_dup(testName);
-    *(testName)++;
+    testName[0]++;
     newBranch->brID=testBID++;
     newBranch->openTime=1;
     newBranch->closeTime=1;
