@@ -66,6 +66,7 @@ genTree * findSmallestNode(genTree* t){
 /* delete a leaf from tree */
 genTree * deleteLeaf(genTree *t, genDelete gDelete){
     gDelete(t->data);
+    FREE(t);
     return NULL;
 }
 
@@ -107,14 +108,12 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
             parent->left=NULL;
         else
             parent->right=NULL;
-        deleteLeaf(toDelete->data, gDelete);
-        FREE(toDelete);
+        deleteLeaf(toDelete, gDelete);
         return t;
     }
     
     
     deleteLeaf(toDelete, gDelete);
-    FREE(toDelete);
     return NULL;
 }
 

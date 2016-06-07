@@ -427,15 +427,17 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     newClient = ALLOC(client,1);
     initClient(newClient);
     
-    /*disabled for test only!!
+    
+#ifndef TEST
+    
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = bankName;
     getClientID(newClient->cID);
     newClient->brID=brID;
     newClient->accNum=acc;
-    */
     
+#else
     newClient->name=str_dup(testName);
     newClient->surname=str_dup(testName);
     testName[0]++;
@@ -444,7 +446,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     testID[8]++;
     newClient->brID=brID;
     newClient->accNum=testAcc++;
-
+#endif
     
     return newClient;
 }

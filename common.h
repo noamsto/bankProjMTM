@@ -11,6 +11,9 @@
 #include "genericTree.h"
 
 
+#define TEST
+
+
 #define NOCHECK 0
 #define CLIENTIDL 10
 #define GETSPECIFIC NULL

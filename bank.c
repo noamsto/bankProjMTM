@@ -33,16 +33,17 @@ void initBank(bank* masterBank){
 void createBank(char* name){
 	masterBank=ALLOC(bank, 1);
 	initBank(masterBank);
-    /*DISABLED FOR TEST ONLY
+#ifndef TEST
     if (name==NULL){
         getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
         return;
     }
-    */
+#else
     masterBank->name=str_dup(testName);
     testName[0]++;
     
     masterBank->name=name;
+#endif
 }
 /*********_Bank_Creation_Functions_END_******************/
 

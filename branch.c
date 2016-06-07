@@ -50,7 +50,7 @@ comparison compare_Branch(branch* a,branch *b)
 {
 	if(a->brID > b->brID)
 		return GREATER;
-	if(a->brID == b->brID)
+	if(a->brID < b->brID)
 		return SMALLER;
 	return EQUAL;
 }
@@ -279,7 +279,7 @@ try  deleteBranch(branchID brID)
         }
     }
     tempBranch = getBranch(brID);
-    branchRoot = remove_node(branchRoot,tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch));
+    branchRoot = remove_node(branchRoot,(void*)tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch));
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
@@ -474,25 +474,15 @@ branch *createBranch()/* create branch, receive data from user */
     newBranch->clientList=createBranchClientList();
 #else
 
-    /*disabled for test Only
-    receive data from user
+    /*receive data from user*/
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
     newBranch->brID= getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
-    newBranch->clientList=createBranchClientList();    /*create the client list of the branch
-    */
+    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
+    
 #endif
-    
-    
-    newBranch->bankName = getBankName();
-    newBranch->branchName=str_dup(testName);
-    testName[0]++;
-    newBranch->brID=testBID++;
-    newBranch->openTime=1;
-    newBranch->closeTime=1;
-    newBranch->clientList=createBranchClientList();
     
 
     return newBranch;
