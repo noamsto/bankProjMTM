@@ -452,7 +452,17 @@ branch *createBranch()/* create branch, receive data from user */
 	printf("Add new branch start:\n");
     newBranch = ALLOC(branch,1);
 	initBranch(newBranch);
-    
+
+#ifdef TEST
+	newBranch->bankName = getBankName();
+    newBranch->branchName=str_dup(testName);
+    testName[0]++;
+    newBranch->brID=testBID++;
+    newBranch->openTime=1;
+    newBranch->closeTime=1;
+    newBranch->clientList=createBranchClientList();
+#else
+
     /*disabled for test Only
     receive data from user
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
@@ -462,16 +472,11 @@ branch *createBranch()/* create branch, receive data from user */
     newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
     newBranch->clientList=createBranchClientList();    /*create the client list of the branch
     */
+#endif
     
     
-    newBranch->bankName = getBankName();
-    newBranch->branchName=str_dup(testName);
-    testName[0]++;
-    newBranch->brID=testBID++;
-    newBranch->openTime=1;
-    newBranch->closeTime=1;
-    newBranch->clientList=createBranchClientList();
     
+
     return newBranch;
 }
 
