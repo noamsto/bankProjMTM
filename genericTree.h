@@ -58,7 +58,7 @@ genTree * tree_to_array(genTree*);
 
 //void print_List(genTree*, genPrintList);
 
-void free_list(genTree*);
+void free_list(genTree*,genDelete);
 
 
 

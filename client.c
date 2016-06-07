@@ -42,7 +42,7 @@ void freeClient(client *findClient);
 
 
 
-comparison cmpClientAcc(client* c1, client* c2){
+comparison cmpClient(client* c1, client* c2){
     if (c1->accNum>c2->accNum)
         return GREATER;
     else if (c1->accNum<c2->accNum)
@@ -99,11 +99,11 @@ genTree *insertClientTree(genTree* root, client* newClient){
     
     if (!root){
         genTree *newTree=NULL;
-        newTree=add_new_node(newTree,(void*)newClient, (genCmp)&cmpClientAcc );
+        newTree=add_new_node(newTree,(void*)newClient, (genCmp)&cmpClient );
         return newTree;
     }
     
-    root=add_new_node(root, (void*)newClient, (genCmp)&cmpClientAcc );
+    root=add_new_node(root, (void*)newClient, (genCmp)&cmpClient );
     return root;
 }
 
@@ -117,7 +117,7 @@ genTree * deleteClientFromTree(genTree *root, accountNum acc){
     
     findClient=getClient(root,acc,NOCHECK);
     
-    root=remove_node(root, (void*)&acc,(genDelete)&freeClient, (genCmp)cmpClientAcc);
+    root=remove_node(root, (void*)&acc,(genDelete)&freeClient, (genCmp)cmpClientAccNum);
     return root;
 }
 

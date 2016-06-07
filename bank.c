@@ -106,10 +106,10 @@ void deleteBankClient(client * deleteC) {
     bankRoot=getBankClientRoot();
   
     updateBankBalance(deleteC->balance, REMOVE);
-    updateNumOfBankClients(REMOVE);
 
     *bankRoot=deleteClientFromTree(*bankRoot, deleteC->accNum);
-    
+    updateNumOfBankClients(REMOVE);
+
 }
 
 /*add a new client to the bank.*/
@@ -169,6 +169,7 @@ genTree ** getBankClientRoot (){
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
+    free_list(CLIENTSROOT(masterBank), (genDelete)&freeClient);
 	FREE(masterBank->name);
 	FREE(masterBank);
 }

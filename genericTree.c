@@ -148,6 +148,19 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
 
 
 
+/*delete all tree*/
+void free_list(genTree* t,genDelete gdelete)
+{
+    if(!t)
+        return;
+    free_list(t->left,gdelete);
+    free_list(t->right,gdelete);
+    gdelete(t->data);
+    FREE(t);
+    
+}
+
+
 
 
 

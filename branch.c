@@ -118,7 +118,7 @@ try addNewClientToBranch()
     /*inform branch and bank on new client*/
     temp->currentClients++;
     addNewClientToBank(newClient);
-    temp->clientList = add_new_node(temp->clientList,newClient,(genCmp)(&cmpClientAcc));
+    temp->clientList = add_new_node(temp->clientList,newClient,(genCmp)(&cmpClient));
     printf("Add new client finished successfully\n");
     return SUCCESS;
 }
@@ -257,8 +257,8 @@ try deleteBranchClient(branchID brID,accountNum acc)
     updateBranchBalance(tempClient->brID,tempClient->balance, REMOVE);
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
+    tempBranch->clientList = remove_node(tempBranch->clientList,tempClient,(genDelete)&freeClient,(genCmp)(&cmpClient));
     tempBranch->currentClients--;
-    tempBranch->clientList = remove_node(tempBranch->clientList,tempClient,(genDelete)&freeClient,(genCmp)(&cmpClientAcc));
     return SUCCESS;
 }
 
@@ -286,7 +286,9 @@ try  deleteBranch(branchID brID)
 
 void deleteAllBranches()
 {
-//	clearBranchTree(branchRoot);
+
+	/*delete!!!! clearBranchTree(branchRoot);*/
+    free_list(branchRoot, (genDelete)&deleteBranchFields);
 }
 
 /*----------------------------------------------------*/
@@ -544,7 +546,7 @@ int printClientDetails(client* client,amount s)
 void deleteBranchFields(branch* to_be_deleted)
 {
     FREE(to_be_deleted->branchName);
-    clearClientTree(to_be_deleted->clientList);
+    /*delete!!!!   clearClientTree(to_be_deleted->clientList);*/
+    free_list(to_be_deleted->clientList, (genDelete)&freeClient);
     FREE(to_be_deleted);
-    updateNumOfBranches(REMOVE); 	  /* decrease amount of branches in bank*/
 }
