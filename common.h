@@ -32,7 +32,7 @@ typedef double amount;
 typedef char clientID;
 
 /*testing purpose*/
-static char* testName= "a\0";
+static char testName[2]= "a\0";
 static accountNum testAcc = 1;
 static clientID testID[10] = "123123121\0";
 static branchID testBID = 1;

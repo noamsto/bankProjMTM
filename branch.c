@@ -475,7 +475,7 @@ branch *createBranch()/* create branch, receive data from user */
     
     newBranch->bankName = getBankName();
     newBranch->branchName=str_dup(testName);
-    *(testName)++;
+    testName[0]++;
     newBranch->brID=testBID++;
     newBranch->openTime=1;
     newBranch->closeTime=1;

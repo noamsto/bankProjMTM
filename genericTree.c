@@ -47,7 +47,7 @@ genTree * add_new_node(genTree* t,void* data,genCmp cmp){
 /* find biggest node in given tree */
 genTree * findBiggestNode(genTree* t){
   
-    while (t!=NULL || t->right!=NULL){
+    while (t!=NULL && t->right!=NULL){
         t=t->right;
     }
     return t;
@@ -56,7 +56,7 @@ genTree * findBiggestNode(genTree* t){
 /* find smallestNode in given tree */
 genTree * findSmallestNode(genTree* t){
     
-    while (t!=NULL || t->right!=NULL){
+    while (t!=NULL && t->right!=NULL){
         t=t->left;
     }
     return t;

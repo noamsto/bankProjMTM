@@ -438,7 +438,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     
     newClient->name=str_dup(testName);
     newClient->surname=str_dup(testName);
-    *(testName)++;
+    testName[0]++;
     newClient->bankName = bankName;
     strcpy(newClient->cID,testID);
     testID[8]++;
