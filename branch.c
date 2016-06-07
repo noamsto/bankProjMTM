@@ -42,12 +42,11 @@ void clearBranchTree(branch*);
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
-void createBranchList()
-{
-	branchRoot = NULL;;
-}
 
-comparison compare_Branch_ID(branch* a,branch *b)
+
+/*****************GENERAL BRANCH FUNCTIONS*****************/
+
+comparison compare_Branch(branch* a,branch *b)
 {
 	if(a->brID > b->brID)
 		return GREATER;
@@ -55,6 +54,18 @@ comparison compare_Branch_ID(branch* a,branch *b)
 		return SMALLER;
 	return EQUAL;
 }
+
+
+
+
+
+
+void createBranchList()
+{
+	branchRoot = NULL;;
+}
+
+
 
 try addNewBranch()
 {
@@ -66,7 +77,7 @@ try addNewBranch()
         return MAX_BANK_REACHED;
     }
     newBranch = createBranch();
-    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch_ID));
+    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch));
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
     return SUCCESS;
 }
@@ -268,7 +279,7 @@ try  deleteBranch(branchID brID)
         }
     }
     tempBranch = getBranch(brID);
-    branchRoot = remove_node(branchRoot,tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch_ID));
+    branchRoot = remove_node(branchRoot,tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch));
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
