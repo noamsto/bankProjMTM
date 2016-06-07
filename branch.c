@@ -247,7 +247,7 @@ try deleteBranchClient(branchID brID,accountNum acc)
     if(tempClient->debt>0)
     		updateBranchLoan(brID,REMOVE);
     tempBranch->currentClients--;
-    tempBranch->clientList = remove_node(tempBranch->clientList,tempClient,(genDelete)(&freeClient),(genCmp)(&cmpClientAcc));
+    tempBranch->clientList = remove_node(tempBranch->clientList,tempClient,(genDelete)&freeClient,(genCmp)(&cmpClientAcc));
     return SUCCESS;
 }
 
@@ -275,7 +275,7 @@ try  deleteBranch(branchID brID)
 
 void deleteAllBranches()
 {
-	clearBranchTree(branchRoot);
+//	clearBranchTree(branchRoot);
 }
 
 /*----------------------------------------------------*/
@@ -370,7 +370,12 @@ boolean checkBranchID(branchID brID)
 
 
 branch* findBranch(genTree* root, branchID brID){
-    return find_Node_Parent(branchRoot,&brID,NOCHECK,(genCmp)(&comp_Branch_to_ID))->data;
+    genTree* b;
+    b=find_Node_Parent(branchRoot,&brID,NOCHECK,(genCmp)&comp_Branch_to_ID);
+    if (b) {
+        return (branch*)b->data;
+    }
+    return NULL;
 
 }
 
@@ -456,13 +461,26 @@ branch *createBranch()/* create branch, receive data from user */
 	printf("Add new branch start:\n");
     newBranch = ALLOC(branch,1);
 	initBranch(newBranch);
-    /*receive data from user*/
+    
+    /*disabled for test Only
+    receive data from user
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
     newBranch->bankName = getBankName();
-    newBranch->brID= (rand()%500);/*getBranchID(NOTEXIST);*/
-    newBranch->openTime = 1;/* getTime("please enter opening time (between 0-23)\n");*/
-    newBranch->closeTime = 1;/* getTime("please enter closing time (between 0-23)\n");*/
-    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
+    newBranch->brID= getBranchID(NOTEXIST);
+    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
+    newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
+    newBranch->clientList=createBranchClientList();    /*create the client list of the branch
+    */
+    
+    
+    newBranch->bankName = getBankName();
+    newBranch->branchName=str_dup(testName);
+    *(testName)++;
+    newBranch->brID=testBID++;
+    newBranch->openTime=1;
+    newBranch->closeTime=1;
+    newBranch->clientList=createBranchClientList();
+    
     return newBranch;
 }
 

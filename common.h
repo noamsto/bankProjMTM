@@ -18,6 +18,7 @@
 #define CANCEL 0
 
 
+
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;
 typedef enum{NOTEXIST,EXIST}availble;   
@@ -30,6 +31,12 @@ typedef int branchID , accountNum;
 typedef double amount;
 typedef char clientID;
 
+/*testing purpose*/
+static char* testName= "a\0";
+static accountNum testAcc = 1;
+static clientID* testID = "123123121";
+static branchID testBID = 1;
+/*testing purpose*/
 
 
 void getName(char** , int, char*);

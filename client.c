@@ -98,8 +98,7 @@ void initClient(client* c)
 genTree *insertClientTree(genTree* root, client* newClient){
     
     if (!root){
-        genTree *newTree;
-        newTree=create_Tree();
+        genTree *newTree=NULL;
         newTree=add_new_node(newTree,(void*)newClient, (genCmp)&cmpClientAcc );
         return newTree;
     }
@@ -204,11 +203,15 @@ void findClient (){
 
 /*function recieve root of clients tree, and return client with given account number*/
 client* getClient(genTree* root, accountNum acc,client** parent ){
-    
+    genTree* cl;
     if (root==NULL){
         return NULL;
     }
-    return (client*)find_Node_Parent(root, (void*)&acc, NOCHECK,(genCmp)&cmpClientAccNum)->data;
+    cl=find_Node_Parent(root, (void*)&acc, NOCHECK,(genCmp)&cmpClientAccNum);
+    if (cl){
+        return (client*)cl->data;
+    }
+    return NULL;
     
 }
 
@@ -410,21 +413,39 @@ void printClientsLinkedList(genLinked *clients){		/*recieve the list head.*/
 client* getDetailsFromUser(branchID brID,char* bankName){
     client* newClient;
     accountNum acc;
-    /*acc= getAcc(NOTEXIST);*/
-    acc = (rand()%10000);
+    
+    /*disabled for test only!!
+    acc= getAcc(NOTEXIST);
     if (acc==CANCEL){
         ACTIONCANCELD;
         return NULL;
     }
+    */
+    
+    
+    
     newClient = ALLOC(client,1);
     initClient(newClient);
+    
+    /*disabled for test only!!
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = bankName;
-    strcpy(newClient->cID,"123123123");
-    /*getClientID(newClient->cID);*/
+    getClientID(newClient->cID);
     newClient->brID=brID;
     newClient->accNum=acc;
+    */
+    
+    newClient->name=str_dup(testName);
+    newClient->surname=str_dup(testName);
+    *(testName)++;
+    newClient->bankName = bankName;
+    strcpy(newClient->cID,testID);
+    testID[8]++;
+    newClient->brID=brID;
+    newClient->accNum=testAcc++;
+
+    
     return newClient;
 }
 

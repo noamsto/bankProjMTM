@@ -13,6 +13,9 @@
 #define MAXSTRING 50
 
 
+
+
+
 /*get string from user, check for legibility comparing to length of word and only letters.*/
 void getName(char** name , int length, char* output){
     int i,len;

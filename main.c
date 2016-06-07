@@ -8,7 +8,7 @@
 
 
 int main(){
-    createBank(NULL);
+    createBank("Master");
     createBranchList();
     mainMenu();/*menu for testing code*/
     deleteBank();

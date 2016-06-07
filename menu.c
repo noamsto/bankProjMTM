@@ -90,7 +90,7 @@ void infoMenu(){
 				printBankInfo();
 				break;
 			case '2':
-				printBranchInfo();
+				//printBranchInfo();
 				break;
 			case '3':
 				printClientInfo(NULL);
@@ -131,14 +131,14 @@ void transactionAndReports(){
 				   loanToClient();
 				   break;
 				case '3':
-					clientNumberWithBiggerLoansThanBalance();
+					//clientNumberWithBiggerLoansThanBalance();
 					break;
 				case '4':
-					printClientAccountsNumberAndBalance();
+					//printClientAccountsNumberAndBalance();
 				   break;
 #ifdef BANK_AHAMELIM	/*hidden menu for bank the new bank*/
 				case '5':
-					clientNumberWithGivenBalance();
+					//dclientNumberWithGivenBalance();
 					break;
 #endif
 				case '9':

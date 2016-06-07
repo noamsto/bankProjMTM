@@ -32,6 +32,7 @@ genTree * add_new_node(genTree* t,void* data,genCmp cmp){
         t->data=data;
         return t;
     }
+    
     c=cmp(t->data,data);
     if (c==GREATER){
         t->right=add_new_node(t->right, data, cmp);
@@ -112,7 +113,7 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
     }
     
     
-    deleteLeaf(toDelete->data, gDelete);
+    deleteLeaf(toDelete, gDelete);
     FREE(toDelete);
     return NULL;
 }
