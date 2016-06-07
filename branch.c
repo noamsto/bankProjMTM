@@ -42,12 +42,11 @@ void clearBranchTree(branch*);
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
-void createBranchList()
-{
-	branchRoot = NULL;;
-}
 
-comparison compare_Branch_ID(branch* a,branch *b)
+
+/*****************GENERAL BRANCH FUNCTIONS*****************/
+
+comparison compare_Branch(branch* a,branch *b)
 {
 	if(a->brID > b->brID)
 		return GREATER;
@@ -55,6 +54,18 @@ comparison compare_Branch_ID(branch* a,branch *b)
 		return SMALLER;
 	return EQUAL;
 }
+
+
+
+
+
+
+void createBranchList()
+{
+	branchRoot = NULL;;
+}
+
+
 
 try addNewBranch()
 {
@@ -66,7 +77,7 @@ try addNewBranch()
         return MAX_BANK_REACHED;
     }
     newBranch = createBranch();
-    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch_ID));
+    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch));
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
     return SUCCESS;
 }
@@ -268,7 +279,7 @@ try  deleteBranch(branchID brID)
         }
     }
     tempBranch = getBranch(brID);
-    branchRoot = remove_node(branchRoot,tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch_ID));
+    branchRoot = remove_node(branchRoot,tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch));
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
 }
@@ -422,20 +433,11 @@ branchID getBranchID(availble checkif){
 
 
 /*-----------------------------INFORMATION FUNCTIONS-------------------*/
-/*
-void printBranchID(branch* root)
-{
-    if(root==NULL)
-        return;
-    printBranchID(root->left);
-    printf("BRANCHID: %d\n",root->brID);
-    printBranchID(root->right);
-}
+
 void printBranchInfo()
 {
 	branchID brID;
 	branch *tempBranch;
-    printBranchID(branchRoot);
     brID = getBranchID(EXIST);
     if(brID == CANCEL)
     {
@@ -453,7 +455,7 @@ void printBranchInfo()
 	printf("Branch balance: %g\n",tempBranch->balance);
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 }
-*/
+
 /*----------ADD NEW BRANCH FUNCTIONS-------------*/
 branch *createBranch()/* create branch, receive data from user */
 {
@@ -461,7 +463,17 @@ branch *createBranch()/* create branch, receive data from user */
 	printf("Add new branch start:\n");
     newBranch = ALLOC(branch,1);
 	initBranch(newBranch);
-    
+
+#ifdef TEST
+	newBranch->bankName = getBankName();
+    newBranch->branchName=str_dup(testName);
+    testName[0]++;
+    newBranch->brID=testBID++;
+    newBranch->openTime=1;
+    newBranch->closeTime=1;
+    newBranch->clientList=createBranchClientList();
+#else
+
     /*disabled for test Only
     receive data from user
 	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
@@ -471,6 +483,7 @@ branch *createBranch()/* create branch, receive data from user */
     newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
     newBranch->clientList=createBranchClientList();    /*create the client list of the branch
     */
+#endif
     
     
     newBranch->bankName = getBankName();
@@ -481,6 +494,7 @@ branch *createBranch()/* create branch, receive data from user */
     newBranch->closeTime=1;
     newBranch->clientList=createBranchClientList();
     
+
     return newBranch;
 }
 
