@@ -33,7 +33,8 @@ typedef enum{SMALLER=-1, EQUAL=0, GREATER=1}comparison;
 
 typedef int (*genCmp)(void*,void*);
 typedef void (*genDelete)(void*);
-
+typedef double (*genValue)(void*);
+typedef void (*genPrint)(void*);
 
 /*------------------------GENERAL LINKED LIST--------------------*/
 
@@ -52,7 +53,7 @@ genTree * remove_node(genTree*,void*,genDelete, genCmp);
 
 genTree * find_Node_Parent(genTree *,void* ,genTree **,genCmp cmp);
 
-//double average_key(genTree*, genValue);
+double average_key(genTree*,int*, genValue);
 
 genTree * tree_to_array(genTree*);
 

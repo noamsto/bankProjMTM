@@ -144,6 +144,31 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
 }
 
 
+void print_List(genTree* t, genPrint print)
+{
+	if(!t)
+		return;
+	print_List(t->left,print);
+	print(t->data);
+	print_List(t->right,print);
+}
+
+double average_key(genTree* t,int* amount, genValue val){
+	int leftAm=0,rightAm=0;
+	double leftAv=0,rightAv=0,myAv;
+	if(!t){
+		*amount = 0;
+		return 0;
+	}
+	leftAv = average_key(t->left,&leftAm,val);
+	rightAv = average_key(t->right,&rightAm,val);
+	*amount = leftAm + rightAm + 1;
+	myAv = val(t->data);
+	myAv += (leftAv * leftAm) + (rightAv * rightAm);
+	return (myAv/ *amount);
+}
+
+
 
 
 /*delete all tree*/
