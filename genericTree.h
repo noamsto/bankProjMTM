@@ -53,7 +53,7 @@ genTree * remove_node(genTree*,void*,genDelete, genCmp);
 
 genTree * find_Node_Parent(genTree *,void* ,genTree **,genCmp cmp);
 
-double average_key(genTree*,int*, genValue);
+double average_key(genTree*,int*, genValue);/*check if pushed*/
 
 genTree * tree_to_array(genTree*);
 
