@@ -8,6 +8,10 @@
 
 
 #include "common.h"
+#define SWAP(D1,D2,TEMP) TEMP=D1->data; \
+                    D1->data=D2->data; \
+                    D2->data=TEMP \
+
 
 
 
@@ -70,8 +74,6 @@ genTree * deleteLeaf(genTree *t, genDelete gDelete){
     return NULL;
 }
 
-
-
 /* remove a node from tree */
 genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
     genTree* toSwap, *toDelete, *parent=NULL;
@@ -89,16 +91,12 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
     
     if(toDelete->left==NULL && toDelete->right!=NULL){
         toSwap=findSmallestNode(toDelete->right);
-        temp=toDelete->data;
-        toDelete->data=toSwap->data;
-        toSwap->data=temp;
+        SWAP(toDelete, toSwap, temp);
         toDelete->right=remove_node(toDelete->right,data, gDelete, cmp);
         return toDelete;
     }else if (toDelete->left!=NULL){
         toSwap=findBiggestNode(toDelete->left);
-        temp=toDelete->data;
-        toDelete->data=toSwap->data;
-        toSwap->data=temp;
+        SWAP(toDelete, toSwap, temp);
         toDelete->left=remove_node(toDelete->left, data,gDelete, cmp);
         return toDelete;
     }

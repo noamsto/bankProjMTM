@@ -6,6 +6,7 @@
 
 #include "bank.h"
 
+/*init a single bank struct*/
 void initBank(bank*);
 
 #define CLIENTSROOT(STRUCT) STRUCT->root
@@ -37,12 +38,11 @@ void createBank(char* name){
     if (name==NULL){
         getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
         return;
-    }
+    }else
+        masterBank->name=name;
 #else
     masterBank->name=str_dup(testName);
-    testName[0]++;
-    
-    masterBank->name=name;
+    testName[0]+=1;
 #endif
 }
 /*********_Bank_Creation_Functions_END_******************/

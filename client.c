@@ -18,18 +18,9 @@ try updateClientDebt(accountNum acc, amount money, addremove add);
 /*function search the tree, compare either balance or id, and build client linked list */
 genLinked* findClientGen (genTree *root, void* tocmpare , genCmp);
 
-/* 2 generic compare functions . one for client id and one for balance;*/
-int compareID(client* check, void* id);
-int compareBal(client* check, void *bal);
-
 /*print clients linked list*/
 void printClientsLinkedList(genLinked *clients);
 
-/*insert a client to a client linked list*/
-void buildClientLinkedList(client *list, client* add);
-
-/*swap 2 clients nodes*/
-void swapClients(client *client1, client*client2);
 
 /*free a single Clinet node*/
 void freeClient(client *findClient);
@@ -412,24 +403,20 @@ void printClientsLinkedList(genLinked *clients){		/*recieve the list head.*/
 /*get information from user about new client.*/
 client* getDetailsFromUser(branchID brID,char* bankName){
     client* newClient;
+#ifndef TEST
     accountNum acc;
+#endif
     
-    /*disabled for test only!!
+    newClient = ALLOC(client,1);
+    initClient(newClient);
+    
+#ifndef TEST
+    
     acc= getAcc(NOTEXIST);
     if (acc==CANCEL){
         ACTIONCANCELD;
         return NULL;
     }
-    */
-    
-    
-    
-    newClient = ALLOC(client,1);
-    initClient(newClient);
-    
-    
-#ifndef TEST
-    
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = bankName;
