@@ -19,7 +19,7 @@ typedef struct branches{
     int openTime;				/*opening hours of the branch*/
     double balance;				/*the branch's balance*/
     double yearProfit;			/*profit of current year in branch*/
-    genTree* clientList;			/*list of all the clients registered to branch*/
+    genTree* clientList;		/*list of all the clients registered to branch*/
 
 }branch;
 
