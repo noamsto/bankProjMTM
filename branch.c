@@ -112,7 +112,11 @@ try addNewClientToBranch()
     check=addClientConditions();
     if(check==FALSE)
     	return FAIL;
+#ifdef TEST
+    brID=1;  /* make branch id 1 for test purposes */
+#else
     brID = getBranchID(EXIST);
+#endif
     if(brID == CANCEL){
         printf("Action aborted\n");
         return CANCEL;
