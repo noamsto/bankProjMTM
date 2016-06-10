@@ -90,7 +90,7 @@ void infoMenu(){
 				printBankInfo();
 				break;
 			case '2':
-				//printBranchInfo();
+				printBranchInfo();
 				break;
 			case '3':
 				printClientInfo(NULL);

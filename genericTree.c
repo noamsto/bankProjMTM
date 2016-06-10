@@ -216,7 +216,7 @@ genLinked* merge_LinkedList(genLinked* a,genLinked* b)
         return b;
     if(b==NULL)
         return a;
-    while(a->next){
+    while(a->next!=NULL){
         a=a->next;
     }
     a->next=b;
