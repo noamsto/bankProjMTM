@@ -25,6 +25,11 @@ typedef struct branches{
 
 
 
+/**** noam added ***/
+void findClientInGivenBranch ();
+
+
+
 void createBranchList();
 /*create branch list */
 

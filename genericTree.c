@@ -8,6 +8,8 @@
 
 
 #include "common.h"
+
+/* macro for swapping data */
 #define SWAP(D1,D2,TEMP) TEMP=D1->data; \
                     D1->data=D2->data; \
                     D2->data=TEMP \
@@ -37,11 +39,11 @@ genTree * add_new_node(genTree* t,void* data,genCmp cmp){
         return t;
     }
     
-    c=cmp(t->data,data);
+    c=cmp(t->data,data); /* call designated compare function */
     if (c==GREATER){
-        t->right=add_new_node(t->right, data, cmp);
-    }else{
         t->left=add_new_node(t->left, data, cmp);
+    }else{
+        t->right=add_new_node(t->right, data, cmp);
     }
     
     return t;
@@ -83,25 +85,28 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
         return NULL;
     }
     
-    toDelete=find_Node_Parent(t, data,&parent, cmp);
+    toDelete=find_Node_Parent(t, data,&parent, cmp);    /*find node and its parent */
     
-    if (toDelete==NULL)
+    if (toDelete==NULL) /* no node found */
         return NULL;
     
-    
     if(toDelete->left==NULL && toDelete->right!=NULL){
-        toSwap=findSmallestNode(toDelete->right);
-        SWAP(toDelete, toSwap, temp);
+        toSwap=findSmallestNode(toDelete->right); /*find smallest node in right tree */
+        SWAP(toDelete, toSwap, temp); /* swap smallest node with the one to delete*/
+        /* call this function again on right tree */
         toDelete->right=remove_node(toDelete->right,data, gDelete, cmp);
         return toDelete;
-    }else if (toDelete->left!=NULL){
-        toSwap=findBiggestNode(toDelete->left);
-        SWAP(toDelete, toSwap, temp);
+    }
+    else if (toDelete->left!=NULL){
+        toSwap=findBiggestNode(toDelete->left); /*find biggest node in left tree */
+        SWAP(toDelete, toSwap, temp); /* swap biggest node with the one to delete*/
+        /* call this function again on right tree */
         toDelete->left=remove_node(toDelete->left, data,gDelete, cmp);
         return toDelete;
     }
     
-    if (parent){
+    /* leaf case */
+    if (parent){ /*if there is a parent */
         if (parent->left==toDelete)
             parent->left=NULL;
         else
@@ -109,8 +114,7 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
         deleteLeaf(toDelete, gDelete);
         return t;
     }
-    
-    
+    /* root case */
     deleteLeaf(toDelete, gDelete);
     return NULL;
 }
@@ -138,9 +142,9 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
     if (parent)
         *parent=t;
     if (c==SMALLER)
-        return find_Node_Parent(t->left, data, parent, cmp);
-    else
         return find_Node_Parent(t->right, data, parent, cmp);
+    else
+        return find_Node_Parent(t->left, data, parent, cmp);
 }
 
 
@@ -148,8 +152,8 @@ void print_List(genLinked* t, genPrint print)
 {
 	if(!t)
 		return;
-    print_List(t->next, print);
     print(t->data);
+    print_List(t->next, print);
 }
 
 double average_key(genTree* t,int* amount, genValue val){
@@ -235,6 +239,29 @@ genLinked* merge_LinkedList(genLinked* a,genLinked* b)
     return new;
 }
 
+
+
+/*sort linked list */
+
+genLinked* sortLinkedList(genLinked* l, genCmp cmp){
+    comparison c;
+    void * temp;
+    genLinked *next;
+    if (!l)
+        return NULL;
+    
+    next=sortLinkedList(l->next, cmp);
+    if (next){
+        c=cmp(l->data,next->data);
+        if (c==GREATER){
+            SWAP(l,next, temp);
+        }
+        l->next=sortLinkedList(l->next, cmp);
+    }
+    
+    
+    return l;
+}
 
 
 

@@ -68,7 +68,7 @@ comparison compareClientBal(client* c, amount *bal){
 
 
 
-/*************************************************************************/
+/**************************** compare functions end *******************************/
 
 
 /*init client struct*/
@@ -154,14 +154,17 @@ try deleteClient(accountNum acc){
 
 
 /*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
-void findClient (){
+void findClient (genTree *clientsTree){
+    genLinked *clientsLinkedList=NULL;
     char c;
-    genLinked *clientsLinkedList=NULL;  /*generic linked list to be used*/
-    genTree* bankRoot=NULL;
     clientID id[CLIENTIDL]; amount balance;
     boolean finish=FALSE;
     
-    bankRoot=*getBankClientRoot();	/*get the clients tree root from the bank*/
+    if (!clientsTree)
+        clientsTree=*getBankClientRoot();	/*get the clients tree root from the bank*/
+
+    
+    
     
     /* request the user for an option, find by id or balance*/
     while (finish!=TRUE){
@@ -175,12 +178,12 @@ void findClient (){
         switch (c) {
             case '1':
                 getClientID(id);
-                clientsLinkedList=find_node(bankRoot,id,(genCmp)&compareClientID);	/*call the find node function with the id compare function pointer*/
+                clientsLinkedList=find_node(clientsTree,id,(genCmp)&compareClientID);	/*call the find node function with the id compare function pointer*/
                 finish = TRUE;
                 break;
             case '2':
                 getDouble(&balance,"Please enter Balance:\n");
-                clientsLinkedList=find_node(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find node function with the balance compare function pointer*/
+                clientsLinkedList=find_node(clientsTree,&balance,(genCmp)&compareClientBal);	/*call the find node function with the balance compare function pointer*/
                 
                 finish = TRUE;
                 break;
@@ -195,6 +198,8 @@ void findClient (){
         return ;
     }
     printf("\n");
+    /*sort linked list by id*/
+    //clientsLinkedList=sortLinkedList(clientsLinkedList, (genCmp)&compareClientID);
     printClientsLinkedList(clientsLinkedList);  /*print the list and destroy it*/
     
 }
@@ -220,7 +225,7 @@ client* getClient(genTree* root, accountNum acc,client** parent ){
 
 /****************** Transaction functions START **********************/
 
-/*get the transaction info from user, accoun number and amount of money.*/
+/*get the transaction info from user, account number and amount of money.*/
 try getTransactionInfo(accountNum* acc,amount* money){
     
     *acc=getAcc(EXIST);
@@ -413,16 +418,17 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     accountNum acc;
 #endif
     
-    newClient = ALLOC(client,1);
-    initClient(newClient);
+    newClient = ALLOC(client,1);    /* creete a new client struct */
+    initClient(newClient);  /* init the struct */
     
 #ifndef TEST
     
-    acc= getAcc(NOTEXIST);
+    acc= getAcc(NOTEXIST);  /* get account number from user */
     if (acc==CANCEL){
         ACTIONCANCELD;
         return NULL;
     }
+    /* recieve all relevant information from user */
     getName(&(newClient->name), MAXNAME, "please enter client name:\n");
     getName(&(newClient->surname), MAXNAME, "please enter client surname:\n");
     newClient->bankName = bankName;
@@ -431,6 +437,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     newClient->accNum=acc;
     
 #else
+    /* FOR TEST ONLY, put a predfined information */
     newClient->name=str_dup(testName);
     newClient->surname=str_dup(testName);
     testName[0]++;
@@ -446,7 +453,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
 
 
 
-/*print a sing client information*/
+/*print a single client information*/
 void printClientInfo(client* c)
 {
     accountNum accNumber;

@@ -81,7 +81,7 @@ void infoMenu(){
 		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
-				"4: Find client\n"
+				"4: Find client in given branch\n"
 				"9: back to main menu\n");
 		subMenu = getchar();
 		getchar();
@@ -96,7 +96,7 @@ void infoMenu(){
 				printClientInfo(NULL);
 				break;
 			case '4':
-				findClient();
+				findClientInGivenBranch();
 				break;
 			case '9':
 				finish=TRUE;

@@ -44,6 +44,18 @@ void clearBranchTree(branch*);
 
 
 
+
+/**************** NOAM ADDED ************************/
+
+/* find a clients in a certain branch by ID or balance */
+void findClientInGivenBranch (){
+    branch *b;
+    b=getBranch(getBranchID(EXIST));
+    findClient(b->clientList);
+}
+
+
+
 /*****************GENERAL BRANCH FUNCTIONS*****************/
 
 comparison compare_Branch(branch* a,branch *b)

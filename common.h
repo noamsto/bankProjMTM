@@ -10,10 +10,11 @@
 #include <string.h>
 #include "genericTree.h"
 
-
+/* define for test purposes */
 #define TEST
 
 
+/* definitions for and typdefs used in the program */
 #define NOCHECK 0
 #define CLIENTIDL 10
 #define GETSPECIFIC NULL
@@ -34,6 +35,8 @@ typedef int branchID , accountNum;
 typedef double amount;
 typedef char clientID;
 
+/* end of definitons */
+
 /*testing purpose*/
 #ifdef TEST
 static char testName[2]= "a\0";
@@ -53,8 +56,8 @@ void getInt(int* num,char* output);
 void getDouble(double* num, char* output);
 /*get string from user, check for legibility comparing to length of size*/
 
-
 void getClientID(clientID *);
+/* get clinet id from user */
 
 #endif /* common_h */
 

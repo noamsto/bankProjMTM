@@ -30,7 +30,7 @@ typedef struct clients{
 
 
 /* find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
-void findClient ();
+void findClient (genTree*);
 
 
 /* insert client to tree */
