@@ -34,15 +34,16 @@ void initBank(bank* masterBank){
 void createBank(char* name){
 	masterBank=ALLOC(bank, 1);
 	initBank(masterBank);
-#ifndef TEST
+
+#ifndef TEST /* if its not a test, request for bank name*/
     if (name==NULL){
         getName(&(masterBank->name), BANKNAMEMAX, "please enter bank name:\n");
         return;
     }else
         masterBank->name=name;
 #else
-    masterBank->name=str_dup(testName);
-    testName[0]+=1;
+    masterBank->name=str_dup(testName); /* give a default name, test purpose */
+    testName[0]+=1; /* change letter for test name */
 #endif
 }
 /*********_Bank_Creation_Functions_END_******************/
@@ -169,7 +170,7 @@ genTree ** getBankClientRoot (){
 /* Delete the bank*/
 void deleteBank(){
 	deleteAllBranches();
-    free_list(CLIENTSROOT(masterBank), (genDelete)&freeClient);
+    free_list(&CLIENTSROOT(masterBank), (genDelete)&freeClient);
 	FREE(masterBank->name);
 	FREE(masterBank);
 }

@@ -59,7 +59,7 @@ genTree * tree_to_array(genTree*);
 
 void print_List(genLinked*, genPrint);
 
-void free_list(genTree*,genDelete);
+void free_list(genTree**,genDelete);
 
 void free_linked_list(genLinked** t,genDelete gDelete);
 

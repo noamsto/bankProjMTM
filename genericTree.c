@@ -171,14 +171,15 @@ double average_key(genTree* t,int* amount, genValue val){
 
 
 /*delete all tree*/
-void free_list(genTree* t,genDelete gdelete)
+void free_list(genTree** t,genDelete gdelete)
 {
-    if(!t)
+    if(!*t)
         return;
-    free_list(t->left,gdelete);
-    free_list(t->right,gdelete);
-    gdelete(t->data);
-    FREE(t);
+    free_list(&(*t)->left,gdelete);
+    free_list(&(*t)->right,gdelete);
+    gdelete((*t)->data);
+    FREE(*t);
+    *t=NULL;
     
 }
 

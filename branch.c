@@ -288,7 +288,7 @@ void deleteAllBranches()
 {
 
 	/*delete!!!! clearBranchTree(branchRoot);*/
-    free_list(branchRoot, (genDelete)&deleteBranchFields);
+    free_list(&branchRoot, (genDelete)&deleteBranchFields);
 }
 
 /*----------------------------------------------------*/
@@ -547,6 +547,6 @@ void deleteBranchFields(branch* to_be_deleted)
 {
     FREE(to_be_deleted->branchName);
     /*delete!!!!   clearClientTree(to_be_deleted->clientList);*/
-    free_list(to_be_deleted->clientList, (genDelete)&freeClient);
+    free_list(&to_be_deleted->clientList, (genDelete)&freeClient);
     FREE(to_be_deleted);
 }

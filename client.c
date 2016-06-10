@@ -30,7 +30,7 @@ void freeClient(client *findClient);
 /****************** compare Functions ***********************************/
 
 
-
+/* compare 2 clients struct by account number */
 comparison cmpClient(client* c1, client* c2){
     if (c1->accNum>c2->accNum)
         return GREATER;
@@ -39,6 +39,7 @@ comparison cmpClient(client* c1, client* c2){
     return EQUAL;
 }
 
+/*compare client account with given account number */
 comparison cmpClientAccNum(client* c, accountNum *acc){
     if (c->accNum>*acc)
         return GREATER;
@@ -48,7 +49,7 @@ comparison cmpClientAccNum(client* c, accountNum *acc){
 }
 
 
-/* 2 generic compare functions . one for client id and one for balance;*/
+/* compare client with given id number */
 comparison compareClientID(client* c, clientID *id){
     if(strcmp(c->cID,id)>0)
         return GREATER;
@@ -56,6 +57,7 @@ comparison compareClientID(client* c, clientID *id){
         return SMALLER;
     return EQUAL;
 }
+/* compare client with given balance */
 comparison compareClientBal(client* c, amount *bal){
     if(c->balance>*bal)
         return GREATER;
@@ -80,18 +82,23 @@ void initClient(client* c)
     c->accNum=0;
 }
 
-
+/*free a single Clinet node*/
+void freeClient(client *c){
+    FREE(c->name);
+    FREE(c->surname);
+    FREE(c);
+}
 
 
 /*insert a single client node to a tree*/
 genTree *insertClientTree(genTree* root, client* newClient){
     
     if (!root){
-        genTree *newTree=NULL;
+        genTree *newTree=NULL; /*if there is no tree node, creat a new one*/
         newTree=add_new_node(newTree,(void*)newClient, (genCmp)&cmpClient );
         return newTree;
     }
-    
+    /* add a new node and return the tree */
     root=add_new_node(root, (void*)newClient, (genCmp)&cmpClient );
     return root;
 }
@@ -126,6 +133,7 @@ try deleteClient(accountNum acc){
             return CANCELED;
         }
     }
+    /* find the client first */
     deleteC=getBankClient(acc);
     if (!deleteC)
         return CLIENTNOTFOUND;
@@ -148,13 +156,14 @@ try deleteClient(accountNum acc){
 /*find client function, recieve either ID or Balance from user and build linked list with all relevant client.*/
 void findClient (){
     char c;
-    genLinked *clientsLinkedList=NULL;
+    genLinked *clientsLinkedList=NULL;  /*generic linked list to be used*/
     genTree* bankRoot=NULL;
     clientID id[CLIENTIDL]; amount balance;
     boolean finish=FALSE;
     
     bankRoot=*getBankClientRoot();	/*get the clients tree root from the bank*/
     
+    /* request the user for an option, find by id or balance*/
     while (finish!=TRUE){
         printf("Find Client by:\n"
                "1. ID\n"
@@ -166,12 +175,12 @@ void findClient (){
         switch (c) {
             case '1':
                 getClientID(id);
-                clientsLinkedList=find_node(bankRoot,id,(genCmp)&compareClientID);	/*call the find client function with the id compare function pointer*/
+                clientsLinkedList=find_node(bankRoot,id,(genCmp)&compareClientID);	/*call the find node function with the id compare function pointer*/
                 finish = TRUE;
                 break;
             case '2':
                 getDouble(&balance,"Please enter Balance:\n");
-                clientsLinkedList=find_node(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find client function with the balance compare function pointer*/
+                clientsLinkedList=find_node(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find node function with the balance compare function pointer*/
                 
                 finish = TRUE;
                 break;
@@ -186,7 +195,7 @@ void findClient (){
         return ;
     }
     printf("\n");
-    printClientsLinkedList(clientsLinkedList);
+    printClientsLinkedList(clientsLinkedList);  /*print the list and destroy it*/
     
 }
 
@@ -436,25 +445,6 @@ client* getDetailsFromUser(branchID brID,char* bankName){
 }
 
 
-
-/*free a single Clinet node*/
-void freeClient(client *c){
-    FREE(c->name);
-    FREE(c->surname);
-    FREE(c);
-}
-
-
-genTree* clearClientTree(genTree* root)
-{
-    if(root == NULL)
-        return NULL;
-    root->left=clearClientTree(root->left);
-    root->right=clearClientTree(root->right);
-    freeClient((client*)root->data);
-    FREE(root);
-    return NULL;
-}
 
 /*print a sing client information*/
 void printClientInfo(client* c)
