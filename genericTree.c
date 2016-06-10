@@ -244,26 +244,43 @@ genLinked* merge_LinkedList(genLinked* a,genLinked* b)
 }
 
 
+/* insert a node in a sorted list */
+genLinked* putSorted (genLinked *l, genLinked* node, genCmp cmp){
+    genLinked *prev=NULL, *seek;
+    seek =l;
+    
+    if (!seek){
+        return node;
+    }
+    if (!node)
+        return l;
+    
+    while (seek!=NULL && cmp(node->data, seek->data)==GREATER ){
+        prev=seek;
+        seek=seek->next;
+    }
+    node->next=seek;
+    if (prev){
+        prev->next=node;
+        return l;
+    }
+    return node;
+
+}
+
+
 
 /*sort linked list */
 
 genLinked* sortLinkedList(genLinked* l, genCmp cmp){
-    comparison c;
-    void * temp;
+
     genLinked *next;
     if (!l)
         return NULL;
     
     next=sortLinkedList(l->next, cmp);
-    if (next){
-        c=cmp(l->data,next->data);
-        if (c==GREATER){
-            SWAP(l,next, temp);
-        }
-        l->next=sortLinkedList(l->next, cmp);
-    }
     
-    
+    l=putSorted(next, l, cmp);
     return l;
 }
 
