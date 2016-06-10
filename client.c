@@ -15,8 +15,6 @@ try getTransactionInfo(accountNum* acc,amount* money);
 /*update client debt.*/
 try updateClientDebt(accountNum acc, amount money, addremove add);
 
-/*function search the tree, compare either balance or id, and build client linked list */
-genLinked* findClientGen (genTree *root, void* tocmpare , genCmp);
 
 /*print clients linked list*/
 void printClientsLinkedList(genLinked *clients);
@@ -51,10 +49,10 @@ comparison cmpClientAccNum(client* c, accountNum *acc){
 
 
 /* 2 generic compare functions . one for client id and one for balance;*/
-comparison compareClientID(client* c, clientID id){
-    if(strcmp(c->cID,&id)>0)
+comparison compareClientID(client* c, clientID *id){
+    if(strcmp(c->cID,id)>0)
         return GREATER;
-    else if (strcmp(c->cID,&id)<0)
+    else if (strcmp(c->cID,id)<0)
         return SMALLER;
     return EQUAL;
 }
@@ -160,7 +158,7 @@ void findClient (){
     while (finish!=TRUE){
         printf("Find Client by:\n"
                "1. ID\n"
-               "2.Balance\n");
+               "2. Balance\n");
         c=getchar();
         getchar();
         
@@ -168,12 +166,12 @@ void findClient (){
         switch (c) {
             case '1':
                 getClientID(id);
-                clientsLinkedList=findClientGen(bankRoot,id,(genCmp)&compareClientID);	/*call the find client function with the id compare function pointer*/
+                clientsLinkedList=find_node(bankRoot,id,(genCmp)&compareClientID);	/*call the find client function with the id compare function pointer*/
                 finish = TRUE;
                 break;
             case '2':
                 getDouble(&balance,"Please enter Balance:\n");
-                clientsLinkedList=findClientGen(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find client function with the balance compare function pointer*/
+                clientsLinkedList=find_node(bankRoot,&balance,(genCmp)&compareClientBal);	/*call the find client function with the balance compare function pointer*/
                 
                 finish = TRUE;
                 break;
@@ -187,6 +185,7 @@ void findClient (){
         printf("No clients found\n");
         return ;
     }
+    printf("\n");
     printClientsLinkedList(clientsLinkedList);
     
 }
@@ -393,10 +392,8 @@ void printClientsLinkedList(genLinked *clients){		/*recieve the list head.*/
     if (clients==NULL){
         return;
     }
-    printClientsLinkedList(clients->next);
-    clients->next=NULL;	/*destroy created list.*/
-    printClientInfo((client*)clients->data); /*send each client to a single client print function.*/
-    printf("\n");
+    print_List(clients, (genPrint)&printClientInfo);
+    free_linked_list(&clients, (genDelete)&freeClient);
 }
 
 
@@ -438,17 +435,6 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     return newClient;
 }
 
-
-
-
-
-/*function search the tree, compare either balance or id, and build client linked list */
-genLinked* findClientGen (genTree *root, void* tocmpare , genCmp cmp){
-    if (root==NULL)
-        return NULL;
-    
-    return find_node(root, tocmpare, cmp);
-}
 
 
 /*free a single Clinet node*/
@@ -495,6 +481,7 @@ void printClientInfo(client* c)
     printf("client balance: %g\n",tempClient->balance);
     printf("Client debt: %g\n",tempClient->debt);
     printf("Client's max overdraft: %d\n",tempClient->maxOverdraft);
+    printf("\n");
 }
 
 /****************** Utility Functions END ************************/

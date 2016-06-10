@@ -144,13 +144,12 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
 }
 
 
-void print_List(genTree* t, genPrint print)
+void print_List(genLinked* t, genPrint print)
 {
 	if(!t)
 		return;
-	print_List(t->left,print);
-	print(t->data);
-	print_List(t->right,print);
+    print_List(t->next, print);
+    print(t->data);
 }
 
 double average_key(genTree* t,int* amount, genValue val){
@@ -184,6 +183,17 @@ void free_list(genTree* t,genDelete gdelete)
 }
 
 
+void free_linked_list(genLinked** t,genDelete gDelete)
+{
+    if(!*t)
+        return;
+    free_linked_list(&(*t)->next, gDelete);
+    FREE(*t);
+    *t=NULL;
+    
+}
+
+
 
 
 
@@ -200,6 +210,7 @@ genLinked * find_node(genTree* t, void* data, genCmp cmp)
         genLinked *me;
         me = ALLOC(genLinked, 1);
         me->data = t->data;
+        me->next=NULL;
         right = merge_LinkedList(me,right);
     }
     
