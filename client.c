@@ -48,6 +48,15 @@ comparison cmpClientAccNum(client* c, accountNum *acc){
     return EQUAL;
 }
 
+comparison compareClientsByID (client *c1, client *c2){
+    if(strcmp(c1->cID,c2->cID)>0)
+        return GREATER;
+    else if (strcmp(c1->cID,c2->cID)<0)
+        return SMALLER;
+    return EQUAL;
+
+}
+
 
 /* compare client with given id number */
 comparison compareClientID(client* c, clientID *id){
@@ -199,7 +208,7 @@ void findClient (genTree *clientsTree){
     }
     printf("\n");
     /*sort linked list by id*/
-    //clientsLinkedList=sortLinkedList(clientsLinkedList, (genCmp)&compareClientID);
+    clientsLinkedList=sortLinkedList(clientsLinkedList, (genCmp)&compareClientsByID);
     printClientsLinkedList(clientsLinkedList);  /*print the list and destroy it*/
     
 }

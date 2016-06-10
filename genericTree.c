@@ -127,19 +127,20 @@ genTree * remove_node(genTree* t, void* data, genDelete gDelete, genCmp cmp){
 genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp){
     comparison c;
     
-    
+    /* check if a tree is given */
     if (!t){
         if (parent)
             *parent=NULL;
         return NULL;
     }
     
-    c=cmp(t->data,data);
+    c=cmp(t->data,data); /*compare using designated compare function */
     
+    /* search the tree in 'pre order' method */
     if (c==EQUAL){
         return t;
     }
-    if (parent)
+    if (parent) /*if a parent pointer provided, update it */
         *parent=t;
     if (c==SMALLER)
         return find_Node_Parent(t->right, data, parent, cmp);
@@ -148,14 +149,16 @@ genTree * find_Node_Parent(genTree * t ,void* data ,genTree ** parent,genCmp cmp
 }
 
 
+/* print a linked list with a generic print function */
 void print_List(genLinked* t, genPrint print)
 {
 	if(!t)
 		return;
-    print(t->data);
-    print_List(t->next, print);
+    print(t->data); /*use given print function */
+    print_List(t->next, print); /* recursivley continue */
 }
 
+/* recursively calculate average using a given function */
 double average_key(genTree* t,int* amount, genValue val){
 	int leftAm=0,rightAm=0;
 	double leftAv=0,rightAv=0,myAv;
@@ -163,12 +166,12 @@ double average_key(genTree* t,int* amount, genValue val){
 		*amount = 0;
 		return 0;
 	}
-	leftAv = average_key(t->left,&leftAm,val);
-	rightAv = average_key(t->right,&rightAm,val);
-	*amount = leftAm + rightAm + 1;
+	leftAv = average_key(t->left,&leftAm,val); /*first calculate left tree */
+	rightAv = average_key(t->right,&rightAm,val);   /*then right tree */
+	*amount = leftAm + rightAm + 1; /* count the amount of nodes */
 	myAv = val(t->data);
-	myAv += (leftAv * leftAm) + (rightAv * rightAm);
-	return (myAv/ *amount);
+	myAv += (leftAv * leftAm) + (rightAv * rightAm); /* calculate overall value */
+	return (myAv/ *amount); /*return the average */
 }
 
 
@@ -187,7 +190,7 @@ void free_list(genTree** t,genDelete gdelete)
     
 }
 
-
+/* delete a generic linked list and free it */
 void free_linked_list(genLinked** t,genDelete gDelete)
 {
     if(!*t)
@@ -208,18 +211,19 @@ genLinked * find_node(genTree* t, void* data, genCmp cmp)
     genLinked *left, *right;
     if(!t)
         return NULL;
-    left=find_node(t->left, data, cmp);
-    right=find_node(t->right, data, cmp);
     
-    if(cmp(t->data,data)==EQUAL){
+    left=find_node(t->left, data, cmp); /*first get a linked list for left tree*/
+    right=find_node(t->right, data, cmp);   /*then for right tree */
+    
+    if(cmp(t->data,data)==EQUAL){   /*check current node */
         genLinked *me;
         me = ALLOC(genLinked, 1);
         me->data = t->data;
         me->next=NULL;
-        right = merge_LinkedList(me,right);
+        right = merge_LinkedList(me,right); /*merge current node with right tree */
     }
     
-    return merge_LinkedList(left,right);
+    return merge_LinkedList(left,right); /* return merged left tree and right tre */
     
 }
 

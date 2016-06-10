@@ -11,7 +11,7 @@
 #include "genericTree.h"
 
 /* define for test purposes */
-#define TEST
+//#define TEST
 
 
 /* definitions for and typdefs used in the program */
