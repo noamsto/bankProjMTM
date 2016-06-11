@@ -77,6 +77,9 @@ double average_key(genTree*,int*, genValue);/*check if pushed*/
 /* convert a tree into array */
 genTree * tree_to_array(genTree*);
 
+/* print a tree data */
+void print_tree(genTree*,genPrint);
+
 /* delet a whole tree */
 void free_list(genTree**,genDelete);
 

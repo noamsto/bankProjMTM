@@ -18,7 +18,6 @@
 
 /*---------------------LOCAL BRANCHLIST-----------------*/
 static genTree* branchRoot;
-int (*cmp_func)(client*,amount);
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
 void initBranch(branch*);/*init branch struct*/
 branch *createBranch();/* create a new branch. get information from user */
@@ -31,13 +30,12 @@ int getTime(char*); /*get hours from user.*/
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 
 /*        TEMPORARY      */
-int countClients(client* , amount ,int (*cmp_func)(client*,amount));
-int compareClientsWithBiggerBalance(client* client, amount balance);
-int compareClientsWithBiggerLoans(client* client, amount balance);
-int printClientDetails(client* client,amount s);
-int averageClients(branch*,double*);
+int countClients(genTree* , amount* ,genCmp);
+int compareClientsWithBiggerBalance(client* client, amount *balance);
+int compareClientsWithBiggerLoans(client* client, amount *balance);
+void printClientDetails(client* client);
+double getNumOfClientsInBranch(branch* b);
 /*        TREE       */
-void clearBranchTree(branch*);
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -56,7 +54,7 @@ void findClientInGivenBranch (){
 
 
 
-/*****************GENERAL BRANCH FUNCTIONS*****************/
+/***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
 
 comparison compare_Branch(branch* a,branch *b)
 {
@@ -68,9 +66,47 @@ comparison compare_Branch(branch* a,branch *b)
 }
 
 
+double getNumOfClientsInBranch(branch* b)
+{
+	return b->currentClients;
+}
 
 
 
+void deleteBranchFields(branch* to_be_deleted)
+{
+    FREE(to_be_deleted->branchName);
+    /*delete!!!!   clearClientTree(to_be_deleted->clientList);*/
+    free_list(&to_be_deleted->clientList, (genDelete)&freeClient);
+    FREE(to_be_deleted);
+}
+
+
+comparison compareClientsWithBiggerBalance(client* client, amount *balance){
+	if(client->balance > *balance)
+		return GREATER;
+	if(client->balance < *balance)
+		return SMALLER;
+	return EQUAL;
+}
+
+comparison compareClientsWithBiggerLoans(client* client, amount *balance){
+	if(client->debt > client->balance)
+		return GREATER;
+	if(client->debt > client->balance)
+		return SMALLER;
+	return EQUAL;
+}
+
+void printClientDetails(client* client)
+{
+	printf("Client account number : %d\n",client->accNum);
+	printf("Client Balance : %f\n",client->balance);
+}
+
+
+
+/***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
 
 void createBranchList()
 {
@@ -151,7 +187,7 @@ if(getNumOfBranches()==0){
    return TRUE;
 }
 
-/*
+
 #ifdef BANK_AHAMELIM
 void clientNumberWithGivenBalance()
 {
@@ -171,8 +207,8 @@ void clientNumberWithGivenBalance()
     
     tempBranch = getBranch(brID);
     getDouble(&balance, "please enter balance:\n");
-    numberOfClients = countClients(tempBranch->clientList,balance,&compareClientsWithBiggerBalance);
-    printf("the number of clients with bigger balance then %f is : %d\n",balance,numberOfClients);
+    numberOfClients = countClients(tempBranch->clientList,&balance,(genCmp)&compareClientsWithBiggerBalance);
+    printf("the number of clients with : %f\n  in balance is :%d\n",balance,numberOfClients);
 }
 #endif
 
@@ -190,7 +226,7 @@ void printClientAccountsNumberAndBalance()
         return;
     }
     tempBranch = getBranch(brID);
-    countClients(tempBranch->clientList,NOCHECK,&printClientDetails);
+    print_tree(tempBranch->clientList,(genPrint)&printClientDetails);
 
 }
 void clientNumberWithBiggerLoansThanBalance()
@@ -209,7 +245,7 @@ void clientNumberWithBiggerLoansThanBalance()
     }
     
     tempBranch = getBranch(brID);
-    numberOfClients = countClients(tempBranch->clientList,NOCHECK,&compareClientsWithBiggerLoans);
+    numberOfClients = countClients(tempBranch->clientList,NOCHECK,(genCmp)&compareClientsWithBiggerLoans);
     printf("amount of clients with bigger loans then balance : %d",numberOfClients);
 }
 
@@ -218,33 +254,13 @@ void averageNumberOfAccountsInBranches()
 {
 	int numOfBranches=0;
 	double clientsAverage=0;
-	numOfBranches = averageClients(branchRoot,&clientsAverage);
+	numOfBranches = average_key(branchRoot,&numOfBranches,(genValue)&getNumOfClientsInBranch);
 	printf("number of branches : %d\n"
 			"Average number of clients in single branch : %f\n",
 			numOfBranches,clientsAverage);
 }
-int averageClients(branch* root,double* averageNum)
-{
-	int count =0,currBranch=0;
-	double average=0,currClients=0;
-	if(root==NULL){
-		*averageNum = 0;
-		return 0;
-	}
-	count = averageClients(root->left,&average);
-	currClients += average * count;
-	currBranch += count;
-	count = averageClients(root->right,&average);
-	currClients += average * count;
-	currBranch += count;
-	currBranch++;
-	currClients += root->currentClients;
-	*averageNum = currClients / currBranch;
-	return currBranch;
-}
 
 
-*/
 try deleteAllBranchClients(branchID id)
 {
     branch *temp=NULL;
@@ -520,49 +536,29 @@ void initBranch(branch *brancInit)
 
 }
 
-/*---------------SEARCH CLIENT FUNCTIONS-----------*//*
-int countClients(client* root, amount balance,int (*cmp_func)(client*,amount)){
+/*---------------SEARCH CLIENT FUNCTIONS-----------*/
+int countClients(genTree* root, amount* balance,genCmp cmp){
 	int numberOfClients;
+	comparison c;
 	if(root == NULL)
 		return 0;
-	numberOfClients = countClients(root->right,balance,cmp_func);
-	numberOfClients +=countClients(root->left,balance,cmp_func);
-	if(cmp_func(root,balance))
-		numberOfClients += 1;
+	numberOfClients = countClients(root->right,balance,cmp);
+	numberOfClients +=countClients(root->left,balance,cmp);
+	c = cmp(root->data,balance);
+	if(balance){
+		if(c==EQUAL)
+			numberOfClients += 1;
+	}
+	else{
+		if(c==GREATER)
+			numberOfClients += 1;
+	}
 	return numberOfClients;
 }
 
-int compareClientsWithBiggerBalance(client* client, amount balance){
-	if(client->balance > balance)
-		return 1;
-	if(client->balance < balance)
-		return -1;
-	return 0;
-}
 
-int compareClientsWithBiggerLoans(client* client, amount balance){
-	if(client->debt > client->balance)
-		return 1;
-	if(client->debt > client->balance)
-		return -1;
-	return 0;
-}
 
-int printClientDetails(client* client,amount s)
-{
-	printf("Client account number : %d\n",client->accNum);
-	printf("Client Balance : %f\n",client->balance);
-	return 0;
-}
-
-*/
 /*DELETE FROM TREE*/
 
 
-void deleteBranchFields(branch* to_be_deleted)
-{
-    FREE(to_be_deleted->branchName);
-    /*delete!!!!   clearClientTree(to_be_deleted->clientList);*/
-    free_list(&to_be_deleted->clientList, (genDelete)&freeClient);
-    FREE(to_be_deleted);
-}
+

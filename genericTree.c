@@ -158,6 +158,20 @@ void print_List(genLinked* t, genPrint print)
     print_List(t->next, print); /* recursivley continue */
 }
 
+
+/* print a tree database with generic print function */
+void print_tree(genTree* t,genPrint print)
+{
+	if(!t)
+		return;
+	print_tree(t->left,print);
+	print(t->data);
+	print_tree(t->right,print);
+}
+
+
+
+
 /* recursively calculate average using a given function */
 double average_key(genTree* t,int* amount, genValue val){
 	int leftAm=0,rightAm=0;
