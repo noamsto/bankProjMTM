@@ -76,7 +76,7 @@ genTree * find_Node_Parent(genTree *,void* ,genTree **,genCmp cmp);
 double average_key(genTree*,int*, genValue);/*check if pushed*/
 
 /* convert a tree into array */
-genTree * tree_to_array(genTree*);
+genTree * tree_to_array(genTree*, int *);
 
 /* print a tree data */
 void print_tree(genTree*,genPrint);

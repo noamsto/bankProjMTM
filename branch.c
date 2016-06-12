@@ -130,6 +130,7 @@ try addNewBranch()
     newBranch = createBranch();
     branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch));
     updateNumOfBranches(ADD);/*update branch list on addition of bank*/
+    printf("Add new branch finished successfully\n");
     return SUCCESS;
 }
 

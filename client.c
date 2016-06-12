@@ -454,7 +454,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     strcpy(newClient->cID,testID);
     testID[8]++;
     newClient->brID=brID;
-    newClient->accNum=testAcc++;
+    newClient->accNum=testAcc[testIndex++];
 #endif
     
     return newClient;

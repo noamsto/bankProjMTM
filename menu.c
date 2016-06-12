@@ -11,6 +11,9 @@ void mainMenu(){
 	int menu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
+#ifdef TEST
+        printf("***_TEST MODE_***\n");
+#endif
 	    printf("\nmain menu:\n"
 	           "1: add/delete menu\n"
 	           "2: transaction\n"
@@ -43,7 +46,7 @@ void add_Delete_Menu(){
 	int subMenu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
-	printf("~ADD/DELETE MENU~:\n"
+	printf("\n~ADD/DELETE MENU~:\n"
 		   "1: add branch \n"
 		   "2: add client \n"
 		   "3: delete branch\n"

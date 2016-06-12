@@ -300,6 +300,43 @@ genLinked* sortLinkedList(genLinked* l, genCmp cmp){
 
 
 
+/* count the nodes of a tree */
+int count_tree(genTree *t){
+    int l_count, r_count;
+    if (!t)
+        return 0;
+    
+    l_count= count_tree(t->left);
+    r_count= count_tree(t->right);
+    return l_count+r_count+1;
+    
+}
+
+
+/* copy each node to the array */
+void copy_nodes(genTree *t, genTree **a){
+    if (!t || !*a)
+        return;
+    
+    copy_nodes(t->left, a);
+    ((*a)++)->data=t->data; /* only if a value is added, increase the "index" */
+    copy_nodes(t->right, a);
+}
+
+
+/* function create an array from a tree */
+genTree* tree_to_array(genTree* t, int* len){
+    int size;
+    genTree *array=NULL, *arrayStart;
+    size=count_tree(t);
+    
+    array=ALLOC(genTree, size);
+    arrayStart=array;
+    copy_nodes(t, &array);
+    *len=size;
+    return arrayStart;
+}
+
 
 
 
