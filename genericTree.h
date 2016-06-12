@@ -50,6 +50,7 @@ void print_List(genLinked*, genPrint);
 /* free and delete a linked list */
 void free_linked_list(genLinked** t,genDelete gDelete);
 
+/* sort a linked list with a certain compare function */
 genLinked* sortLinkedList(genLinked* , genCmp );
 
 /*------------------------GENERIC LINKED LIST--------------------*/

@@ -49,7 +49,10 @@ double getNumOfClientsInBranch(branch* b);
 void findClientInGivenBranch (){
     branch *b;
     b=getBranch(getBranchID(EXIST));
-    findClient(b->clientList);
+    if (b==NULL)
+        printf("Action canceled\n");
+    else
+        findClient(b->clientList);
 }
 
 
