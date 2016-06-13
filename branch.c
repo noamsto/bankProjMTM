@@ -1,7 +1,7 @@
 /* bank project
  Yahel Tsufim 304952898
  Noam Stolero 201581683
- file:branch.c 
+ file:branch.c
  */
 
 /* ---------i chose right to be the smaller and left to be the bigger-------- */
