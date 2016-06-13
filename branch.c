@@ -103,9 +103,12 @@ void findClientInGivenBranch (){
     branch *b;
     b=getBranch(getBranchID(EXIST));
     if (b==NULL)
-        printf("Action canceled\n");
+        printf("Action canceled.\n");
     else
-        findClient(b->clientList);
+        if(b->currentClients>0)
+            findClient(b->clientList);
+        else
+            printf("Selected branch have no clients.\n");
 }
 
 /***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/

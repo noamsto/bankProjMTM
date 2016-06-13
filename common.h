@@ -14,6 +14,7 @@
 /* #define TEST */
 
 
+
 /* definitions for and typdefs used in the program */
 #define NOCHECK 0
 #define CLIENTIDL 10
@@ -39,9 +40,9 @@ typedef char clientID;
 #ifdef TEST
 static char testName[2]= "a\0";
 static accountNum testAcc[7] ={5,2,6,3,4,8,9};
+static int testIndex=0;
 static clientID testID[10] = "123123121\0";
 static branchID testBID = 1;
-static int testIndex=0;
 #endif
 /*testing purpose*/
 

@@ -5,6 +5,7 @@
  */
 
 #include "bank.h"
+
 #define GETBRID(ACC) getBankClient(ACC )->brID
 #define ACTIONCANCELD printf("Action aborted\n")
 
@@ -118,12 +119,8 @@ genTree *insertClientTree(genTree* root, client* newClient){
 
 /*delete a client from a tree*/
 genTree * deleteClientFromTree(genTree *root, accountNum acc){
-    client *findClient= NULL;
     if (!root)  /*empty tree case*/
         return NULL;
-    
-    findClient=getClient(root,acc,NOCHECK);
-    
     root=remove_node(root, (void*)&acc,(genDelete)&freeClient, (genCmp)cmpClientAccNum);
     return root;
 }
