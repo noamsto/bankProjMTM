@@ -1,10 +1,7 @@
-//
-//  WEI.h
-//  mtm5
-//
-//  Created by Noam Stolero on 5.6.2016.
-//  Copyright © 2016 Noam Stolero. All rights reserved.
-//
+/*  WEI.h
+Yahel Tsufim 304952898
+Noam Stolero 201581683
+*/
 
 #ifndef WEI_h
 #define WEI_h
