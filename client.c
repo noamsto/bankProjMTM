@@ -48,6 +48,7 @@ comparison cmpClientAccNum(client* c, accountNum *acc){
     return EQUAL;
 }
 
+/* compare 2 clients bt ID */
 comparison compareClientsByID (client *c1, client *c2){
     if(strcmp(c1->cID,c2->cID)>0)
         return GREATER;
@@ -66,6 +67,7 @@ comparison compareClientID(client* c, clientID *id){
         return SMALLER;
     return EQUAL;
 }
+
 /* compare client with given balance */
 comparison compareClientBal(client* c, amount *bal){
     if(c->balance>*bal)

@@ -1,11 +1,8 @@
-//
-//  genericTree.c
-//  bankMTM
-//
-//  Created by Noam Stolero on 6.6.2016.
-//  Copyright © 2016 Noam Stolero. All rights reserved.
-//
-
+/* bank project
+ Yahel Tsufim 304952898
+ Noam Stolero 201581683
+ file:genericTree.c
+ */
 
 #include "common.h"
 
@@ -269,7 +266,7 @@ genLinked* putSorted (genLinked *l, genLinked* node, genCmp cmp){
     if (!node)
         return l;
     
-    while (seek!=NULL && cmp(node->data, seek->data)==GREATER ){
+    while (seek!=NULL && cmp(node->data, seek->data)==GREATER ){ /* find where to insert node */
         prev=seek;
         seek=seek->next;
     }
@@ -284,16 +281,15 @@ genLinked* putSorted (genLinked *l, genLinked* node, genCmp cmp){
 
 
 
-/*sort linked list */
-
+/* recursively sort linked list */
 genLinked* sortLinkedList(genLinked* l, genCmp cmp){
 
     genLinked *next;
     if (!l)
         return NULL;
     
+    /* the assumption is the list is already sorted, so only needed to find new node position */
     next=sortLinkedList(l->next, cmp);
-    
     l=putSorted(next, l, cmp);
     return l;
 }
@@ -334,6 +330,7 @@ genTree* tree_to_array(genTree* t, int* len){
     arrayStart=array;
     copy_nodes(t, &array);
     *len=size;
+    /* array was tempered so return its start position */
     return arrayStart;
 }
 

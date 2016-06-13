@@ -6,7 +6,8 @@
 
 #include "menu.h"
 
-/*testing code*/
+
+
 void mainMenu(){
 	int menu;
 	boolean finish=FALSE;

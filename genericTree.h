@@ -1,10 +1,8 @@
-//
-//  genericTree.h
-//  bankMTM
-//
-//  Created by Noam Stolero on 6.6.2016.
-//  Copyright © 2016 Noam Stolero. All rights reserved.
-//
+/* bank project
+ Yahel Tsufim 304952898
+ Noam Stolero 201581683
+ file:genericTree.h
+ */
 
 #ifndef genericTree_h
 #define genericTree_h

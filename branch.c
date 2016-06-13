@@ -43,21 +43,11 @@ double getNumOfClientsInBranch(branch* b);
 
 
 
-/**************** NOAM ADDED ************************/
-
-/* find a clients in a certain branch by ID or balance */
-void findClientInGivenBranch (){
-    branch *b;
-    b=getBranch(getBranchID(EXIST));
-    if (b==NULL)
-        printf("Action canceled\n");
-    else
-        findClient(b->clientList);
-}
 
 
 
 /***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
+
 
 comparison compare_Branch(branch* a,branch *b)
 {
@@ -108,6 +98,15 @@ void printClientDetails(client* client)
 }
 
 
+/* find a clients in a certain branch by ID or balance */
+void findClientInGivenBranch (){
+    branch *b;
+    b=getBranch(getBranchID(EXIST));
+    if (b==NULL)
+        printf("Action canceled\n");
+    else
+        findClient(b->clientList);
+}
 
 /***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
 
