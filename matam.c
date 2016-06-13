@@ -10,10 +10,10 @@
 #include "matam.h"
 #include <string.h>
 
-//Allocation Counter.
+/* Allocation Counter. */
 static unsigned int allocated_blocks = 0;
 
-void *checked_malloc(unsigned int size) //allocating memory, checking if succeded and incremneting counter.
+void *checked_malloc(unsigned int size) /* allocating memory, checking if succeded and incremneting counter. */
 {
 	void * ret;
 
@@ -26,7 +26,7 @@ void *checked_malloc(unsigned int size) //allocating memory, checking if succede
 	return ret;
 }
 
-void checked_free (void *ptr)   //free alocated memory and decrement counter.
+void checked_free (void *ptr)   /* free alocated memory and decrement counter. */
 {
 
 	free(ptr);
@@ -34,7 +34,7 @@ void checked_free (void *ptr)   //free alocated memory and decrement counter.
 	return;
 }
 
-//print a message if any allocated memory was nit freed.
+/* print a message if any allocated memory was nit freed. */
 void check_for_exit() {
 	if (allocated_blocks) {
 		fprintf (stderr, "Memory leak: %d memory blocks still allocated \n", allocated_blocks);
@@ -43,7 +43,7 @@ void check_for_exit() {
         return;
 }
 
-char* str_dup(const char* copy) //str dup function working with upper functions.
+char* str_dup(const char* copy) /* str dup function working with upper functions. */
 {
     char* create;
     create = ALLOC(char,(int)strlen(copy));

@@ -11,7 +11,7 @@
 #include "genericTree.h"
 
 /* define for test purposes */
-#define TEST
+/* #define TEST */
 
 
 /* definitions for and typdefs used in the program */
@@ -20,8 +20,6 @@
 #define GETSPECIFIC NULL
 #define BANK_AHAMELIM
 #define CANCEL 0
-
-
 
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;
