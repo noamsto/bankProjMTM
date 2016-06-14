@@ -6,11 +6,14 @@
 
 #include "menu.h"
 
-/*testing code*/
+
 void mainMenu(){
 	int menu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
+#ifdef TEST
+        printf("\n***_TEST MODE_***");
+#endif
 	    printf("\nmain menu:\n"
 	           "1: add/delete menu\n"
 	           "2: transaction\n"
@@ -43,7 +46,10 @@ void add_Delete_Menu(){
 	int subMenu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
-	printf("~ADD/DELETE MENU~:\n"
+#ifdef TEST
+        printf("\n***_TEST MODE_***");
+#endif
+	printf("\n~ADD/DELETE MENU~:\n"
 		   "1: add branch \n"
 		   "2: add client \n"
 		   "3: delete branch\n"
@@ -78,6 +84,9 @@ void infoMenu(){
 	int subMenu;
 	boolean finish=FALSE;
 	while(finish == FALSE){
+#ifdef TEST
+        printf("\n***_TEST MODE_***");
+#endif
 		printf( "\n1: print bank info\n"
 				"2: print branch info\n"
 				"3: print client info\n"
@@ -113,6 +122,9 @@ void transactionAndReports(){
 	int subMenu;
 		boolean finish=FALSE;
 		while(finish == FALSE){
+#ifdef TEST
+            printf("\n***_TEST MODE_***");
+#endif
 			printf( "\n1: deposit money to client\n"
 					"2: loan money to client\n"
 					"3: number of clients with bigger loans\n"

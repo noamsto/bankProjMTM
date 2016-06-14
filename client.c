@@ -5,6 +5,7 @@
  */
 
 #include "bank.h"
+
 #define GETBRID(ACC) getBankClient(ACC )->brID
 #define ACTIONCANCELD printf("Action aborted\n")
 
@@ -48,6 +49,7 @@ comparison cmpClientAccNum(client* c, accountNum *acc){
     return EQUAL;
 }
 
+/* compare 2 clients bt ID */
 comparison compareClientsByID (client *c1, client *c2){
     if(strcmp(c1->cID,c2->cID)>0)
         return GREATER;
@@ -66,6 +68,7 @@ comparison compareClientID(client* c, clientID *id){
         return SMALLER;
     return EQUAL;
 }
+
 /* compare client with given balance */
 comparison compareClientBal(client* c, amount *bal){
     if(c->balance>*bal)
@@ -116,12 +119,8 @@ genTree *insertClientTree(genTree* root, client* newClient){
 
 /*delete a client from a tree*/
 genTree * deleteClientFromTree(genTree *root, accountNum acc){
-    client *findClient= NULL;
     if (!root)  /*empty tree case*/
         return NULL;
-    
-    findClient=getClient(root,acc,NOCHECK);
-    
     root=remove_node(root, (void*)&acc,(genDelete)&freeClient, (genCmp)cmpClientAccNum);
     return root;
 }
@@ -454,7 +453,7 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     strcpy(newClient->cID,testID);
     testID[8]++;
     newClient->brID=brID;
-    newClient->accNum=testAcc++;
+    newClient->accNum=testAcc[testIndex++];
 #endif
     
     return newClient;

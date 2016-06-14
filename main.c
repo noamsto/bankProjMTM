@@ -6,20 +6,26 @@
 
 #include "menu.h"
 
+/*testing tree to array */
+void test_treeToArray();
+
+
 
 int main(){
     createBank(NULL);
     createBranchList();
     
 #ifdef TEST /*create 2 branches and 3 clients for test purposes */
-    addNewBranch();
-    addNewBranch();
-    addNewClientToBranch();
-    addNewClientToBranch();
-    addNewClientToBranch();
+    printf("***_TEST MODE_***\n\n");
     
+    addNewBranch();
+    addNewBranch();
+    addNewClientToBranch();
+    addNewClientToBranch();
+    addNewClientToBranch();
+    printf("\n");
+    test_treeToArray();
 #endif
-    
     
     mainMenu();/*menu for testing code*/
     deleteBank();
@@ -29,3 +35,19 @@ int main(){
     
     
 }
+
+/* test tree to array function with bank clients tree */
+void test_treeToArray(){
+    genTree *t=NULL;
+    int len=0,i=0;
+    t=*getBankClientRoot();
+    t=tree_to_array(t, &len);
+    
+    for (i=0; i<len; i++){
+        printClientInfo(t[i].data);
+    }
+    FREE(t);
+    
+    
+}
+

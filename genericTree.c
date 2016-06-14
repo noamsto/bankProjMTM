@@ -1,11 +1,8 @@
-//
-//  genericTree.c
-//  bankMTM
-//
-//  Created by Noam Stolero on 6.6.2016.
-//  Copyright © 2016 Noam Stolero. All rights reserved.
-//
-
+/* bank project
+ Yahel Tsufim 304952898
+ Noam Stolero 201581683
+ file:genericTree.c
+ */
 
 #include "common.h"
 
@@ -269,7 +266,7 @@ genLinked* putSorted (genLinked *l, genLinked* node, genCmp cmp){
     if (!node)
         return l;
     
-    while (seek!=NULL && cmp(node->data, seek->data)==GREATER ){
+    while (seek!=NULL && cmp(node->data, seek->data)==GREATER ){ /* find where to insert node */
         prev=seek;
         seek=seek->next;
     }
@@ -284,21 +281,58 @@ genLinked* putSorted (genLinked *l, genLinked* node, genCmp cmp){
 
 
 
-/*sort linked list */
-
+/* recursively sort linked list */
 genLinked* sortLinkedList(genLinked* l, genCmp cmp){
 
     genLinked *next;
     if (!l)
         return NULL;
     
+    /* the assumption is the list is already sorted, so only needed to find new node position */
     next=sortLinkedList(l->next, cmp);
-    
     l=putSorted(next, l, cmp);
     return l;
 }
 
 
+
+/* count the nodes of a tree */
+int count_tree(genTree *t){
+    int l_count, r_count;
+    if (!t)
+        return 0;
+    
+    l_count= count_tree(t->left);
+    r_count= count_tree(t->right);
+    return l_count+r_count+1;
+    
+}
+
+
+/* copy each node to the array */
+void copy_nodes(genTree *t, genTree **a){
+    if (!t || !*a)
+        return;
+    
+    copy_nodes(t->left, a);
+    ((*a)++)->data=t->data; /* only if a value is added, increase the "index" */
+    copy_nodes(t->right, a);
+}
+
+
+/* function create an array from a tree */
+genTree* tree_to_array(genTree* t, int* len){
+    int size;
+    genTree *array=NULL, *arrayStart;
+    size=count_tree(t);
+    
+    array=ALLOC(genTree, size);
+    arrayStart=array;
+    copy_nodes(t, &array);
+    *len=size;
+    /* array was tempered so return its start position */
+    return arrayStart;
+}
 
 
 

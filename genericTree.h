@@ -1,10 +1,8 @@
-//
-//  genericTree.h
-//  bankMTM
-//
-//  Created by Noam Stolero on 6.6.2016.
-//  Copyright © 2016 Noam Stolero. All rights reserved.
-//
+/* bank project
+ Yahel Tsufim 304952898
+ Noam Stolero 201581683
+ file:genericTree.h
+ */
 
 #ifndef genericTree_h
 #define genericTree_h
@@ -76,7 +74,7 @@ genTree * find_Node_Parent(genTree *,void* ,genTree **,genCmp cmp);
 double average_key(genTree*,int*, genValue);/*check if pushed*/
 
 /* convert a tree into array */
-genTree * tree_to_array(genTree*);
+genTree * tree_to_array(genTree*, int *);
 
 /* print a tree data */
 void print_tree(genTree*,genPrint);

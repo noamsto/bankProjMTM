@@ -9,6 +9,7 @@
 /*init a single bank struct*/
 void initBank(bank*);
 
+/* bank client root macro */
 #define CLIENTSROOT(STRUCT) STRUCT->root
 
 
@@ -119,11 +120,12 @@ void addNewClientToBank(client* createdClient){
 
 	newClient=ALLOC(client,1);
 
-	*newClient=*createdClient;
+	*newClient=*createdClient; /*copy client fields */
+    /* copy Name fields, deep copying */
     newClient->name=str_dup(createdClient->name);
     newClient->surname=str_dup(createdClient->name);
 
-    
+    /* insert the client to the bank clients tree */
 	CLIENTSROOT(masterBank)=insertClientTree(CLIENTSROOT(masterBank), newClient);
 
 	masterBank->numOfClients++;
@@ -131,20 +133,25 @@ void addNewClientToBank(client* createdClient){
 
 /*********_Update_bank_Fields_END_******************/
 
+
+
+/*********_Information_Functions_START_******************/
+
+
+
 /*return number clients of bank.*/
 int clientNumberOfBank(){
-	return masterBank->numOfClients;
+    return masterBank->numOfClients;
 }
 
 
 /*get client in bank Client list.*/
 client* getBankClient(accountNum acc){
-	client* getCl=NULL;
+    client* getCl=NULL;
     getCl= getClient(CLIENTSROOT(masterBank), acc, NOCHECK);
-	return getCl;
+    return getCl;
 }
 
-/*********_Information_Functions_START_******************/
 
 /*return current number of branches.*/
 int getNumOfBranches(){
@@ -160,24 +167,28 @@ int isBankFull(){
 	return TRUE;
 }
 
+/*return the bank name*/
+char* getBankName(){
+    return masterBank->name;
+}
+
+/* return the bank clients tree */
+genTree ** getBankClientRoot (){
+    return &(CLIENTSROOT(masterBank));
+}
+
+
 /*********_Information_Functions_END_******************/
 
 
-genTree ** getBankClientRoot (){
-	return &(CLIENTSROOT(masterBank));
-}
+
 
 /* Delete the bank*/
 void deleteBank(){
-	deleteAllBranches();
-    free_list(&CLIENTSROOT(masterBank), (genDelete)&freeClient);
+	deleteAllBranches(); /* delete all branches first */
+    free_list(&CLIENTSROOT(masterBank), (genDelete)&freeClient);    /*delete client list */
 	FREE(masterBank->name);
 	FREE(masterBank);
-}
-
-/*return the bank name*/
-char* getBankName(){
-	return masterBank->name;
 }
 
 /*print all of the bank information and status.*/

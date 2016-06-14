@@ -11,7 +11,8 @@
 #include "genericTree.h"
 
 /* define for test purposes */
-#define TEST
+/* #define TEST */
+
 
 
 /* definitions for and typdefs used in the program */
@@ -20,8 +21,6 @@
 #define GETSPECIFIC NULL
 #define BANK_AHAMELIM
 #define CANCEL 0
-
-
 
 typedef enum{ADD,REMOVE}addremove;
 typedef enum{FALSE,TRUE}boolean;
@@ -40,7 +39,8 @@ typedef char clientID;
 /*testing purpose*/
 #ifdef TEST
 static char testName[2]= "a\0";
-static accountNum testAcc = 1;
+static accountNum testAcc[7] ={5,2,6,3,4,8,9};
+static int testIndex=0;
 static clientID testID[10] = "123123121\0";
 static branchID testBID = 1;
 #endif

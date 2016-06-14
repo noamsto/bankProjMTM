@@ -25,10 +25,8 @@ typedef struct branches{
 
 
 
-/**** noam added ***/
 void findClientInGivenBranch ();
-
-
+/* find a client/clients of a certain branch, regarding either balance or id. */
 
 void createBranchList();
 /*create branch list */
