@@ -12,6 +12,9 @@
 
 #define MAXNAME 20
 
+
+
+
 typedef struct clients{
     char* name;					/*client's name*/
     char* surname;				/*client's family name*/

@@ -12,7 +12,7 @@
 #include "genericList.h"
 
 /* define for test purposes */
-/* #define TEST */
+#define TEST
 
 
 
@@ -36,16 +36,6 @@ typedef double amount;
 typedef char clientID;
 
 /* end of definitons */
-
-/*testing purpose*/
-#ifdef TEST
-static char testName[2]= "a\0";
-static accountNum testAcc[7] ={5,2,6,3,4,8,9};
-static int testIndex=0;
-static clientID testID[10] = "123123121\0";
-static branchID testBID = 1;
-#endif
-/*testing purpose*/
 
 
 void getName(char** , int, char*);

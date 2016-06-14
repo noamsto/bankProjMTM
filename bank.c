@@ -12,6 +12,12 @@ void initBank(bank*);
 /* bank client root macro */
 #define CLIENTSROOT(STRUCT) STRUCT->root
 
+/*testing purpose*/
+#ifdef TEST
+static char testNameBa[2]= "a\0";
+#endif
+/*testing purpose*/
+
 
 /*********_Bank_Creation_Functions_START_******************/
 
@@ -43,8 +49,8 @@ void createBank(char* name){
     }else
         masterBank->name=name;
 #else
-    masterBank->name=str_dup(testName); /* give a default name, test purpose */
-    testName[0]+=1; /* change letter for test name */
+    masterBank->name=str_dup(testNameBa); /* give a default name, test purpose */
+    testNameBa[0]+=1; /* change letter for test name */
 #endif
 }
 /*********_Bank_Creation_Functions_END_******************/
