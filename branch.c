@@ -18,36 +18,169 @@
 
 /*---------------------LOCAL BRANCHLIST-----------------*/
 static genTree* branchRoot;
+
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
-void initBranch(branch*);/*init branch struct*/
-branch *createBranch();/* create a new branch. get information from user */
+
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
-void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 boolean addClientConditions(); /* check if possible to add new client to the bank */
-branch* findBranch(genTree* , branchID );
-branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
-int getTime(char*); /*get hours from user.*/
+branch* findBranch(genTree* , branchID );/* return branch pointer according to branch ID */
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 
-/*        TEMPORARY      */
+/* DATA FROM USER FUNCTIONS */
+branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
+int getTime(char*); /*get hours from user.*/
+branch *createBranch();/* create a new branch. get information from user */
+
+/* GENERAL BRANCH FUNCTIONS */
+void initBranch(branch*);/*init branch struct*/
+void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
+comparison compare_Branch(branch*,branch *);
 int countClients(genTree* , amount* ,genCmp);
-int compareClientsWithBiggerBalance(client* client, amount *balance);
-int compareClientsWithBiggerLoans(client* client, amount *balance);
-void printClientDetails(client* client);
-double getNumOfClientsInBranch(branch* b);
-/*        TREE       */
+int compareClientsWithBiggerBalance(client* client, amount *balance);/* check if a client has more then requested balance */
+int compareClientsWithBiggerLoans(client* client, amount *balance);/* check if a client has bigger loan then balance */
+void printClientDetails(client* client);/* print client details (account number and balance) */
+double getNumOfClientsInBranch(branch* b);/* recieve how many clients are in specific branch */
+branch* chooseBranch();/* allows the user to choose a branch and gets the pointer to the branch */
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
 
+/*----------CREATE LIST FUNCTIONS-------------*/
+
+void createBranchList()
+{
+	branchRoot = NULL;;
+}
 
 
+genTree* createBranchClientList()
+{
+	return NULL;
+}
+
+/*----------ADD NEW BRANCH FUNCTIONS-------------*/
+
+try addNewBranch()
+{
+    /*put the new branch in the end of the branch list*/
+    branch* newBranch;
+
+    if(getNumOfBranches() == N){
+        printf("bank has maximum number of branches.\n");
+        return MAX_BANK_REACHED;
+    }
+    newBranch = createBranch();
+    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch));
+    updateNumOfBranches(ADD);/*update branch list on addition of bank*/
+    return SUCCESS;
+}
 
 
+branch* createBranch()/* create branch, receive data from user */
+{
+	branch *newBranch;
+	printf("Add new branch start:\n");
+    newBranch = ALLOC(branch,1);
+	initBranch(newBranch);
+
+#ifdef TEST
+	newBranch->bankName = getBankName();
+    newBranch->branchName=str_dup(testName);
+    testName[0]++;
+    newBranch->brID=testBID++;
+    newBranch->openTime=1;
+    newBranch->closeTime=1;
+    newBranch->clientList=createBranchClientList();
+#else
+
+    /*receive data from user*/
+	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
+    newBranch->bankName = getBankName();
+    newBranch->brID= getBranchID(NOTEXIST);
+    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
+    newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
+    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
+
+#endif
 
 
-/***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
+    return newBranch;
+}
 
+
+void initBranch(branch *brancInit)
+{
+    brancInit->brID = 0;
+    brancInit->balance=0;
+    brancInit->openTime=0;
+    brancInit->closeTime=0;
+    brancInit->currentClients=0;
+    brancInit->numOfActiveLoans=0;
+    brancInit->balance = 1.0;
+    brancInit->yearProfit = 1.0;
+
+}
+
+/*----------ADD NEW CLIENT TO BRANCH FUNCTIONS-------------*/
+
+try addNewClientToBranch()
+{
+    /*prepare data to receive client*/
+    branch *tempBranch;
+    client *newClient;
+    boolean check;
+    branchID brID;
+
+    printf("Starting new client registry:\n");
+    check=addClientConditions();
+    if(check==FALSE)
+    	return FAIL;
+#ifdef TEST
+    brID=1;  /* make branch id 1 for test purposes */
+    tempBranch = getBranch(brID);
+#else
+    if((tempBranch = chooseBranch())==NULL)
+        return FAIL;
+#endif
+
+
+    if (isBranchFull(tempBranch)) {
+        printf("the branch is full\n");
+        return FAIL;
+    }
+    newClient = getDetailsFromUser(tempBranch->brID,tempBranch->bankName);
+
+
+    /*inform branch and bank on new client*/
+    tempBranch->currentClients++;
+    addNewClientToBank(newClient);
+    tempBranch->clientList = add_new_node(tempBranch->clientList,newClient,(genCmp)(&cmpClient));
+    printf("Add new client finished successfully\n");
+    return SUCCESS;
+}
+
+boolean addClientConditions(){
+if(getNumOfBranches()==0){
+           printf("first add a branch\n");
+           return FALSE;
+   }
+   if (isBankFull()) {
+       printf("The bank is full\n");
+       return FALSE;
+   }
+   return TRUE;
+}
+
+
+/***************** BRANCH FUNCTIONS FOR GENERAL PURPOSES *****************/
+
+comparison comp_Branch_to_ID(branch* a, branchID* b){
+	if(a->brID > *b)
+		return GREATER;
+	if(a->brID < *b)
+		return SMALLER;
+	return EQUAL;
+}
 
 comparison compare_Branch(branch* a,branch *b)
 {
@@ -64,6 +197,19 @@ double getNumOfClientsInBranch(branch* b)
 	return b->currentClients;
 }
 
+
+/* find a clients in a certain branch by ID or balance */
+void findClientInGivenBranch (){
+    branch *b;
+    b=getBranch(getBranchID(EXIST));
+    if (b==NULL)
+        printf("Action canceled.\n");
+    else
+        if(b->currentClients>0)
+            findClient(b->clientList);
+        else
+            printf("Selected branch have no clients.\n");
+}
 
 
 void deleteBranchFields(branch* to_be_deleted)
@@ -97,101 +243,19 @@ void printClientDetails(client* client)
 	printf("Client Balance : %f\n",client->balance);
 }
 
-
-/* find a clients in a certain branch by ID or balance */
-void findClientInGivenBranch (){
-    branch *b;
-    b=getBranch(getBranchID(EXIST));
-    if (b==NULL)
-        printf("Action canceled.\n");
-    else
-        if(b->currentClients>0)
-            findClient(b->clientList);
-        else
-            printf("Selected branch have no clients.\n");
-}
-
-/***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
-
-void createBranchList()
-{
-	branchRoot = NULL;;
-}
-
-
-
-try addNewBranch()
-{
-    /*put the new branch in the end of the branch list*/
-    branch* newBranch;
-
-    if(getNumOfBranches() == N){
-        printf("bank has maximum number of branches.\n");
-        return MAX_BANK_REACHED;
-    }
-    newBranch = createBranch();
-    branchRoot = add_new_node(branchRoot,newBranch,(genCmp)(&compare_Branch));
-    updateNumOfBranches(ADD);/*update branch list on addition of bank*/
-    printf("Add new branch finished successfully\n");
-    return SUCCESS;
-}
-
-
-genTree* createBranchClientList()
-{
+branch* chooseBranch(){
+	branchID brID;
+	brID = getBranchID(EXIST);
+	if(brID == CANCEL){
+	   printf("Aborted the action\n");
 	return NULL;
+	}
+
+	return getBranch(brID);
 }
 
-try addNewClientToBranch()
-{
-    /*prepare data to receive client*/
-    branch *temp;
-    client *newClient;
-    boolean check;
-    branchID brID;
-    
-    printf("Starting new client registry:\n");
-    check=addClientConditions();
-    if(check==FALSE)
-    	return FAIL;
-#ifdef TEST
-    brID=1;  /* make branch id 1 for test purposes */
-#else
-    brID = getBranchID(EXIST);
-#endif
-    if(brID == CANCEL){
-        printf("Action aborted\n");
-        return CANCEL;
-    }
-    
-    temp = getBranch(brID);
-    
-    if (isBranchFull(temp)) {
-        printf("the branch is full\n");
-        return FAIL;
-    }
-    newClient = getDetailsFromUser(temp->brID,temp->bankName);
-    
 
-    /*inform branch and bank on new client*/
-    temp->currentClients++;
-    addNewClientToBank(newClient);
-    temp->clientList = add_new_node(temp->clientList,newClient,(genCmp)(&cmpClient));
-    printf("Add new client finished successfully\n");
-    return SUCCESS;
-}
-
-boolean addClientConditions(){
-if(getNumOfBranches()==0){
-           printf("first add a branch\n");
-           return FALSE;
-   }
-   if (isBankFull()) {
-       printf("The bank is full\n");
-       return FALSE;
-   }
-   return TRUE;
-}
+/*----------QUERY FUNCTIONS-------------*/
 
 
 #ifdef BANK_AHAMELIM
@@ -200,18 +264,12 @@ void clientNumberWithGivenBalance()
 	int numberOfClients;
     amount balance;
     branch *tempBranch;
-    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    brID = getBranchID(EXIST);
-    if(brID == CANCEL){
-        printf("Aborted the action\n");
+    if((tempBranch = chooseBranch())==NULL)
         return;
-    }
-    
-    tempBranch = getBranch(brID);
     getDouble(&balance, "please enter balance:\n");
     numberOfClients = countClients(tempBranch->clientList,&balance,(genCmp)&compareClientsWithBiggerBalance);
     printf("the number of clients with : %f\n  in balance is :%d\n",balance,numberOfClients);
@@ -221,17 +279,12 @@ void clientNumberWithGivenBalance()
 void printClientAccountsNumberAndBalance()
 {
 	branch *tempBranch;
-    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    brID = getBranchID(EXIST);
-    if(brID == CANCEL){
-        printf("Aborted the action\n");
+    if((tempBranch = chooseBranch())==NULL)
         return;
-    }
-    tempBranch = getBranch(brID);
     print_tree(tempBranch->clientList,(genPrint)&printClientDetails);
 
 }
@@ -239,18 +292,12 @@ void clientNumberWithBiggerLoansThanBalance()
 {
 	int numberOfClients;
     branch *tempBranch;
-    branchID brID;
     if(getNumOfBranches()==0){
         printf("no branches\n");
         return ;
     }
-    brID = getBranchID(EXIST);
-    if(brID == CANCEL){
-        printf("Aborted the action\n");
-        return;
-    }
-    
-    tempBranch = getBranch(brID);
+    if((tempBranch = chooseBranch())==NULL)
+    	return;
     numberOfClients = countClients(tempBranch->clientList,NOCHECK,(genCmp)&compareClientsWithBiggerLoans);
     printf("amount of clients with bigger loans then balance : %d",numberOfClients);
 }
@@ -266,6 +313,15 @@ void averageNumberOfAccountsInBranches()
 			numOfBranches,clientsAverage);
 }
 
+int isBranchFull(branch *tempBranch)
+{
+    if (tempBranch->currentClients<=MAXBRANCHCLIENT) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+/*----------DELETE FUNCTIONS-------------*/
 
 try deleteAllBranchClients(branchID id)
 {
@@ -310,13 +366,11 @@ try  deleteBranch(branchID brID)
     }
 
     if(brID==NOCHECK){
-        brID=getBranchID(EXIST);/*receive branch from user*/
-        if(brID == CANCEL){
-            printf("Aborted the action\n");
-            return CANCEL;
-        }
-    }
+    	if((tempBranch = chooseBranch())==NULL)
+    	    return FAIL;
+    }else{
     tempBranch = getBranch(brID);
+    }
     branchRoot = remove_node(branchRoot,(void*)tempBranch,(genDelete)(&deleteBranchFields),(genCmp)(&compare_Branch));
     updateNumOfBranches(REMOVE);  /* decrease amount of branches in bank*/
     return SUCCESS;
@@ -324,17 +378,15 @@ try  deleteBranch(branchID brID)
 
 void deleteAllBranches()
 {
-
-	/*delete!!!! clearBranchTree(branchRoot);*/
     free_list(&branchRoot, (genDelete)&deleteBranchFields);
 }
 
-/*----------------------------------------------------*/
+/*------------------UPDATE BRANCH FUNCTIONS-------------------*/
 
 try updateBranchBalance(branchID brID, amount am,addremove remove)
 {
     branch *tempBranch;
-    ;
+
     if ((tempBranch = getBranch(brID))==NULL){/*if branch not found*/
         printf("branch not found.\n");
         return BRANCHNOTFOUND;
@@ -377,61 +429,10 @@ void updateCurrentClient(branchID brID,addremove remove){
 }
 
 
-int isBranchFull(branch *tempBranch)
-{
-    if (tempBranch->currentClients<=MAXBRANCHCLIENT) {
-        return FALSE;
-    }
-    return TRUE;
-}
-
-
-comparison comp_Branch_to_ID(branch* a, branchID* b){
-	if(a->brID > *b)
-		return GREATER;
-	if(a->brID < *b)
-		return SMALLER;
-	return EQUAL;
-}
-
-branch* getBranch(branchID brID)
-{
-    return findBranch(branchRoot,brID);
-}
 
 
 
-client* getBranchClient(accountNum acc, branchID brID)
-{
-    branch *tempBranch=NULL;
-    tempBranch=getBranch(brID);
-    return getClient(tempBranch->clientList,acc,NULL);
-}
-
-
-
-/*---------------HELP SEARCH IN TREE BRANCH-------------------*/
-boolean checkBranchID(branchID brID)
-{
-    if(findBranch(branchRoot,brID) != NULL)
-    	return TRUE;
-    return FALSE;
-}
-
-
-
-branch* findBranch(genTree* root, branchID brID){
-    genTree* b;
-    b=find_Node_Parent(branchRoot,&brID,NOCHECK,(genCmp)&comp_Branch_to_ID);
-    if (b) {
-        return (branch*)b->data;
-    }
-    return NULL;
-
-}
-
-
-/*------------------------------------RECIEVE DATA FROM USER-------------------------------*/
+/*----------------RECIEVE DATA FROM USER---------------------*/
 
 int getTime(char *output){
     int time;
@@ -476,15 +477,10 @@ branchID getBranchID(availble checkif){
 
 void printBranchInfo()
 {
-	branchID brID;
+
 	branch *tempBranch;
-    brID = getBranchID(EXIST);
-    if(brID == CANCEL)
-    {
-        printf("Aborted the action\n");
-        return;
-    }
-	tempBranch = getBranch(brID);
+	if((tempBranch = chooseBranch())==NULL)
+	    return;
 	printf("Branch name: %s\n",tempBranch->branchName);
 	printf("Branch Bank name: %s\n",tempBranch->bankName);
 	printf("Branch ID : %d\n",tempBranch->brID);
@@ -496,53 +492,9 @@ void printBranchInfo()
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 }
 
-/*----------ADD NEW BRANCH FUNCTIONS-------------*/
-branch *createBranch()/* create branch, receive data from user */
-{
-	branch *newBranch;
-	printf("Add new branch start:\n");
-    newBranch = ALLOC(branch,1);
-	initBranch(newBranch);
-
-#ifdef TEST
-	newBranch->bankName = getBankName();
-    newBranch->branchName=str_dup(testName);
-    testName[0]++;
-    newBranch->brID=testBID++;
-    newBranch->openTime=1;
-    newBranch->closeTime=1;
-    newBranch->clientList=createBranchClientList();
-#else
-
-    /*receive data from user*/
-	getName(&newBranch->branchName,MAXNAME,"please enter branch name:\n");
-    newBranch->bankName = getBankName();
-    newBranch->brID= getBranchID(NOTEXIST);
-    newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
-    newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
-    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
-    
-#endif
-    
-
-    return newBranch;
-}
 
 
-void initBranch(branch *brancInit)
-{
-    brancInit->brID = 0;
-    brancInit->balance=0;
-    brancInit->openTime=0;
-    brancInit->closeTime=0;
-    brancInit->currentClients=0;
-    brancInit->numOfActiveLoans=0;
-    brancInit->balance = 1.0;
-    brancInit->yearProfit = 1.0;
-
-}
-
-/*---------------SEARCH CLIENT FUNCTIONS-----------*/
+/*---------------SEARCH FUNCTIONS-----------*/
 int countClients(genTree* root, amount* balance,genCmp cmp){
 	int numberOfClients;
 	comparison c;
@@ -563,8 +515,34 @@ int countClients(genTree* root, amount* balance,genCmp cmp){
 }
 
 
+boolean checkBranchID(branchID brID)
+{
+    if(findBranch(branchRoot,brID) != NULL)
+    	return TRUE;
+    return FALSE;
+}
 
-/*DELETE FROM TREE*/
 
 
+branch* findBranch(genTree* root, branchID brID){
+    genTree* b;
+    b=find_Node_Parent(branchRoot,&brID,NOCHECK,(genCmp)&comp_Branch_to_ID);
+    if (b) {
+        return (branch*)b->data;
+    }
+    return NULL;
 
+}
+
+
+client* getBranchClient(accountNum acc, branchID brID)
+{
+    branch *tempBranch=NULL;
+    tempBranch=getBranch(brID);
+    return getClient(tempBranch->clientList,acc,NULL);
+}
+
+branch* getBranch(branchID brID)
+{
+    return findBranch(branchRoot,brID);
+}
