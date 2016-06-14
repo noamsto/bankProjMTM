@@ -23,7 +23,7 @@ static genTree* branchRoot;
 
 void updateCurrentClient(branchID ,addremove);/*update amount of clients in branch*/
 boolean addClientConditions(); /* check if possible to add new client to the bank */
-branch* findBranch(genTree* , branchID );
+branch* findBranch(genTree* , branchID );/* return branch pointer according to branch ID */
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
 
 /* DATA FROM USER FUNCTIONS */
@@ -36,11 +36,11 @@ void initBranch(branch*);/*init branch struct*/
 void deleteBranchFields(branch*);/* delete all the fields of a certain branch */
 comparison compare_Branch(branch*,branch *);
 int countClients(genTree* , amount* ,genCmp);
-int compareClientsWithBiggerBalance(client* client, amount *balance);
-int compareClientsWithBiggerLoans(client* client, amount *balance);
-void printClientDetails(client* client);
-double getNumOfClientsInBranch(branch* b);
-branch* chooseBranch();
+int compareClientsWithBiggerBalance(client* client, amount *balance);/* check if a client has more then requested balance */
+int compareClientsWithBiggerLoans(client* client, amount *balance);/* check if a client has bigger loan then balance */
+void printClientDetails(client* client);/* print client details (account number and balance) */
+double getNumOfClientsInBranch(branch* b);/* recieve how many clients are in specific branch */
+branch* chooseBranch();/* allows the user to choose a branch and gets the pointer to the branch */
 
 
 /*----------------------------------------------CODE BEGIN'S HERE--------------------------------------------*/
@@ -172,24 +172,7 @@ if(getNumOfBranches()==0){
 }
 
 
-/**************** NOAM ADDED ************************/
-
-/* find a clients in a certain branch by ID or balance */
-void findClientInGivenBranch (){
-    branch *b;
-    b=getBranch(getBranchID(EXIST));
-    if (b==NULL)
-        printf("Action canceled.\n");
-    else
-        if(b->currentClients>0)
-            findClient(b->clientList);
-        else
-            printf("Selected branch have no clients.\n");
-}
-
-
-
-/***************** BRANCH FUNCTIONS FOR GENERAL PURPUSES *****************/
+/***************** BRANCH FUNCTIONS FOR GENERAL PURPOSES *****************/
 
 comparison comp_Branch_to_ID(branch* a, branchID* b){
 	if(a->brID > *b)
@@ -214,6 +197,19 @@ double getNumOfClientsInBranch(branch* b)
 	return b->currentClients;
 }
 
+
+/* find a clients in a certain branch by ID or balance */
+void findClientInGivenBranch (){
+    branch *b;
+    b=getBranch(getBranchID(EXIST));
+    if (b==NULL)
+        printf("Action canceled.\n");
+    else
+        if(b->currentClients>0)
+            findClient(b->clientList);
+        else
+            printf("Selected branch have no clients.\n");
+}
 
 
 void deleteBranchFields(branch* to_be_deleted)

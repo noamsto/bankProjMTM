@@ -8,7 +8,8 @@
 
 #include "matam.h"
 #include <string.h>
-#include "genericTree.h"
+
+#include "genericList.h"
 
 /* define for test purposes */
 /* #define TEST */
