@@ -98,7 +98,7 @@ branch* createBranch()/* create branch, receive data from user */
     newBranch->brID=testBID++;
     newBranch->openTime=1;
     newBranch->closeTime=1;
-    newBranch->clientList=createBranchClientList();
+    newBranch->clientList=createBranchClientTree();
 #else
 
     /*receive data from user*/
@@ -107,7 +107,7 @@ branch* createBranch()/* create branch, receive data from user */
     newBranch->brID= getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
-    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
+    newBranch->clientList=createBranchClientTree();    /*create the client list of the branch*/
 
 #endif
 

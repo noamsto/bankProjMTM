@@ -13,7 +13,6 @@ void test_treeToArray();
 
 int main(){
     createBank(NULL);
-    createBranchList();
     
 #ifdef TEST /*create 2 branches and 3 clients for test purposes */
     printf("***_TEST MODE_***\n\n");
@@ -41,7 +40,7 @@ void test_treeToArray(){
     genTree *t=NULL;
     int len=0,i=0;
     t=*getBankClientRoot();
-    t=tree_to_array(t, &len);
+    t=createArrayFromTree(t, &len);
     
     for (i=0; i<len; i++){
         printClientInfo(t[i].data);

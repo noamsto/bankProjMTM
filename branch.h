@@ -28,14 +28,10 @@ typedef struct branches{
 void findClientInGivenBranch ();
 /* find a client/clients of a certain branch, regarding either balance or id. */
 
-void createBranchList();
-/*create branch list */
 
 try addNewBranch();
 /*create a new branch and add to list. get info from user*/
 
-genTree* createBranchClientList();
-/*create list of clients to branch*/
 
 try addNewClientToBranch();
 /*create new client and add to client list belong to branch. get info from user*/
@@ -46,8 +42,10 @@ void clientNumberWithGivenBalance();
 void printClientAccountsNumberAndBalance();
 
 void clientNumberWithBiggerLoansThanBalance();
+/* print clients with bigger loan than balance */
 
 void averageNumberOfAccountsInBranches();
+/* average number of accounts in branch */
 
 try deleteAllBranchClients(branchID);
 /*delete all clients of a certain branch. returns whether the action succeeded*/

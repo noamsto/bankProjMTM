@@ -310,25 +310,25 @@ int count_tree(genTree *t){
 
 
 /* copy each node to the array */
-void copy_nodes(genTree *t, genTree **a){
+void tree_to_array(genTree *t, genTree **a){
     if (!t || !*a)
         return;
     
-    copy_nodes(t->left, a);
+    tree_to_array(t->left, a);
     ((*a)++)->data=t->data; /* only if a value is added, increase the "index" */
-    copy_nodes(t->right, a);
+    tree_to_array(t->right, a);
 }
 
 
 /* function create an array from a tree */
-genTree* tree_to_array(genTree* t, int* len){
+genTree* createArrayFromTree(genTree* t, int* len){
     int size;
     genTree *array=NULL, *arrayStart;
     size=count_tree(t);
     
     array=ALLOC(genTree, size);
     arrayStart=array;
-    copy_nodes(t, &array);
+    tree_to_array(t, &array);
     *len=size;
     /* array was tempered so return its start position */
     return arrayStart;
