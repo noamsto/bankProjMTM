@@ -24,7 +24,7 @@ clientString* clientToString(client*);
 clientString* copyClientStings(clientString*);
 
 
-void openFile(char*,char*);
+try openFile(char*,char*);
 
 
 void closeFile();
