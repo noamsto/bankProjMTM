@@ -9,6 +9,15 @@
 #define GETBRID(ACC) getBankClient(ACC )->brID
 #define ACTIONCANCELD printf("Action aborted\n")
 
+/*testing purpose*/
+#ifdef TEST
+static char testNameC[2]= "a\0";
+static accountNum testAcc[7] ={5,2,6,3,4,8,9};
+static int testIndex=0;
+static clientID testID[10] = "123123121\0";
+#endif
+/*testing purpose*/
+
 
 /*get the transaction info from user, account number and amount of money.*/
 try getTransactionInfo(accountNum* acc,amount* money);
@@ -446,9 +455,9 @@ client* getDetailsFromUser(branchID brID,char* bankName){
     
 #else
     /* FOR TEST ONLY, put a predfined information */
-    newClient->name=str_dup(testName);
-    newClient->surname=str_dup(testName);
-    testName[0]++;
+    newClient->name=str_dup(testNameC);
+    newClient->surname=str_dup(testNameC);
+    testNameC[0]++;
     newClient->bankName = bankName;
     strcpy(newClient->cID,testID);
     testID[8]++;

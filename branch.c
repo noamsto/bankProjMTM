@@ -16,7 +16,15 @@
 #define MINBALANCE 1
 #define MAXBALANCE 500
 
+
 /*---------------------LOCAL BRANCHLIST-----------------*/
+/*testing purpose*/
+#ifdef TEST
+static char testNameB[2]= "a\0";
+static branchID testBID = 1;
+#endif
+/*testing purpose*/
+
 static genTree* branchRoot;
 
 /*--------------------LOCAL FUNCTION DECLERATION--------*/
@@ -47,13 +55,13 @@ branch* chooseBranch();/* allows the user to choose a branch and gets the pointe
 
 /*----------CREATE LIST FUNCTIONS-------------*/
 
-void createBranchList()
+void createBranchTree()
 {
 	branchRoot = NULL;;
 }
 
 
-genTree* createBranchClientList()
+genTree* createBranchClientTree()
 {
 	return NULL;
 }
@@ -85,12 +93,12 @@ branch* createBranch()/* create branch, receive data from user */
 
 #ifdef TEST
 	newBranch->bankName = getBankName();
-    newBranch->branchName=str_dup(testName);
-    testName[0]++;
+    newBranch->branchName=str_dup(testNameB);
+    testNameB[0]++;
     newBranch->brID=testBID++;
     newBranch->openTime=1;
     newBranch->closeTime=1;
-    newBranch->clientList=createBranchClientList();
+    newBranch->clientList=createBranchClientTree();
 #else
 
     /*receive data from user*/
@@ -99,7 +107,7 @@ branch* createBranch()/* create branch, receive data from user */
     newBranch->brID= getBranchID(NOTEXIST);
     newBranch->openTime = getTime("please enter opening time (between 0-23)\n");
     newBranch->closeTime =getTime("please enter closing time (between 0-23)\n");
-    newBranch->clientList=createBranchClientList();    /*create the client list of the branch*/
+    newBranch->clientList=createBranchClientTree();    /*create the client list of the branch*/
 
 #endif
 
@@ -129,15 +137,17 @@ try addNewClientToBranch()
     branch *tempBranch;
     client *newClient;
     boolean check;
-    branchID brID;
 
     printf("Starting new client registry:\n");
     check=addClientConditions();
     if(check==FALSE)
     	return FAIL;
 #ifdef TEST
+    {
+    branchID brID;
     brID=1;  /* make branch id 1 for test purposes */
     tempBranch = getBranch(brID);
+    }
 #else
     if((tempBranch = chooseBranch())==NULL)
         return FAIL;

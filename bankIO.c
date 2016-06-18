@@ -5,4 +5,5 @@
  *      Author: yali
  */
 
-
+FILE* input;
+FILE* output;
