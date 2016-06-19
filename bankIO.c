@@ -6,6 +6,8 @@
  */
 
 #include "bank.h"
+#include <ctype.h>
+
 
 FILE* target;
 
@@ -57,11 +59,11 @@ clientString* copyClientStings(clientString* source){
 void printClientString(clientString* cs)
 {
     fprintf(target,"%s %s %d\n",cs->familyName,cs->clientID,cs->clientAcc);
-
+    
 }
 void printClientToFile(client* cs)
 {
-	fprintf(target,"%s %s %d\n",cs->surname,cs->cID,cs->accNum);
+    fprintf(target,"%s %s %d\n",cs->surname,cs->cID,cs->accNum);
 }
 
 
@@ -76,32 +78,32 @@ try openFile(char*path ,char* restrictions){
         return FAIL;
     return SUCCESS;
 }
-    
-    
+
+
 genTree* readClientFromFile()
 {
-	genTree* fileData=NULL;
-	clientString newClient,*readclient;
+    genTree* fileData=NULL;
+    clientString newClient,*readclient;
     char surname[20],id[20];
-	while((fscanf(target,"%s %s %d",surname,id, &newClient.clientAcc))>0){
+    while((fscanf(target,"%s %s %d",surname,id, &newClient.clientAcc))>0){
         newClient.clientID=id;
         newClient.familyName=surname;
-		readclient = copyClientStings(&newClient);
-		fileData = add_new_node(fileData,readclient,(genCmp)(&compareClientSurname));
-	}
-	return fileData;
+        readclient = copyClientStings(&newClient);
+        fileData = add_new_node(fileData,readclient,(genCmp)(&compareClientSurname));
+    }
+    return fileData;
 }
 
 
 comparison compareClientSurname(clientString* a,clientString* b)
 {
-	int res;
-	res = strcmp(a->familyName,b->familyName);
-	if(res>0)
-		return GREATER;
-	else if(res<0)
-		return SMALLER;
-	return EQUAL;
+    int res;
+    res = strcmp(a->familyName,b->familyName);
+    if(res>0)
+        return GREATER;
+    else if(res<0)
+        return SMALLER;
+    return EQUAL;
 }
 
 void deleteClientString(clientString* del)
@@ -111,8 +113,7 @@ void deleteClientString(clientString* del)
     FREE(del);
 }
 
-
-void sortBySurename(char fileName[FILENAMESIZE])
+char* sortBySurename(char fileName[FILENAMESIZE])
 {
     genTree* t = NULL;
     openFile(fileName, "r");
@@ -123,6 +124,83 @@ void sortBySurename(char fileName[FILENAMESIZE])
     print_tree(t, (genPrint)(&printClientString));
     free_list(&t, (genDelete)&deleteClientString);
     closeFile();
+    return fileName;
+    
+}
+
+
+char* changeToNumber(char* str)
+{
+    char* head = str;
+    while(*str!='\0'){
+        *str = toupper(*str);
+        *str = (*str - 'A' + 2);
+        str++;
+    }
+    return head;
+}
+
+void compressStr(char* str,char** cmpr)
+{
+    int cmprInd=0,cpyI=0,i=0;
+    char temp[20]={0};
+    while(*str!=0){/*loop for all the string*/
+        for(cpyI=4;cpyI>=0;cpyI--){
+            
+            if(cmprInd==8){
+                i++;
+                cmprInd=0;
+            }
+            temp[i] = temp[i] | ((*str >> cpyI) & 1);
+            if(cpyI)
+                temp[i] <<= 1;
+            cmprInd++;
+        }
+        str++;
+    }
+}
+
+char* nameCmpr(char* str)
+{
+    char len, *cmpr=NULL;
+    len = (char)strlen(str);
+    cmpr=ALLOC(char, len);
+    str = changeToNumber(str);
+    cmpr++;
+    compressStr(str,&(cmpr));
+    cmpr--;
+    cmpr[0]=len;
+    return cmpr;
+    
+}
+
+
+
+
+void printCmpr(clientString *c){
+    char *cmpr;
+    short accNum;
+    cmpr=nameCmpr(c->familyName);
+    fwrite(cmpr, cmpr[0], sizeof(char), target);
+    fwrite(c->clientID,CLIENTIDL,sizeof(char),target);
+    accNum=(short)(c->clientAcc);
+    fwrite(&accNum, 1, sizeof(short), target);
+}
+
+char* compressFile(char * fileName){
+    
+    genTree* t = NULL;
+    openFile(fileName, "r");
+    t = readClientFromFile();
+    
+    strcat(fileName, ".cmpr");
+    openFile(fileName, "w+");
+    
+    print_tree(t, (genPrint)(&printCmpr));
+    free_list(&t, (genDelete)&deleteClientString);
+    closeFile();
+    
+    return fileName;
 }
 
 

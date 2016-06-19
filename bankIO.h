@@ -19,6 +19,10 @@ typedef struct Strings{
 	accountNum clientAcc;			/* the client account number */
 }clientString;
 
+
+char* compressFile(char*);
+
+    
 clientString* clientToString(client*);
 
 
@@ -41,7 +45,7 @@ genTree* readClientFromFile();
 comparison compareClientSurname(clientString*,clientString*);
 
 
-void sortBySurename(char*);
+char* sortBySurename(char*);
 
 
 #endif /* BANKIO_H_ */
