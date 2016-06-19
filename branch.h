@@ -7,7 +7,7 @@
 #ifndef branch_h
 #define branch_h
 #define NOID 0
-#include "client.h"
+#include "bankIO.h"
 
 typedef struct branches{
     branchID brID;				/*the ID of the branch*/
@@ -77,5 +77,8 @@ boolean checkBranchID(branchID brID);
 
 void printBranchInfo();
 /*print all the information on branch. receive the branch ID from the user*/
+
+void printAllBranchToFile();
+/* print all branches to file with their name */
 
 #endif /* branch_h */

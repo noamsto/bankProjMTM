@@ -10,6 +10,7 @@
 
 #include "client.h"
 
+#define FILENAMESIZE 20
 
 
 typedef struct Strings{
@@ -24,21 +25,23 @@ clientString* clientToString(client*);
 clientString* copyClientStings(clientString*);
 
 
+
 try openFile(char*,char*);
 
 
 void closeFile();
 
 
-void printClientToFile(clientString*);
+void printClientToFile(client*);
 
 
-genTree* readClientFromFile(FILE*);
+genTree* readClientFromFile();
 
 
 comparison compareClientSurname(clientString*,clientString*);
 
 
+void sortBySurename(char*);
 
 
 #endif /* BANKIO_H_ */

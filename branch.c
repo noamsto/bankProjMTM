@@ -33,6 +33,8 @@ void updateCurrentClient(branchID ,addremove);/*update amount of clients in bran
 boolean addClientConditions(); /* check if possible to add new client to the bank */
 branch* findBranch(genTree* , branchID );/* return branch pointer according to branch ID */
 int isBranchFull(branch *);/*check if branch is full (has more room from clients)*/
+void printBranchToFile(branch*); /*print all clients in branch to file */
+
 
 /* DATA FROM USER FUNCTIONS */
 branchID getBranchID(availble checkif);/* get branch ID from user, including check if the id is already in use*/
@@ -503,6 +505,29 @@ void printBranchInfo()
 }
 
 
+void printAllBranchToFile()
+{
+    print_tree(branchRoot, (genPrint)(&printBranchToFile));
+}
+
+void printBranchToFile(branch* b)
+{
+    char *sortedFile;
+    char fileName[FILENAMESIZE];
+    if(b==NULL || b->currentClients==0)
+        return;
+    sprintf(fileName, "%d",b->brID);
+    strcat(fileName, ".txt");
+    openFile(fileName, "w+");
+    print_tree(b->clientList, (genPrint)(&printClientToFile));
+    closeFile();
+    sortedFile = sortBySurename(fileName);
+    compressFile(sortedFile,fileName);
+    
+    return;
+}
+
+
 
 /*---------------SEARCH FUNCTIONS-----------*/
 int countClients(genTree* root, amount* balance,genCmp cmp){
@@ -543,7 +568,6 @@ branch* findBranch(genTree* root, branchID brID){
     return NULL;
 
 }
-
 
 client* getBranchClient(accountNum acc, branchID brID)
 {

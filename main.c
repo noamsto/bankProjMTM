@@ -22,11 +22,19 @@ int main(){
     addNewClientToBranch();
     addNewClientToBranch();
     addNewClientToBranch();
+    printAllBranchToFile();
     printf("\n");
     test_treeToArray();
+    
 #endif
     
-    mainMenu();/*menu for testing code*/
+    
+    
+    
+    
+    
+    
+    //mainMenu();/*menu for testing code*/
     deleteBank();
     check_for_exit();
     printf("Thank you for using our program. Have a good day\n");
