@@ -52,4 +52,7 @@ comparison compareClientSurname(clientString*,clientString*);
 char* sortBySurename(char*);
 
 
+char* fileEncDec(char*,char*);
+
+
 #endif /* BANKIO_H_ */

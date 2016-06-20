@@ -8,6 +8,8 @@
 #include "bank.h"
 #include <ctype.h>
 
+#define MASC_ODD	85
+#define MASC_EVEN	170
 
 FILE* target;
 
