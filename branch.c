@@ -522,7 +522,9 @@ void printBranchToFile(branch* b)
     print_tree(b->clientList, (genPrint)(&printClientToFile));
     closeFile();
     sortedFile = sortBySurename(fileName);
-    compressFile(sortedFile);
+    sortedFile = compressFile(sortedFile);
+    sortedFile = fileEncDec(sortedFile,".enc");
+    sortedFile = fileEncDec(sortedFile,".dec");
     
     return;
 }

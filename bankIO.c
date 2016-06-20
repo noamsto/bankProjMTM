@@ -8,6 +8,8 @@
 #include "bank.h"
 #include <ctype.h>
 
+#define MASC_ODD	85
+#define MASC_EVEN	170
 
 FILE* target;
 
@@ -236,5 +238,62 @@ char* compressFile(char * fileName){
     return fileName;
 }
 
+
+char charEncDec(char* a)/* encrypt the received char and return an encrypted char */
+{
+	char encrypt=0;
+	char odd,even;
+	odd = (*a & MASC_ODD) << 1;
+	even = (*a & MASC_EVEN) >> 1;
+	encrypt =  odd | even;
+	return encrypt;
+
+}
+
+
+
+void textEncDec(char* text,long textSize)
+{
+	long i=0;
+	for(i=0;i<textSize;i++){
+		text[i] = charEncDec(text+i);
+	}
+
+}
+
+
+
+char* readBinaryFile(FILE* file,long* byteSize)
+{
+	char* text=NULL;
+	fseek(file,0,SEEK_END);
+	*byteSize = ftell(file);
+	text = ALLOC(char,*byteSize);
+	fread(text,sizeof(char),*byteSize,file);
+	return text;
+
+}
+
+
+void writeBinaryFile(FILE* output,char* text,long length)
+{
+	fwrite(text,sizeof(char),length,output);
+}
+
+
+
+char* fileEncDec(char* fileName,char* addFileName)
+{
+	char* text=NULL;
+	long fileSize=0;
+	openFile(fileName, "r");
+	text = readBinaryFile(target,&fileSize);
+	textEncDec(text,fileSize);
+	closeFile();
+	strcat(fileName,addFileName);
+	openFile(fileName,"w+");
+	writeBinaryFile(target,text,fileSize);
+	return fileName;
+}
 
 
