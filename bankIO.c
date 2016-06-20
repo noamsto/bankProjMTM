@@ -252,13 +252,13 @@ char charEncDec(char* a)/* encrypt the received char and return an encrypted cha
 
 
 
-void textEncDec(char* text,long textSize)
+char* textEncDec(char* text,long textSize)
 {
 	long i=0;
 	for(i=0;i<textSize;i++){
 		text[i] = charEncDec(text+i);
 	}
-
+	return text;
 }
 
 
@@ -268,6 +268,7 @@ char* readBinaryFile(FILE* file,long* byteSize)
 	char* text=NULL;
 	fseek(file,0,SEEK_END);
 	*byteSize = ftell(file);
+	fseek(file,0,SEEK_SET);
 	text = ALLOC(char,*byteSize);
 	fread(text,sizeof(char),*byteSize,file);
 	return text;
@@ -288,7 +289,7 @@ char* fileEncDec(char* fileName,char* addFileName)
 	long fileSize=0;
 	openFile(fileName, "r");
 	text = readBinaryFile(target,&fileSize);
-	textEncDec(text,fileSize);
+	text = textEncDec(text,fileSize);
 	closeFile();
 	strcat(fileName,addFileName);
 	openFile(fileName,"w+");
