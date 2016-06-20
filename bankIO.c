@@ -403,6 +403,7 @@ char* fileEncDec(char* fileName,char* addFileName)
 	strcat(fileName,addFileName);
 	openFile(fileName,"w+");
 	writeBinaryFile(target,text,fileSize);
+    FREE(text);
 	return fileName;
 }
 
