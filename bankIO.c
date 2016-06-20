@@ -140,25 +140,58 @@ char* changeToNumber(char* str)
     return head;
 }
 
-void compressStr(char* str,char** cmpr)
-{
-    int cmprInd=0,cpyI=0,i=0;
-    char temp[20]={0};
-    while(*str!=0){/*loop for all the string*/
-        for(cpyI=4;cpyI>=0;cpyI--){
-            
-            if(cmprInd==8){
-                i++;
-                cmprInd=0;
+
+
+
+void compressor(char* str, char* cmpr){
+    char mask=32, res = '\0';
+    int i=8, len=0;
+    len=(int)strlen(str);
+    while (len--){
+        
+        for (mask=16; mask>0; mask>>=1){
+            if (i==0){
+                *(cmpr++)=res;
+                i=8;
+                res=0;
             }
-            temp[i] = temp[i] | ((*str >> cpyI) & 1);
-            if(cpyI)
-                temp[i] <<= 1;
-            cmprInd++;
+            res<<=1;
+            if ((*str & mask) !=0){
+                res |=1;
+            }
+            i--;
         }
         str++;
     }
+    if (i>0){
+        res<<=i;
+        *cmpr=res;
+    }
 }
+
+
+
+
+
+//void compressStr(char* str,char** cmpr)
+//{
+//    int cmprInd=0,cpyI=0,i=0;
+//    char temp[20]={0};
+//    while(*str!=0){/*loop for all the string*/
+//        for(cpyI=4;cpyI>=0;cpyI--){
+//            
+//            if(cmprInd==8){
+//                i++;
+//                cmprInd=0;
+//            }
+//            temp[i] = temp[i] | ((*str >> cpyI) & 1);
+//            if(cpyI)
+//                temp[i] <<= 1;
+//            cmprInd++;
+//        }
+//        str++;
+//    }
+//}
 
 char* nameCmpr(char* str)
 {
@@ -167,9 +200,9 @@ char* nameCmpr(char* str)
     cmpr=ALLOC(char, len);
     str = changeToNumber(str);
     cmpr++;
-    compressStr(str,&(cmpr));
+    compressor(str,cmpr);
     cmpr--;
-    cmpr[0]=len;
+    cmpr[0]=(len*5/8)+1;
     return cmpr;
     
 }
@@ -181,7 +214,7 @@ void printCmpr(clientString *c){
     char *cmpr;
     short accNum;
     cmpr=nameCmpr(c->familyName);
-    fwrite(cmpr, cmpr[0], sizeof(char), target);
+    fwrite(cmpr, cmpr[0]+1, sizeof(char), target);
     fwrite(c->clientID,CLIENTIDL,sizeof(char),target);
     accNum=(short)(c->clientAcc);
     fwrite(&accNum, 1, sizeof(short), target);
