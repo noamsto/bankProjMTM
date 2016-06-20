@@ -347,7 +347,63 @@ char* compressFile(char * fileName){
 
 /******************* COMPRESSION FUNCTIONS ******************/
 
+char charEncDec(char* a)/* encrypt the received char and return an encrypted char */
+{
+	char encrypt=0;
+	char odd,even;
+	odd = (*a & MASC_ODD) << 1;
+	even = (*a & MASC_EVEN) >> 1;
+	encrypt =  odd | even;
+	return encrypt;
 
 
+}
+
+
+
+char* textEncDec(char* text,long textSize)
+{
+	long i=0;
+	for(i=0;i<textSize;i++){
+		text[i] = charEncDec(text+i);
+	}
+	return text;
+}
+
+
+
+char* readBinaryFile(FILE* file,long* byteSize)
+{
+	char* text=NULL;
+	fseek(file,0,SEEK_END);
+	*byteSize = ftell(file);
+	fseek(file,0,SEEK_SET);
+	text = ALLOC(char,(int)*byteSize);
+	fread(text,sizeof(char),*byteSize,file);
+	return text;
+
+}
+
+
+void writeBinaryFile(FILE* output,char* text,long length)
+{
+	fwrite(text,sizeof(char),length,output);
+}
+
+
+
+char* fileEncDec(char* fileName,char* addFileName)
+{
+	char* text=NULL;
+	long fileSize=0;
+	openFile(fileName, "r");
+	text = readBinaryFile(target,&fileSize);
+	text = textEncDec(text,fileSize);
+	closeFile();
+	strcat(fileName,addFileName);
+	openFile(fileName,"w+");
+	writeBinaryFile(target,text,fileSize);
+	return fileName;
+}
 
 
