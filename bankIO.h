@@ -15,11 +15,15 @@
 
 typedef struct Strings{
 	char* familyName;				/* family name of a client */
-	char* clientID;					/* the ID number of a client */
+	char clientID[CLIENTIDL];					/* the ID number of a client */
 	accountNum clientAcc;			/* the client account number */
 }clientString;
 
 
+char * decompressFile( char *);
+
+
+    
 char* compressFile(char*);
 
     

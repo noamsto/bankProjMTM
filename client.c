@@ -11,7 +11,7 @@
 
 /*testing purpose*/
 #ifdef TEST
-static char testNameC[6]= "abcde\0";
+static char testNameC[]= "abcdefg\0";
 static accountNum testAcc[7] ={5,2,6,3,4,8,9};
 static int testIndex=0;
 static clientID testID[10] = "123123121\0";
