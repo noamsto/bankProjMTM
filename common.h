@@ -12,7 +12,7 @@
 #include "genericList.h"
 
 /* define for test purposes */
-#define TEST
+//#define TEST
 
 
 

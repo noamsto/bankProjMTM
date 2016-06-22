@@ -91,6 +91,7 @@ void infoMenu(){
 				"2: print branch info\n"
 				"3: print client info\n"
 				"4: Find client in given branch\n"
+                "5: Print branches into file \n"
 				"9: back to main menu\n");
 		subMenu = getchar();
 		getchar();
@@ -106,6 +107,8 @@ void infoMenu(){
 				break;
 			case '4':
 				findClientInGivenBranch();
+            case '5':
+                printAllBranchToFile();
 				break;
 			case '9':
 				finish=TRUE;

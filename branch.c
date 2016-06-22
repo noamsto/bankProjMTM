@@ -504,28 +504,28 @@ void printBranchInfo()
 	printf("Yearly profit: %g\n",tempBranch->yearProfit);
 }
 
-
+/* print all the branches to file, using generic function */
 void printAllBranchToFile()
 {
     print_tree(branchRoot, (genPrint)(&printBranchToFile));
 }
 
+/* print a single branch to file */
 void printBranchToFile(branch* b)
 {
     char *sortedFile, *cmprFile,*encFile;
     char fileName[FILENAMESIZE];
     if(b==NULL || b->currentClients==0)
         return;
-    sprintf(fileName, "%d",b->brID);
-    strcat(fileName, ".txt");
-    openFile(fileName, "w+");
-    print_tree(b->clientList, (genPrint)(&printClientToFile));
-    closeFile();
-    sortedFile = sortBySurename(fileName);
-    cmprFile=compressFile(sortedFile);
-    encFile = fileEncDec(cmprFile,".enc");
-    decompressFile(encFile);
-
+    sprintf(fileName, "%d",b->brID); /* convert the int into a string */
+    strcat(fileName, ".txt");   /* add txt extension */
+    openFile(fileName, "w+");   /* create the file the branch */
+    print_tree(b->clientList, (genPrint)(&printClientToFile));  /* print the clients of the branch */
+    closeFile();    /* close the file */
+    sortedFile = sortBySurename(fileName);  /* sort the file by surname */
+    cmprFile=compressFile(sortedFile);  /* compress the file */
+    encFile = fileEncDec(cmprFile,".enc"); /* encode the file */
+    decompressFile(encFile);    /* decode the file and decompress */
     return;
 }
 

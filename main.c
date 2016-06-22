@@ -14,27 +14,28 @@ void test_treeToArray();
 int main(){
     createBank(NULL);
     
-#ifdef TEST /*create 2 branches and 3 clients for test purposes */
+#ifdef TEST /*create 2 branches and 7 clients for test purposes */
     printf("***_TEST MODE_***\n\n");
     
+    /* create 2 branches for test */
     addNewBranch();
     addNewBranch();
+    /* create 7 clients for test */
     addNewClientToBranch();
     addNewClientToBranch();
     addNewClientToBranch();
-    printAllBranchToFile();
+    addNewClientToBranch();
+    addNewClientToBranch();
+    addNewClientToBranch();
+    addNewClientToBranch();
+    
+    printAllBranchToFile(); /* test all the IO functions */
     printf("\n");
-    test_treeToArray();
+    test_treeToArray(); /* test tree to array function */
     
 #endif
     
-    
-    
-    
-    
-    
-    
-    //mainMenu();/*menu for testing code*/
+    mainMenu(); /*menu for testing code*/
     deleteBank();
     check_for_exit();
     printf("Thank you for using our program. Have a good day\n");
