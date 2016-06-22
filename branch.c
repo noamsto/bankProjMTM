@@ -523,10 +523,10 @@ void printBranchToFile(branch* b)
     closeFile();
     sortedFile = sortBySurename(fileName);
     cmprFile=compressFile(sortedFile);
-    decompressFile(cmprFile);
     encFile = fileEncDec(cmprFile,".enc");
     decFile = fileEncDec(encFile,".dec");
-    
+    decompressFile(decFile);
+
     return;
 }
 

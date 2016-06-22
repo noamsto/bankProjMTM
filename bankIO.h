@@ -10,7 +10,7 @@
 
 #include "client.h"
 
-#define FILENAMESIZE 20
+#define FILENAMESIZE 50
 
 
 typedef struct Strings{
