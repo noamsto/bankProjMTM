@@ -8,8 +8,8 @@
 #include "bank.h"
 #include <ctype.h>
 
-#define MASC_ODD	85
-#define MASC_EVEN	170
+#define MASK_ODD	85
+#define MASK_EVEN	170
 
 FILE* target;
 
@@ -135,6 +135,10 @@ void printClientString(clientString* cs)
 
 void printClientToFile(client* cs)
 {
+    int i;
+    for (i=0; cs->surname[i]!='\0'; i++){
+        cs->surname[i]=toupper( cs->surname[i]);
+    }
     fprintf(target,"%s %s %d\n",cs->surname,cs->cID,cs->accNum);
 }
 
@@ -271,6 +275,7 @@ void printCmpr(clientString *c)
     
     cmpr=nameCmpr(c->familyName);   /* compress surname */
     fwrite(cmpr, cmpr[0]+1, sizeof(char), target);  /* write the cmpressed name to file */
+    FREE(cmpr);
     fwrite(c->clientID,CLIENTIDL,sizeof(char),target);  /* write the client id */
     accNum=(short)(c->clientAcc);   /* converte the account number into short */
     fwrite(&accNum, 1, sizeof(short), target); /* write the client acc */
@@ -286,7 +291,6 @@ char* compressFile(char * fileName){
     
     strcat(fileName, ".cmpr");  /* create target file name */
     openFile(fileName, "w+");
-    
     print_tree(t, (genPrint)(&printCmpr));  /* compress and print the tree */
     free_list(&t, (genDelete)&deleteClientString);  /* delete the tree */
     closeFile();
@@ -342,8 +346,8 @@ char charEncDec(char* a)
 {
 	char encrypt=0;
 	char odd,even;
-	odd = (*a & MASC_ODD) << 1;
-	even = (*a & MASC_EVEN) >> 1;
+	odd = (*a & MASK_ODD) << 1;
+	even = (*a & MASK_EVEN) >> 1;
 	encrypt =  odd | even;
 	return encrypt;
 }
@@ -361,9 +365,10 @@ void writeBinaryFile(FILE* output,char* text,long length)
 
 char * decompressFile( char *fileName){
     genTree *t=NULL;
+    char *decFile=NULL;
+    decFile = fileEncDec(fileName,".dec");
 
-    t=readDecmp(fileName);
-    strcat(fileName, ".dec");  /* create target file name */
+    t=readDecmp(decFile);
     openFile(fileName, "w+");
     print_tree(t, (genPrint)(&printClientString));  /* compress and print the tree */
     free_list(&t, (genDelete)&deleteClientString);  /* delete the tree */

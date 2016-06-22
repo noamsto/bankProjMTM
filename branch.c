@@ -512,7 +512,7 @@ void printAllBranchToFile()
 
 void printBranchToFile(branch* b)
 {
-    char *sortedFile, *cmprFile,*encFile, *decFile;
+    char *sortedFile, *cmprFile,*encFile;
     char fileName[FILENAMESIZE];
     if(b==NULL || b->currentClients==0)
         return;
@@ -524,8 +524,7 @@ void printBranchToFile(branch* b)
     sortedFile = sortBySurename(fileName);
     cmprFile=compressFile(sortedFile);
     encFile = fileEncDec(cmprFile,".enc");
-    decFile = fileEncDec(encFile,".dec");
-    decompressFile(decFile);
+    decompressFile(encFile);
 
     return;
 }
