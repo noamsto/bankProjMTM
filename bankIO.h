@@ -1,8 +1,7 @@
-/*
- * bankIO.h
- *
- *  Created on: Jun 18, 2016
- *      Author: yali
+/* bank project
+ Yahel Tsufim 304952898
+ Noam Stolero 201581683
+ file:bankIO.c
  */
 
 #ifndef BANKIO_H_
